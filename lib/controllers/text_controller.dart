@@ -1,10 +1,11 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 class TextController extends StateNotifier<String> {
   var url = Uri.parse("https://api.openai.com/v1/completions");
-  final _apiToken = "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";
+  final _apiToken = dotenv.env['API_TOKEN'];
 
   TextController() : super('');
 
