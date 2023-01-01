@@ -10,10 +10,6 @@ import 'package:mocktail/mocktail.dart';
 
 class MockTextController extends Mock implements TextController {}
 
-class Listener extends Mock {
-  void call(String? previous, String next);
-}
-
 void main() {
   dotenv.testLoad(fileInput: File('lib/.env').readAsStringSync());
   // setUpAll() {
@@ -23,7 +19,6 @@ void main() {
   textController = MockTextController();
   final textControllerProvider =
       StateNotifierProvider<TextController, String>((ref) => textController);
-  final listener = Listener();
   const promptText = 'This is a test prompt';
   const answerText = 'This is a test answer';
   test("Test the textControllerProvider reads accurate answer", () async {
