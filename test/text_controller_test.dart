@@ -42,7 +42,7 @@ void main() {
     test("returns proper answer format when http response is successful",
         () async {
       final TextController textController = TextController();
-      
+
       final mockHTTPClient = MockClient((request) async {
         // Create sample response of the HTTP call //
         final response = {
@@ -59,8 +59,6 @@ void main() {
         };
         return Response(jsonEncode(response), 200);
       });
-
-      expect(, );
     });
   });
 }
