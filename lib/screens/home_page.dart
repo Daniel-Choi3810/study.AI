@@ -84,7 +84,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   ),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                height: 300,
+                height: 100,
                 child: Text(
                   answerText,
                 ),

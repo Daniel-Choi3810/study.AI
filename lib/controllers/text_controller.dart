@@ -6,6 +6,7 @@ import 'dart:convert';
 class TextController extends StateNotifier<String> {
   var url = Uri.parse("https://api.openai.com/v1/completions");
   final _apiToken = dotenv.env['API_TOKEN'];
+  String ans = '';
 
   TextController() : super('');
 
@@ -33,7 +34,7 @@ class TextController extends StateNotifier<String> {
       );
       if (request.statusCode == 200) {
         // isLoading.value = false;
-        state = jsonDecode(request.body)['choices'][0]['text'];
+        state = await jsonDecode(request.body)['choices'][0]['text'];
       } else {
         // isLoading.value = false;
         print(jsonDecode(request.body));
