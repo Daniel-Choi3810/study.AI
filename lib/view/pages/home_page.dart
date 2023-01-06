@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/controllers/providers/text_controller_providers.dart';
+import '../components/home_page/search_field.dart';
 
+// Consumer Stateful Widget is a widget that can be used to read providers
 class MyHomePage extends ConsumerStatefulWidget {
   const MyHomePage({super.key});
 
@@ -10,11 +12,15 @@ class MyHomePage extends ConsumerStatefulWidget {
 }
 
 class _MyHomePageState extends ConsumerState<MyHomePage> {
-  final TextEditingController _textFieldController = TextEditingController();
+  // How do we make this a separate class?
+  final TextEditingController _textFieldController =
+      TextEditingController(); // Controller to edit search field text
   @override
   Widget build(BuildContext context) {
-    final answerText = ref.watch(answerTextProvider);
-    final isLoading = ref.watch(isLoadingProvider);
+    final answerText = ref
+        .watch(answerTextProvider); // Watch for changes in answerTextProvider
+    final isLoading =
+        ref.watch(isLoadingProvider); // Watch for changes in isLoadingProvider
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -27,6 +33,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Text(
+                // Title Text
                 'Welcome to IntelliStudy!',
                 style: Theme.of(context).textTheme.headline5,
               ),
@@ -35,35 +42,21 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
               ),
               Padding(
                 padding: const EdgeInsets.all(18.0),
-                child: TextField(
-                  controller: _textFieldController,
-                  decoration: const InputDecoration(
-                    prefixIcon: Padding(
-                      padding: EdgeInsets.only(
-                        left: 10.0,
-                      ),
-                      child: Icon(
-                        Icons.search_rounded,
-                      ),
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                    ),
-                    hintText: 'Enter your question...',
-                    hintStyle: TextStyle(
-                        color: Colors.grey, fontStyle: FontStyle.italic),
-                  ),
-                ),
+                child: SearchField(
+                    textFieldController:
+                        _textFieldController), // SearchField Widget
               ),
               Padding(
                 padding: const EdgeInsets.all(28.0),
                 child: MaterialButton(
+                  // TODO: REFACTOR THIS SEARCH BUTTON TO SEPARATE FILE
                   color: Colors.black,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30.0),
                   ),
                   minWidth: 225,
                   onPressed: () async {
+                    // TODO: CREATE FUTURE PROVIDER TO WATCH CHANGES IN ANSWER TEXT PROVIDER
                     // answerText.when(
                     //   loading: () => const CircularProgressIndicator(),
                     //   error: (err, stack) => Text('Error: $err'),
@@ -72,15 +65,15 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                     //         promptText: _textFieldController.text.trim());
                     //   },
                     // );
-                    // print("$isLoading before await call");
+                    // TODO: REFACTOR THIS METHOD TO SEPARATE FILE
                     if (_textFieldController.text.trim().isNotEmpty) {
+                      // If search field is not empty, get answer text with prompt text
                       await ref.read(answerTextProvider.notifier).getText(
                           promptText: _textFieldController.text.trim());
                     } else {
+                      // If search field is empty, get answer text with default prompt text
                       ref.read(answerTextProvider.notifier).enterPrompt();
                     }
-
-                    // print("$isLoading after await call");
                   },
                   child: const Text(
                     'Generate Answer',
@@ -88,8 +81,11 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   ),
                 ),
               ),
-              isLoading ? const CircularProgressIndicator() : const SizedBox(),
+              isLoading
+                  ? const CircularProgressIndicator()
+                  : const SizedBox(), // If isLoading is true, show CircularProgressIndicator, else show SizedBox
               Container(
+                // Container to display answer text
                 width: 800,
                 height: 300,
                 margin: const EdgeInsets.all(20),
