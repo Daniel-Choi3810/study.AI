@@ -14,6 +14,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final answerText = ref.watch(answerTextProvider);
+    final isLoading = ref.watch(isLoadingProvider);
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -63,9 +64,23 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   ),
                   minWidth: 225,
                   onPressed: () async {
-                    await ref
-                        .read(answerTextProvider.notifier)
-                        .getText(promptText: _textFieldController.text.trim());
+                    // answerText.when(
+                    //   loading: () => const CircularProgressIndicator(),
+                    //   error: (err, stack) => Text('Error: $err'),
+                    //   data: (ans) async {
+                    //     await ref.read(answerTextProvider.notifier).getText(
+                    //         promptText: _textFieldController.text.trim());
+                    //   },
+                    // );
+                    // print("$isLoading before await call");
+                    if (_textFieldController.text.trim().isNotEmpty) {
+                      await ref.read(answerTextProvider.notifier).getText(
+                          promptText: _textFieldController.text.trim());
+                    } else {
+                      ref.read(answerTextProvider.notifier).enterPrompt();
+                    }
+
+                    // print("$isLoading after await call");
                   },
                   child: const Text(
                     'Generate Answer',
@@ -73,8 +88,10 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   ),
                 ),
               ),
+              isLoading ? const CircularProgressIndicator() : const SizedBox(),
               Container(
-                width: 400,
+                width: 800,
+                height: 300,
                 margin: const EdgeInsets.all(20),
                 padding: const EdgeInsets.all(12.0),
                 decoration: BoxDecoration(
@@ -84,9 +101,8 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                   ),
                   borderRadius: BorderRadius.circular(12),
                 ),
-                height: 100,
                 child: Text(
-                  answerText,
+                  answerText.toString(),
                 ),
               ),
             ],

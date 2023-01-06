@@ -6,9 +6,14 @@ class OpenAIRequestModel {
   // String frequencyPenalty;
   // String presencePenalty;
   // String stop;
-  var n;
+  dynamic n;
   bool stream;
-  var logprobs;
+  dynamic logprobs;
+  String contentType;
+  String authorization;
+  String model;
+  dynamic url;
+  String apiToken;
 
   OpenAIRequestModel({
     required this.prompt,
@@ -18,6 +23,11 @@ class OpenAIRequestModel {
     required this.n,
     required this.stream,
     required this.logprobs,
+    required this.contentType,
+    required this.authorization,
+    required this.model,
+    required this.url,
+    required this.apiToken,
   });
 
   Map<String, dynamic> toJson() {
@@ -29,6 +39,10 @@ class OpenAIRequestModel {
     data['n'] = n;
     data['stream'] = stream;
     data['logprobs'] = logprobs;
+    data['content_type'] = contentType;
+    data['authorization'] = authorization;
+    data['model'] = model;
+
     // data['frequency_penalty'] = frequencyPenalty;
     // data['presence_penalty'] = presencePenalty;
     // data['stop'] = stop;

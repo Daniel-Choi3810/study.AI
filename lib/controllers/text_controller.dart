@@ -1,38 +1,48 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
+import 'package:intellistudy/controllers/providers/text_controller_providers.dart';
 import 'dart:convert';
-
 import 'package:intellistudy/models/openai_request_model.dart';
 
 class TextController extends StateNotifier<String> {
   var url = Uri.parse("https://api.openai.com/v1/completions");
   final _apiToken = dotenv.env['API_TOKEN'];
-  String ans = '';
+  TextController(this.ref) : super('');
+  final Ref ref;
 
-  TextController() : super('');
+  void enterPrompt() {
+    state = "Please enter a valid prompt";
+  }
 
   Future getText({required String promptText}) async {
     OpenAIRequestModel openAIRequestModel = OpenAIRequestModel(
       prompt: promptText,
       maxTokens: 100,
-      temperature: 0,
+      temperature: 0.6,
       topP: 1,
       n: 1,
       stream: false,
       logprobs: null,
+      contentType: 'application/json',
+      authorization: 'Bearer $_apiToken',
+      model: 'text-davinci-003',
+      url: url,
+      apiToken: _apiToken!,
     );
+
     try {
-      // isLoading.value = true;
+      ref.read(isLoadingProvider.notifier).update((state) => true);
+      // print((ref.read(isLoadingProvider.notifier).state).toString());
       var request = await http.post(
-        url,
+        openAIRequestModel.url,
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $_apiToken',
+          'Content-Type': openAIRequestModel.contentType,
+          'Authorization': openAIRequestModel.authorization,
         },
         body: jsonEncode(
           {
-            "model": "text-davinci-003",
+            "model": openAIRequestModel.model,
             "prompt": "${openAIRequestModel.prompt}\n \n",
             "max_tokens": openAIRequestModel.maxTokens,
             "temperature": openAIRequestModel.temperature,
@@ -43,12 +53,10 @@ class TextController extends StateNotifier<String> {
           },
         ),
       );
+      ref.read(isLoadingProvider.notifier).update((state) => false);
       if (request.statusCode == 200) {
-        // isLoading.value = false;
         state = await jsonDecode(request.body)['choices'][0]['text'];
       } else {
-        // isLoading.value = false;
-        // print(jsonDecode(request.body));
         state = "${request.statusCode} error, please try again";
       }
     } catch (e) {
