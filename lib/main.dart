@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intellistudy/view/pages/test_page.dart';
+import 'package:intellistudy/view/pages/home_page.dart';
 
 void main() async {
   await dotenv.load(fileName: "lib/.env");
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Study Buddy',
       theme: ThemeData.dark(),
-      home: const TestPage(),
+      home: const MyHomePage(),
     );
   }
 }

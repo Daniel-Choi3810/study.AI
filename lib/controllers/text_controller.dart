@@ -1,6 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
 import 'package:intellistudy/controllers/providers/text_controller_providers.dart';
 import 'dart:convert';
 import 'package:intellistudy/models/openai_request_model.dart';
@@ -8,8 +7,9 @@ import 'package:intellistudy/models/openai_request_model.dart';
 class TextController extends StateNotifier<String> {
   var url = Uri.parse("https://api.openai.com/v1/completions");
   final _apiToken = dotenv.env['API_TOKEN'];
-  TextController(this.ref) : super('');
   final Ref ref;
+
+  TextController(this.ref) : super('');
 
   void enterPrompt() {
     state = "Please enter a valid prompt";
@@ -34,25 +34,26 @@ class TextController extends StateNotifier<String> {
     try {
       ref.read(isLoadingProvider.notifier).update((state) => true);
       // print((ref.read(isLoadingProvider.notifier).state).toString());
-      var request = await http.post(
-        openAIRequestModel.url,
-        headers: {
-          'Content-Type': openAIRequestModel.contentType,
-          'Authorization': openAIRequestModel.authorization,
-        },
-        body: jsonEncode(
-          {
-            "model": openAIRequestModel.model,
-            "prompt": "${openAIRequestModel.prompt}\n \n",
-            "max_tokens": openAIRequestModel.maxTokens,
-            "temperature": openAIRequestModel.temperature,
-            "top_p": openAIRequestModel.topP,
-            "n": openAIRequestModel.n,
-            "stream": openAIRequestModel.stream,
-            "logprobs": openAIRequestModel.logprobs
-          },
-        ),
-      );
+      // var request = await http.post(
+      //   openAIRequestModel.url,
+      //   headers: {
+      //     'Content-Type': openAIRequestModel.contentType,
+      //     'Authorization': openAIRequestModel.authorization,
+      //   },
+      //   body: jsonEncode(
+      //     {
+      //       "model": openAIRequestModel.model,
+      //       "prompt": "${openAIRequestModel.prompt}\n \n",
+      //       "max_tokens": openAIRequestModel.maxTokens,
+      //       "temperature": openAIRequestModel.temperature,
+      //       "top_p": openAIRequestModel.topP,
+      //       "n": openAIRequestModel.n,
+      //       "stream": openAIRequestModel.stream,
+      //       "logprobs": openAIRequestModel.logprobs
+      //     },
+      //   ),
+      // );
+      var request = await openAIRequestModel.postRequest();
       ref.read(isLoadingProvider.notifier).update((state) => false);
       if (request.statusCode == 200) {
         state = await jsonDecode(request.body)['choices'][0]['text'];

@@ -1,3 +1,8 @@
+import 'dart:convert';
+
+import 'package:http/http.dart' as http;
+import 'package:http/http.dart';
+
 class OpenAIRequestModel {
   String prompt;
   int maxTokens;
@@ -47,5 +52,28 @@ class OpenAIRequestModel {
     // data['presence_penalty'] = presencePenalty;
     // data['stop'] = stop;
     return data;
+  }
+
+  Future<Response> postRequest() async {
+    var request = await http.post(
+      url,
+      headers: {
+        'Content-Type': contentType,
+        'Authorization': authorization,
+      },
+      body: jsonEncode(
+        {
+          "model": model,
+          "prompt": "$prompt \n \n",
+          "max_tokens": maxTokens,
+          "temperature": temperature,
+          "top_p": topP,
+          "n": n,
+          "stream": stream,
+          "logprobs": logprobs
+        },
+      ),
+    );
+    return request;
   }
 }
