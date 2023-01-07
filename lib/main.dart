@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/view/pages/home_page.dart';
 
 void main() async {
-  await dotenv.load(fileName: "lib/.env");
+  await dotenv.load(fileName: ".env");
   runApp(
     const ProviderScope(
       child: MyApp(),
