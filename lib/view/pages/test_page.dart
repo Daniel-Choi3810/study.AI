@@ -12,8 +12,6 @@ class _TestPageState extends State<TestPage> {
   bool isStarred = false;
   @override
   Widget build(BuildContext context) {
-    final height = MediaQuery.of(context).size.height;
-    final width = MediaQuery.of(context).size.width;
     return const SafeArea(
       child: Scaffold(
         body: Center(

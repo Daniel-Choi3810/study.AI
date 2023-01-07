@@ -27,24 +27,25 @@ class TextController extends StateNotifier<String> {
       prompt: promptText,
       maxTokens: 100,
       temperature: 0.6,
-      topP: 1,
+      topP: 0.5,
       n: 1,
       stream: false,
       logprobs: null,
       contentType: 'application/json',
       authorization: 'Bearer $_apiToken',
-      model: 'text-davinci-003',
+      model: 'text-davinci-002',
       url: url,
       apiToken: _apiToken!,
     );
 
     try {
       // This try catch block is used to make the post request and update the state of the app
-      ref.read(isLoadingProvider.notifier).update((state) => true);
-      print(
-          "right before request"); // This is used to update the loading progress of the app to true
-      Response request = await openAIRequestModel.postRequest();
-      print(request.body); // This is the post request
+      ref.read(isLoadingProvider.notifier).update((state) =>
+          true); // This is used to update the loading progress of the app to true
+      Stopwatch stopwatch = Stopwatch()..start();
+      Response request =
+          await openAIRequestModel.postRequest(); // This is the post request
+      print('API Request executed in ${stopwatch.elapsed}');
       ref.read(isLoadingProvider.notifier).update((state) =>
           false); // This is used to update the loading progress of the app to false
       if (request.statusCode == 200) {
