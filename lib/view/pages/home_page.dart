@@ -12,9 +12,9 @@ class MyHomePage extends ConsumerStatefulWidget {
 }
 
 class _MyHomePageState extends ConsumerState<MyHomePage> {
-  // How do we make this a separate class?
-  final TextEditingController _textFieldController =
-      TextEditingController(); // Controller to edit search field text
+  // How do we make this a separate class?/ C
+  // Controller to edit search field text
+  final TextEditingController _textFieldController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     final answerText = ref
@@ -44,7 +44,7 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 padding: const EdgeInsets.all(18.0),
                 child: SearchField(
                     textFieldController:
-                        _textFieldController), // SearchField Widget
+                        _textFieldController), // TODO: REFACTOR THIS SEARCH FIELD TO SEPARATE FILE
               ),
               Padding(
                 padding: const EdgeInsets.all(28.0),

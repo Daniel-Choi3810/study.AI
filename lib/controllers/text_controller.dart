@@ -1,22 +1,29 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart';
 import 'package:intellistudy/controllers/providers/text_controller_providers.dart';
 import 'dart:convert';
 import 'package:intellistudy/models/openai_request_model.dart';
 
 class TextController extends StateNotifier<String> {
-  var url = Uri.parse("https://api.openai.com/v1/completions");
-  final _apiToken = dotenv.env['API_TOKEN'];
-  final Ref ref;
+  // This is the controller for the text
+  var url = Uri.parse(
+      "https://api.openai.com/v1/completions"); // This is the url that the post request is being sent to
+  final _apiToken =
+      dotenv.env['API_TOKEN']; // This is the api token located in the .env file
+  final Ref ref; // This is the ref that is used to access the providers
 
   TextController(this.ref) : super('');
 
   void enterPrompt() {
+    // This is the default prompt that is displayed if the user does not enter a prompt
     state = "Please enter a valid prompt";
   }
 
   Future getText({required String promptText}) async {
+    // This function is used to make the post request
     OpenAIRequestModel openAIRequestModel = OpenAIRequestModel(
+      // This is the object that is used to make the post request
       prompt: promptText,
       maxTokens: 100,
       temperature: 0.6,
@@ -32,32 +39,19 @@ class TextController extends StateNotifier<String> {
     );
 
     try {
+      // This try catch block is used to make the post request and update the state of the app
       ref.read(isLoadingProvider.notifier).update((state) => true);
-      // print((ref.read(isLoadingProvider.notifier).state).toString());
-      // var request = await http.post(
-      //   openAIRequestModel.url,
-      //   headers: {
-      //     'Content-Type': openAIRequestModel.contentType,
-      //     'Authorization': openAIRequestModel.authorization,
-      //   },
-      //   body: jsonEncode(
-      //     {
-      //       "model": openAIRequestModel.model,
-      //       "prompt": "${openAIRequestModel.prompt}\n \n",
-      //       "max_tokens": openAIRequestModel.maxTokens,
-      //       "temperature": openAIRequestModel.temperature,
-      //       "top_p": openAIRequestModel.topP,
-      //       "n": openAIRequestModel.n,
-      //       "stream": openAIRequestModel.stream,
-      //       "logprobs": openAIRequestModel.logprobs
-      //     },
-      //   ),
-      // );
-      var request = await openAIRequestModel.postRequest();
-      ref.read(isLoadingProvider.notifier).update((state) => false);
+      print(
+          "right before request"); // This is used to update the loading progress of the app to true
+      Response request = await openAIRequestModel.postRequest();
+      print(request.body); // This is the post request
+      ref.read(isLoadingProvider.notifier).update((state) =>
+          false); // This is used to update the loading progress of the app to false
       if (request.statusCode == 200) {
+        // if the request is successful, then the state is updated to the response
         state = await jsonDecode(request.body)['choices'][0]['text'];
       } else {
+        // if the request is not successful, then the state is updated to the error
         state = "${request.statusCode} error, please try again";
       }
     } catch (e) {
