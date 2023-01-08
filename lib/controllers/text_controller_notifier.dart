@@ -5,7 +5,7 @@ import 'package:intellistudy/controllers/providers/text_controller_providers.dar
 import 'dart:convert';
 import 'package:intellistudy/models/openai_request_model.dart';
 
-class TextController extends StateNotifier<String> {
+class TextControllerNotifier extends StateNotifier<String> {
   // This is the controller for the text
   var url = Uri.parse(
       "https://api.openai.com/v1/completions"); // This is the url that the post request is being sent to
@@ -13,7 +13,7 @@ class TextController extends StateNotifier<String> {
       dotenv.env['API_TOKEN']; // This is the api token located in the .env file
   final Ref ref; // This is the ref that is used to access the providers
 
-  TextController(this.ref) : super('');
+  TextControllerNotifier(this.ref) : super('');
 
   void enterPrompt() {
     // This is the default prompt that is displayed if the user does not enter a prompt

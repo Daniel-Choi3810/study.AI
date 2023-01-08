@@ -41,7 +41,10 @@ dependencies:
   flutter_dotenv: ^5.0.2
   mocktail: ^0.3.0
   flip_card: ^0.6.0
+  riverpod_annotation: 
 dev_dependencies:
+  riverpod_generator: 
+  build_runner:
   flutter_test:
     sdk: flutter
 

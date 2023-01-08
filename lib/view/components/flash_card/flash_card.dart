@@ -119,8 +119,6 @@ class _FlashCardState extends State<FlashCard> {
           ],
         ),
       ),
-      // height: height * 0.8,
-      // width: width * 0.7,
     );
   }
 }
