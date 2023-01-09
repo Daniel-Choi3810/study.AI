@@ -68,8 +68,7 @@ class OpenAIRequestModel {
       body: jsonEncode(
         {
           "model": model,
-          "prompt":
-              "$prompt. \n \n", // TODO: Verify this work for encoding, and if not figure out how to encode UTF-8 ?
+          "prompt": "$prompt. \n \n",
           "max_tokens": maxTokens,
           "temperature": temperature,
           "top_p": topP,

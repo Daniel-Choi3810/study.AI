@@ -7,9 +7,4 @@ final answerTextProvider =
 ); // This is the provider that is used to access the text controller
 final isLoadingProvider = StateProvider((ref) =>
     false); // This is the provider that is used to access the loading state
-// final answerProvider = FutureProvider(
-//   (ref) {
-//     final textController = ref.watch(answerTextProvider.notifier);
-//     return textController;
-//   },
-// );
+

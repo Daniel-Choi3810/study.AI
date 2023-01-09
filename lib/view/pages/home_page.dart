@@ -40,9 +40,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               Padding(
                 padding: const EdgeInsets.all(18.0),
-                child: SearchField(
-                    textFieldController:
-                        _textFieldController), // TODO: REFACTOR THIS SEARCH FIELD TO SEPARATE FILE
+                child: SearchField(textFieldController: _textFieldController),
               ),
               Padding(
                 padding: const EdgeInsets.all(28.0),
@@ -54,15 +52,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
                   minWidth: 225,
                   onPressed: () async {
-                    // TODO: CREATE FUTURE PROVIDER TO WATCH CHANGES IN ANSWER TEXT PROVIDER
-                    // answerText.when(
-                    //   loading: () => const CircularProgressIndicator(),
-                    //   error: (err, stack) => Text('Error: $err'),
-                    //   data: (ans) async {
-                    //     await ref.read(answerTextProvider.notifier).getText(
-                    //         promptText: _textFieldController.text.trim());
-                    //   },
-                    // );
                     // TODO: REFACTOR THIS METHOD TO SEPARATE FILE
                     if (_textFieldController.text.trim().isNotEmpty) {
                       // If search field is not empty, get answer text with prompt text
