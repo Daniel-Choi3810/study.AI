@@ -43,6 +43,8 @@ dependencies:
   flip_card: ^0.6.0
   riverpod_annotation: 
   google_fonts: ^3.0.1
+  tuple: ^2.0.1
+  auto_size_text: ^3.0.0
 dev_dependencies:
   riverpod_generator: 
   build_runner:

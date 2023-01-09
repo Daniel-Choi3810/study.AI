@@ -5,7 +5,7 @@ import 'package:intellistudy/controllers/providers/text_controller_providers.dar
 import 'dart:convert';
 import 'package:intellistudy/models/openai_request_model.dart';
 
-class TextControllerNotifier extends StateNotifier<String> {
+class TextControllerNotifier extends StateNotifier<String?> {
   // This is the controller for the text
   var url = Uri.parse(
       "https://api.openai.com/v1/completions"); // This is the url that the post request is being sent to
@@ -14,6 +14,10 @@ class TextControllerNotifier extends StateNotifier<String> {
   final Ref ref; // This is the ref that is used to access the providers
 
   TextControllerNotifier(this.ref) : super('');
+
+  void clearAnswer() {
+    state = '';
+  }
 
   void enterPrompt() {
     // This is the default prompt that is displayed if the user does not enter a prompt
@@ -33,7 +37,7 @@ class TextControllerNotifier extends StateNotifier<String> {
       logprobs: null,
       contentType: 'application/json',
       authorization: 'Bearer $_apiToken',
-      model: 'text-davinci-002',
+      model: 'text-davinci-003',
       url: url,
       apiToken: _apiToken!,
     );
