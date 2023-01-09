@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intellistudy/view/pages/test_page.dart';
 
 void main() async {
@@ -21,7 +22,9 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Study Buddy',
-      theme: ThemeData.dark(),
+      theme: ThemeData(
+          brightness: Brightness.dark,
+          fontFamily: GoogleFonts.montserrat().fontFamily),
       home: const TestPage(),
     );
   }
