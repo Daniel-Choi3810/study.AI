@@ -4,16 +4,14 @@ import 'package:intellistudy/controllers/providers/text_controller_providers.dar
 import '../components/home_page/search_field.dart';
 
 // Consumer Stateful Widget is a widget that can be used to read providers
-class MyHomePage extends ConsumerStatefulWidget {
-  const MyHomePage({super.key});
+class HomePage extends ConsumerStatefulWidget {
+  const HomePage({super.key});
 
   @override
-  ConsumerState<MyHomePage> createState() => _MyHomePageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _HomePageState();
 }
 
-class _MyHomePageState extends ConsumerState<MyHomePage> {
-  // How do we make this a separate class?/ C
-  // Controller to edit search field text
+class _HomePageState extends ConsumerState<HomePage> {
   final TextEditingController _textFieldController = TextEditingController();
   @override
   Widget build(BuildContext context) {

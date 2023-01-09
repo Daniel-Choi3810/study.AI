@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:intellistudy/view/pages/test_page.dart';
+import 'package:intellistudy/view/pages/home_page.dart';
 
 void main() async {
   await dotenv.load(fileName: ".env");
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
           brightness: Brightness.dark,
           fontFamily: GoogleFonts.montserrat().fontFamily),
-      home: const TestPage(),
+      home: const HomePage(),
     );
   }
 }
