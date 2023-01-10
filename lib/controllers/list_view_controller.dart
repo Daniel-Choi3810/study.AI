@@ -5,7 +5,7 @@ class ListViewNotifier extends StateNotifier<List<List<String>>> {
 
   ListViewNotifier() : super([]);
 
-  void updateList({required String term, required String definition}) async {
+  void addToList({required String term, required String definition}) async {
     state = [
       ...state,
       [term, definition]

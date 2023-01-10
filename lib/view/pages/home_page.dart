@@ -57,7 +57,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       await ref
                           .read(answerTextProvider.notifier)
                           .getText(promptText: searchFieldText.text.trim());
-                      ref.read(responsesProvider.notifier).updateList(
+                      ref.read(responsesProvider.notifier).addToList(
                           term: searchFieldText.text.trim(),
                           definition: ref.read(answerTextProvider).toString());
                     } else {
