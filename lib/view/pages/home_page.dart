@@ -57,15 +57,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                       await ref
                           .read(answerTextProvider.notifier)
                           .getText(promptText: searchFieldText.text.trim());
-                      ref.read(responsesProvider.notifier).update((state) {
-                        return [
-                          ...state,
-                          [
-                            searchFieldText.text.trim(),
-                            ref.read(answerTextProvider)
-                          ],
-                        ];
-                      });
+                      ref.read(responsesProvider.notifier).updateList(
+                          term: searchFieldText.text.trim(),
+                          definition: ref.read(answerTextProvider).toString());
                     } else {
                       // If search field is empty, get answer text with default prompt text
                       ref.read(answerTextProvider.notifier).enterPrompt();
