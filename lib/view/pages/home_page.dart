@@ -19,8 +19,6 @@ class _HomePageState extends ConsumerState<HomePage> {
     double width = MediaQuery.of(context).size.width;
     final searchFieldText = ref.watch(searchFieldProvider);
     final searchList = ref.watch(responsesProvider);
-    final answerText = ref
-        .watch(answerTextProvider); // Watch for changes in answerTextProvider
     final isLoading =
         ref.watch(isLoadingProvider); // Watch for changes in isLoadingProvider
     return SafeArea(
@@ -34,6 +32,9 @@ class _HomePageState extends ConsumerState<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
+              SizedBox(
+                height: height * 0.05,
+              ),
               Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: SearchField(
@@ -50,15 +51,18 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
                   minWidth: 225,
                   onPressed: () async {
+                    String prompt = searchFieldText.text.trim();
+                    searchFieldText.clear();
+                    print(prompt);
                     //ref.read(answerTextProvider.notifier).clearAnswer();
                     // TODO: REFACTOR THIS METHOD TO SEPARATE FILE
-                    if (searchFieldText.text.trim().isNotEmpty) {
+                    if (prompt.isNotEmpty) {
                       // If search field is not empty, get answer text with prompt text
                       await ref
                           .read(answerTextProvider.notifier)
-                          .getText(promptText: searchFieldText.text.trim());
-                      ref.read(responsesProvider.notifier).addToList(
-                          term: searchFieldText.text.trim(),
+                          .getText(promptText: prompt);
+                      await ref.read(responsesProvider.notifier).addToList(
+                          term: prompt,
                           definition: ref.read(answerTextProvider).toString());
                     } else {
                       // If search field is empty, get answer text with default prompt text
@@ -74,25 +78,6 @@ class _HomePageState extends ConsumerState<HomePage> {
               isLoading
                   ? const CircularProgressIndicator()
                   : const SizedBox(), // If isLoading is true, show CircularProgressIndicator, else show SizedBox
-              Container(
-                // Container to display answer text
-                width: width * 0.7,
-                height: height * 0.25,
-                margin: const EdgeInsets.all(20),
-                padding: const EdgeInsets.all(12.0),
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(12),
-                ),
-                child: isLoading
-                    ? const Text('')
-                    : Text(
-                        answerText.toString(),
-                      ),
-              ),
               // Create a scrollable vertical list view
               Expanded(
                 child: ListView.builder(
@@ -101,11 +86,16 @@ class _HomePageState extends ConsumerState<HomePage> {
                   itemCount: searchList
                       .length, // Watch for changes in responsesProvider (list of responses)
                   itemBuilder: ((_, index) {
-                    return FormattedResponse(
-                        height: height,
-                        width: width,
-                        searchList: searchList,
-                        id: index);
+                    return GestureDetector(
+                      onTap: () {
+                        print(index);
+                      },
+                      child: FormattedResponse(
+                          height: height,
+                          width: width,
+                          searchList: searchList,
+                          id: index),
+                    );
                   }),
                 ),
               ),

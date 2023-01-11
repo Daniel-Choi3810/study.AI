@@ -5,7 +5,8 @@ class ListViewNotifier extends StateNotifier<List<List<String>>> {
 
   ListViewNotifier() : super([]);
 
-  void addToList({required String term, required String definition}) async {
+  Future<void> addToList(
+      {required String term, required String definition}) async {
     state = [
       ...state,
       [term, definition]
@@ -18,7 +19,7 @@ class ListViewNotifier extends StateNotifier<List<List<String>>> {
     // state = state..removeAt(index);
   }
 
-  void editList(
+  Future<void> editList(
       {required int index,
       required String term,
       required String definition}) async {
