@@ -11,4 +11,17 @@ class ListViewNotifier extends StateNotifier<List<List<String>>> {
       [term, definition]
     ];
   }
+
+  Future<void> removeFromList({required int index}) async {
+    // how efficient is this?
+    state = state.where((element) => element != state[index]).toList();
+    // state = state..removeAt(index);
+  }
+
+  void editList(
+      {required int index,
+      required String term,
+      required String definition}) async {
+    state[index] = [term, definition];
+  }
 }

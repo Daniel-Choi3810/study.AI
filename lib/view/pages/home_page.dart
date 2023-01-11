@@ -1,7 +1,7 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/controllers/providers/text_controller_providers.dart';
+import '../components/home_page/formatted_response.dart';
 import '../components/home_page/search_field.dart';
 
 // Consumer Stateful Widget is a widget that can be used to read providers
@@ -99,37 +99,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                   scrollDirection: Axis.vertical,
                   shrinkWrap: true,
                   itemCount: searchList
-                      .length, // Watch for changes in responsesProvider (list of respons
+                      .length, // Watch for changes in responsesProvider (list of responses)
                   itemBuilder: ((_, index) {
-                    return Padding(
-                      padding: const EdgeInsets.all(30.0),
-                      child: Container(
-                        padding: const EdgeInsets.all(20),
-                        height: height * 0.2,
-                        width: width * 0.5,
-                        decoration: const BoxDecoration(color: Colors.black),
-                        child: Row(
-                          // mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Expanded(
-                              child: AutoSizeText(
-                                "Term: ${searchList[index][0]}",
-                                maxLines: 6,
-                              ),
-                            ),
-                            const SizedBox(
-                              width: 30,
-                            ),
-                            Expanded(
-                              child: AutoSizeText(
-                                " Definition: ${searchList[index][1]}",
-                                maxLines: 6,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
+                    return FormattedResponse(
+                        height: height,
+                        width: width,
+                        searchList: searchList,
+                        id: index);
                   }),
                 ),
               ),
