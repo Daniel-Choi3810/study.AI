@@ -28,7 +28,8 @@ class _HomePageState extends ConsumerState<HomePage> {
           backgroundColor: Colors.black,
           title: const Text("IntelliStudy"),
         ),
-        body: Center(
+        body: SingleChildScrollView(
+          scrollDirection: Axis.vertical,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
@@ -68,6 +69,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                       // If search field is empty, get answer text with default prompt text
                       ref.read(answerTextProvider.notifier).enterPrompt();
                     }
+                    print(ref.read(responsesProvider));
                   },
                   child: const Text(
                     'Generate Answer',
@@ -79,25 +81,20 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ? const CircularProgressIndicator()
                   : const SizedBox(), // If isLoading is true, show CircularProgressIndicator, else show SizedBox
               // Create a scrollable vertical list view
-              Expanded(
-                child: ListView.builder(
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  itemCount: searchList
-                      .length, // Watch for changes in responsesProvider (list of responses)
-                  itemBuilder: ((_, index) {
-                    return GestureDetector(
-                      onTap: () {
-                        print(index);
-                      },
-                      child: FormattedResponse(
-                          height: height,
-                          width: width,
-                          searchList: searchList,
-                          id: index),
-                    );
-                  }),
-                ),
+              ListView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                itemCount: searchList
+                    .length, // Watch for changes in responsesProvider (list of responses)
+                itemBuilder: ((_, index) {
+                  return FormattedResponse(
+                      key:
+                          UniqueKey(), //TODO: Figure this out, why does valueKey Not work?
+                      height: height,
+                      width: width,
+                      searchList: searchList,
+                      id: index);
+                }),
               ),
             ],
           ),

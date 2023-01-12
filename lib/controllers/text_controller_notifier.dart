@@ -29,7 +29,7 @@ class TextControllerNotifier extends StateNotifier<String?> {
     OpenAIRequestModel openAIRequestModel = OpenAIRequestModel(
       // This is the object that is used to make the post request
       prompt: promptText,
-      maxTokens: 100,
+      maxTokens: 50,
       temperature: 0.6,
       topP: 0.5,
       n: 1,
@@ -37,7 +37,7 @@ class TextControllerNotifier extends StateNotifier<String?> {
       logprobs: null,
       contentType: 'application/json',
       authorization: 'Bearer $_apiToken',
-      model: 'text-davinci-003',
+      model: 'text-davinci-002',
       url: url,
       apiToken: _apiToken!,
     );
