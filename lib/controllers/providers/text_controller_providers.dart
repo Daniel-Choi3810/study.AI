@@ -4,7 +4,7 @@ import 'package:intellistudy/controllers/text_controller_notifier.dart';
 import '../list_view_controller.dart';
 
 final answerTextProvider =
-    StateNotifierProvider.autoDispose<TextControllerNotifier, String?>(
+    StateNotifierProvider<TextControllerNotifier, String?>(
   (ref) => TextControllerNotifier(ref),
 ); // This is the provider that is used to access the text controller
 final isLoadingProvider = StateProvider.autoDispose((ref) =>

@@ -17,7 +17,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    final searchFieldText = ref.watch(searchFieldProvider);
+    final searchFieldTextController = ref.watch(searchFieldProvider);
     final searchList = ref.watch(responsesProvider);
     final isLoading =
         ref.watch(isLoadingProvider); // Watch for changes in isLoadingProvider
@@ -38,7 +38,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: SearchField(
-                  textFieldController: searchFieldText,
+                  textFieldController: searchFieldTextController,
                 ),
               ),
               Padding(
@@ -51,8 +51,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
                   minWidth: 225,
                   onPressed: () async {
-                    String prompt = searchFieldText.text.trim();
-                    searchFieldText.clear();
+                    String prompt = searchFieldTextController.text.trim();
+                    searchFieldTextController.clear();
                     print(prompt);
                     //ref.read(answerTextProvider.notifier).clearAnswer();
                     // TODO: REFACTOR THIS METHOD TO SEPARATE FILE
