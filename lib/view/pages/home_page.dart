@@ -45,6 +45,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               Padding(
                 padding: const EdgeInsets.all(18.0),
                 child: SearchField(
+                  width: width,
                   textFieldController: searchFieldTextController,
                 ),
               ),
@@ -98,12 +99,15 @@ class _HomePageState extends ConsumerState<HomePage> {
                       style: TextStyle(
                         color: Colors.red,
                         fontWeight: FontWeight.bold,
-                        fontSize: 20,
+                        fontSize: 14,
                       ),
                     ),
               isLoading
                   ? const CircularProgressIndicator()
                   : const SizedBox(), // If isLoading is true, show CircularProgressIndicator, else show SizedBox
+              SizedBox(
+                height: height * 0.06,
+              ),
               // Create a scrollable vertical list view
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),

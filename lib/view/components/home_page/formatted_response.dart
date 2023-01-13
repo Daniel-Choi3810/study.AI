@@ -25,11 +25,11 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
   Widget build(BuildContext context) {
     final count = ref.watch(responsesCountProvider);
     return Padding(
-      padding: const EdgeInsets.all(30.0),
+      padding: const EdgeInsets.symmetric(horizontal: 200.0, vertical: 20),
       child: Container(
+        height: widget.height * 0.2,
+        width: widget.width * 0.9,
         padding: const EdgeInsets.all(20),
-        height: widget.height * 0.3,
-        width: widget.width * 0.5,
         decoration: const BoxDecoration(
             color: Colors.black,
             borderRadius: BorderRadius.all(Radius.circular(20))),
@@ -46,12 +46,15 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
             ),
             Row(
               children: [
-                const Text(
-                  "Term:",
-                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                const Align(
+                  alignment: Alignment(0, 0),
+                  child: Text(
+                    "Term:",
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                  ),
                 ),
                 SizedBox(
-                  width: widget.width * 0.45,
+                  width: widget.width * 0.337,
                 ),
                 const Text("Definition:",
                     style:
