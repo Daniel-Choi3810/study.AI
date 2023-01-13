@@ -27,11 +27,11 @@ final isValidProvider = StateProvider.autoDispose((ref) => true);
 final searchFieldProvider =
     StateProvider.autoDispose(((ref) => TextEditingController()));
 
+final responsesCountProvider = StateProvider.autoDispose((ref) => 3);
 // Hive Database Providers
 
 /// This is the provider that is used to access
 /// the database controller to store the responses
 /// in the database and display them in the list view
-final dbProvider =
-    StateNotifierProvider.autoDispose<ResponsesDataBaseController, List>(
-        ((ref) => ResponsesDataBaseController()));
+final dbProvider = StateNotifierProvider<ResponsesDataBaseController, List>(
+    ((ref) => ResponsesDataBaseController(ref)));

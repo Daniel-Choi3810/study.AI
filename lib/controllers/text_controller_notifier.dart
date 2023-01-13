@@ -67,6 +67,7 @@ class TextControllerNotifier extends StateNotifier<String?> {
 
         state = await jsonDecode(utf8.decode(request.bodyBytes))['choices'][0]
             ['text'];
+        print(state);
       } else {
         // if the request is not successful, then the state is updated to the error
         state = "${request.statusCode} error, please try again";

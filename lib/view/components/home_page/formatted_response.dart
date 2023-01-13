@@ -23,6 +23,7 @@ class FormattedResponse extends ConsumerStatefulWidget {
 class FormattedResponseState extends ConsumerState<FormattedResponse> {
   @override
   Widget build(BuildContext context) {
+    final count = ref.watch(responsesCountProvider);
     return Padding(
       padding: const EdgeInsets.all(30.0),
       child: Container(
@@ -44,15 +45,15 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
               ],
             ),
             Row(
-              children: const [
-                Text(
+              children: [
+                const Text(
                   "Term:",
                   style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
                 ),
                 SizedBox(
-                  width: 305,
+                  width: widget.width * 0.45,
                 ),
-                Text("Definition:",
+                const Text("Definition:",
                     style:
                         TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
               ],
@@ -92,13 +93,28 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
             ),
             Align(
               alignment: Alignment.bottomLeft,
-              child: IconButton(
-                  onPressed: () async {
-                    await ref
-                        .read(dbProvider.notifier)
-                        .removeFromList(index: widget.id);
-                  },
-                  icon: const Icon(Icons.delete)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  IconButton(
+                      onPressed: () async {
+                        await ref
+                            .read(dbProvider.notifier)
+                            .removeFromList(index: widget.id);
+                      },
+                      icon: const Icon(Icons.delete)),
+                  // Text(count.toString()),
+                  IconButton(
+                      onPressed: () async {
+                        await ref.read(dbProvider.notifier).regenerateResponse(
+                              index: widget.id,
+                              term: "${widget.searchList[widget.id][0]}",
+                            );
+                      },
+                      icon: const Icon(Icons.redo_rounded))
+                  //  : const Text("No more responses left"),
+                ],
+              ),
             ),
           ],
         ),
