@@ -23,10 +23,10 @@ class _HomePageState extends ConsumerState<HomePage> {
     double width = MediaQuery.of(context).size.width;
     final db = ref.watch(dbProvider);
     final searchFieldTextController = ref.watch(searchFieldProvider);
-    // final searchList = ref.watch(responsesProvider);
     final isLoading =
         ref.watch(isLoadingProvider); // Watch for changes in isLoadingProvider
-    // _responseBox.put('responses', searchList);
+    final isValid =
+        ref.watch(isValidProvider); // Watch for changes in isValidProvider
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -64,6 +64,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                     //ref.read(answerTextProvider.notifier).clearAnswer();
                     // TODO: REFACTOR THIS METHOD TO SEPARATE FILE
                     if (prompt.isNotEmpty) {
+                      ref
+                          .read(isValidProvider.notifier)
+                          .update((state) => true);
                       // If search field is not empty, get answer text with prompt text
                       await ref
                           .read(answerTextProvider.notifier)
@@ -76,7 +79,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                           definition: ref.read(answerTextProvider).toString());
                     } else {
                       // If search field is empty, get answer text with default prompt text
-                      // ref.read(answerTextProvider.notifier).enterPrompt();
+                      ref
+                          .read(isValidProvider.notifier)
+                          .update((state) => false);
                     }
                     //print(ref.read(responsesProvider));
                   },
@@ -86,6 +91,16 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
                 ),
               ),
+              isValid
+                  ? const SizedBox()
+                  : const Text(
+                      'Please enter a valid prompt',
+                      style: TextStyle(
+                        color: Colors.red,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                      ),
+                    ),
               isLoading
                   ? const CircularProgressIndicator()
                   : const SizedBox(), // If isLoading is true, show CircularProgressIndicator, else show SizedBox

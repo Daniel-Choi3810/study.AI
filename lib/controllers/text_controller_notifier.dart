@@ -19,9 +19,10 @@ class TextControllerNotifier extends StateNotifier<String?> {
     state = '';
   }
 
-  void enterPrompt() {
+  String enterPrompt() {
     // This is the default prompt that is displayed if the user does not enter a prompt
     state = "Please enter a valid prompt";
+    return state.toString();
   }
 
   Future getText({required String promptText}) async {
@@ -37,7 +38,7 @@ class TextControllerNotifier extends StateNotifier<String?> {
       logprobs: null,
       contentType: 'application/json',
       authorization: 'Bearer $_apiToken',
-      model: 'text-davinci-002',
+      model: 'text-ada-001',
       url: url,
       apiToken: _apiToken!,
     );
@@ -49,7 +50,16 @@ class TextControllerNotifier extends StateNotifier<String?> {
       Stopwatch stopwatch = Stopwatch()..start();
       Response request =
           await openAIRequestModel.postRequest(); // This is the post request
-      print('API Request executed in ${stopwatch.elapsed}');
+      if (stopwatch.elapsed.inSeconds > 10) {
+        // This is used to check if the request is taking longer than 10 seconds
+        print(stopwatch.elapsed.inSeconds);
+        // This is used to check if the request is taking too long
+        state = "Request is taking too long, please try again";
+        ref.read(isLoadingProvider.notifier).update((state) => false);
+        return;
+      }
+      stopwatch.stop();
+      print('API Request executed in ${stopwatch.elapsed.inSeconds} seconds');
       ref.read(isLoadingProvider.notifier).update((state) =>
           false); // This is used to update the loading progress of the app to false
       if (request.statusCode == 200) {

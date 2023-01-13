@@ -18,9 +18,14 @@ final answerTextProvider =
 final isLoadingProvider = StateProvider.autoDispose((ref) => false);
 
 /// This is the provider that is used to access
+/// the valid prompt message when the user does not
+/// enter a valid prompt
+final isValidProvider = StateProvider.autoDispose((ref) => true);
+
+/// This is the provider that is used to access
 /// the search field text controller
-final searchFieldProvider = StateProvider.autoDispose(((ref) =>
-    TextEditingController())); // This is the provider that is used to access the search field text controller
+final searchFieldProvider =
+    StateProvider.autoDispose(((ref) => TextEditingController()));
 
 // Hive Database Providers
 
