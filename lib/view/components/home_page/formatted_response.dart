@@ -27,12 +27,22 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
       padding: const EdgeInsets.all(30.0),
       child: Container(
         padding: const EdgeInsets.all(20),
-        height: widget.height * 0.2,
+        height: widget.height * 0.3,
         width: widget.width * 0.5,
-        decoration: const BoxDecoration(color: Colors.black),
+        decoration: const BoxDecoration(
+            color: Colors.black,
+            borderRadius: BorderRadius.all(Radius.circular(20))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Row(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: Text("${widget.id + 1}."),
+                ),
+              ],
+            ),
             Row(
               children: const [
                 Text(
@@ -87,10 +97,6 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                     await ref
                         .read(dbProvider.notifier)
                         .removeFromList(index: widget.id);
-                    // await ref
-                    //     .read(responsesProvider.notifier)
-                    //     .removeFromList(index: widget.id);
-                    // // print(ref.read(responsesProvider));
                   },
                   icon: const Icon(Icons.delete)),
             ),
