@@ -33,13 +33,27 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            Row(
+              children: const [
+                Text(
+                  "Term:",
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                ),
+                SizedBox(
+                  width: 305,
+                ),
+                Text("Definition:",
+                    style:
+                        TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+              ],
+            ),
             Expanded(
               child: Row(
                 // mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Expanded(
                     child: TextFormField(
-                      initialValue: "Term: ${widget.searchList[widget.id][0]}",
+                      initialValue: "${widget.searchList[widget.id][0]}",
                       onChanged: (term) {
                         ref
                             .read(dbProvider.notifier)
@@ -54,8 +68,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                   ),
                   Expanded(
                     child: TextFormField(
-                      initialValue:
-                          "Definition: ${widget.searchList[widget.id][1]}",
+                      initialValue: "${widget.searchList[widget.id][1]}",
                       onChanged: (definition) {
                         ref.read(dbProvider.notifier).editDefinition(
                             index: widget.id, definition: definition.trim());
