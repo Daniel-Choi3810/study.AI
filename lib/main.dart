@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/view/pages/home_page.dart';
 
 void main() async {
+  await Hive.initFlutter();
+  await Hive.openBox('responsesDataBase');
   await dotenv.load(fileName: ".env");
   runApp(
     const ProviderScope(

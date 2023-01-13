@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../controllers/providers/text_controller_providers.dart';
+import '../../../controllers/providers.dart';
 
 class FormattedResponse extends ConsumerStatefulWidget {
   const FormattedResponse({
@@ -12,7 +12,7 @@ class FormattedResponse extends ConsumerStatefulWidget {
   });
   final double height;
   final int id;
-  final List<List<String>> searchList;
+  final List searchList;
   final double width;
 
   @override
@@ -40,13 +40,11 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                   Expanded(
                     child: TextFormField(
                       initialValue: "Term: ${widget.searchList[widget.id][0]}",
-                      onChanged: (text) {
-                        setState(() {
-                          ref
-                              .read(responsesProvider.notifier)
-                              .editTerm(index: widget.id, term: text.trim());
-                          print(ref.read(responsesProvider));
-                        });
+                      onChanged: (term) {
+                        ref
+                            .read(dbProvider.notifier)
+                            .editTerm(index: widget.id, term: term.trim());
+                        print(ref.read(dbProvider));
                       },
                       maxLines: 6,
                     ),
@@ -58,12 +56,10 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                     child: TextFormField(
                       initialValue:
                           "Definition: ${widget.searchList[widget.id][1]}",
-                      onChanged: (text) {
-                        setState(() {
-                          ref.read(responsesProvider.notifier).editDefinition(
-                              index: widget.id, definition: text.trim());
-                          print(ref.read(responsesProvider));
-                        });
+                      onChanged: (definition) {
+                        ref.read(dbProvider.notifier).editDefinition(
+                            index: widget.id, definition: definition.trim());
+                        print(ref.read(dbProvider));
                       },
                       maxLines: 6,
                     ),
@@ -76,9 +72,12 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
               child: IconButton(
                   onPressed: () async {
                     await ref
-                        .read(responsesProvider.notifier)
+                        .read(dbProvider.notifier)
                         .removeFromList(index: widget.id);
-                    // print(ref.read(responsesProvider));
+                    // await ref
+                    //     .read(responsesProvider.notifier)
+                    //     .removeFromList(index: widget.id);
+                    // // print(ref.read(responsesProvider));
                   },
                   icon: const Icon(Icons.delete)),
             ),

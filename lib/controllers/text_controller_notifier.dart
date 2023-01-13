@@ -1,7 +1,7 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
-import 'package:intellistudy/controllers/providers/text_controller_providers.dart';
+import 'package:intellistudy/controllers/providers.dart';
 import 'dart:convert';
 import 'package:intellistudy/models/openai_request_model.dart';
 

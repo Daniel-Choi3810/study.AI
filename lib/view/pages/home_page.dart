@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intellistudy/controllers/providers/text_controller_providers.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intellistudy/controllers/providers.dart';
 import '../components/home_page/formatted_response.dart';
 import '../components/home_page/search_field.dart';
 
@@ -13,14 +14,19 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
+  // ResponsesDataBaseController db = ResponsesDataBaseController();
+  final _responseBox = Hive.box('responsesDataBase');
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    final db = ref.watch(dbProvider);
     final searchFieldTextController = ref.watch(searchFieldProvider);
-    final searchList = ref.watch(responsesProvider);
+    // final searchList = ref.watch(responsesProvider);
     final isLoading =
         ref.watch(isLoadingProvider); // Watch for changes in isLoadingProvider
+    // _responseBox.put('responses', searchList);
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
@@ -54,7 +60,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   onPressed: () async {
                     String prompt = searchFieldTextController.text.trim();
                     searchFieldTextController.clear();
-                    print(prompt);
+                    // print(prompt);
                     //ref.read(answerTextProvider.notifier).clearAnswer();
                     // TODO: REFACTOR THIS METHOD TO SEPARATE FILE
                     if (prompt.isNotEmpty) {
@@ -62,14 +68,17 @@ class _HomePageState extends ConsumerState<HomePage> {
                       await ref
                           .read(answerTextProvider.notifier)
                           .getText(promptText: prompt);
-                      await ref.read(responsesProvider.notifier).addToList(
+                      // await ref.read(responsesProvider.notifier).addToList(
+                      //     term: prompt,
+                      //     definition: ref.read(answerTextProvider).toString());
+                      await ref.read(dbProvider.notifier).addToList(
                           term: prompt,
                           definition: ref.read(answerTextProvider).toString());
                     } else {
                       // If search field is empty, get answer text with default prompt text
-                      ref.read(answerTextProvider.notifier).enterPrompt();
+                      // ref.read(answerTextProvider.notifier).enterPrompt();
                     }
-                    print(ref.read(responsesProvider));
+                    //print(ref.read(responsesProvider));
                   },
                   child: const Text(
                     'Generate Answer',
@@ -84,7 +93,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               ListView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                itemCount: searchList
+                itemCount: db
                     .length, // Watch for changes in responsesProvider (list of responses)
                 itemBuilder: ((_, index) {
                   return FormattedResponse(
@@ -92,7 +101,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                           UniqueKey(), //TODO: Figure this out, why does valueKey Not work?
                       height: height,
                       width: width,
-                      searchList: searchList,
+                      searchList: db,
                       id: index);
                 }),
               ),
