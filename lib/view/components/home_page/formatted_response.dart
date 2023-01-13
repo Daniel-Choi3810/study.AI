@@ -27,7 +27,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 200.0, vertical: 20),
       child: Container(
-        height: widget.height * 0.2,
+        height: widget.height * 0.25,
         width: widget.width * 0.9,
         padding: const EdgeInsets.all(20),
         decoration: const BoxDecoration(

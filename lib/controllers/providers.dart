@@ -28,6 +28,7 @@ final searchFieldProvider =
     StateProvider.autoDispose(((ref) => TextEditingController()));
 
 final responsesCountProvider = StateProvider.autoDispose((ref) => 3);
+
 // Hive Database Providers
 
 /// This is the provider that is used to access

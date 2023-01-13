@@ -29,6 +29,16 @@ class _HomePageState extends ConsumerState<HomePage> {
         ref.watch(isValidProvider); // Watch for changes in isValidProvider
     return SafeArea(
       child: Scaffold(
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.only(bottom: 10, right: 20.0),
+          child: FloatingActionButton.extended(
+              label: const Text("Clear All",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+              onPressed: () {
+                ref.read(dbProvider.notifier).clearList();
+              }),
+        ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Colors.black,
@@ -93,13 +103,18 @@ class _HomePageState extends ConsumerState<HomePage> {
                 ),
               ),
               isValid
-                  ? const SizedBox()
-                  : const Text(
-                      'Please enter a valid prompt',
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 14,
+                  ? const SizedBox(
+                      height: 18,
+                    )
+                  : const SizedBox(
+                      height: 18,
+                      child: Text(
+                        'Please enter a valid prompt',
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
                       ),
                     ),
               isLoading

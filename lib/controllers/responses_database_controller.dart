@@ -74,7 +74,7 @@ class ResponsesDataBaseController extends StateNotifier<List> {
   }
 
   Future<void> clearList() async {
-    state = state..clear();
+    state = [];
     myBox.put('responsesDataBase', state);
   }
 }
