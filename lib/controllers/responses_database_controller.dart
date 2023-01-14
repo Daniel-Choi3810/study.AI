@@ -40,11 +40,18 @@ class ResponsesDataBaseController extends StateNotifier<List> {
   Future<void> editTerm({required int index, required String term}) async {
     state[index] = [term, state[index][1], 3];
     myBox.put('responsesDataBase', state);
+    print('term edited: $term');
   }
 
   Future<void> editDefinition(
       {required int index, required String definition}) async {
     state[index] = [state[index][0], definition, 3];
+    myBox.put('responsesDataBase', state);
+    print('definition edited: $definition');
+  }
+
+  Future<void> placeCurrentResponse({required int index}) async {
+    state[index] = [state[index][0], state[index][1], state[index][2]];
     myBox.put('responsesDataBase', state);
   }
 

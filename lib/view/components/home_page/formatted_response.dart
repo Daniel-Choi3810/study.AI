@@ -21,9 +21,55 @@ class FormattedResponse extends ConsumerStatefulWidget {
 }
 
 class FormattedResponseState extends ConsumerState<FormattedResponse> {
+  FocusNode termFocusNode = FocusNode();
+  FocusNode definitionFocusNode = FocusNode();
+  final termSavedProvider = StateProvider<bool>((ref) => true);
+  final definitionSavedProvider = StateProvider<bool>((ref) => true);
+
+  @override
+  void initState() {
+    super.initState();
+    termFocusNode.addListener(() {
+      if (!termFocusNode.hasFocus) {
+        ref.read(termSavedProvider.notifier).state = true;
+        ref.read(dbProvider.notifier).editTerm(
+            index: widget.id,
+            term: ref.read(termTextProvider.notifier).state.toString().trim());
+      } else {
+        ref.read(dbProvider.notifier).placeCurrentResponse(index: widget.id);
+        ref.read(termSavedProvider.notifier).state = false;
+      }
+    });
+    definitionFocusNode.addListener(() {
+      if (!definitionFocusNode.hasFocus) {
+        ref.read(definitionSavedProvider.notifier).state = true;
+        ref.read(dbProvider.notifier).editDefinition(
+            index: widget.id,
+            definition: ref
+                .read(definitionTextProvider.notifier)
+                .state
+                .toString()
+                .trim());
+      } else {
+        ref.read(dbProvider.notifier).placeCurrentResponse(index: widget.id);
+        ref.read(definitionSavedProvider.notifier).state = false;
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    termFocusNode.dispose();
+    definitionFocusNode.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    final count = ref.watch(responsesCountProvider);
+    final termSaved = ref.watch(termSavedProvider);
+    final definitionSaved = ref.watch(definitionSavedProvider);
+    // final count = ref.watch(responsesCountProvider);
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 200.0, vertical: 20),
       child: Container(
@@ -68,11 +114,11 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                   Expanded(
                     child: TextFormField(
                       initialValue: "${widget.searchList[widget.id][0]}",
+                      focusNode: termFocusNode,
                       onChanged: (term) {
-                        ref
-                            .read(dbProvider.notifier)
-                            .editTerm(index: widget.id, term: term.trim());
-                        print(ref.read(dbProvider));
+                        ref.read(termTextProvider.notifier).state = term.trim();
+
+                        print(ref.read(termTextProvider));
                       },
                       maxLines: 6,
                     ),
@@ -83,10 +129,11 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                   Expanded(
                     child: TextFormField(
                       initialValue: "${widget.searchList[widget.id][1]}",
+                      focusNode: definitionFocusNode,
                       onChanged: (definition) {
-                        ref.read(dbProvider.notifier).editDefinition(
-                            index: widget.id, definition: definition.trim());
-                        print(ref.read(dbProvider));
+                        ref.read(definitionTextProvider.notifier).state =
+                            definition.trim();
+                        print(ref.read(definitionTextProvider));
                       },
                       maxLines: 6,
                     ),
@@ -106,7 +153,18 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                             .removeFromList(index: widget.id);
                       },
                       icon: const Icon(Icons.delete)),
-                  // Text(count.toString()),
+                  Text(
+                    termSaved ? "Term saved" : "Term not saved",
+                    style:
+                        TextStyle(color: termSaved ? Colors.white : Colors.red),
+                  ),
+                  Text(
+                    definitionSaved
+                        ? "Definition saved"
+                        : "Definition not saved",
+                    style: TextStyle(
+                        color: definitionSaved ? Colors.white : Colors.red),
+                  ),
                   IconButton(
                       onPressed: () async {
                         await ref.read(dbProvider.notifier).regenerateResponse(

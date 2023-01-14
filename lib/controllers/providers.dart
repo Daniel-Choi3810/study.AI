@@ -27,7 +27,12 @@ final isValidProvider = StateProvider.autoDispose((ref) => true);
 final searchFieldProvider =
     StateProvider.autoDispose(((ref) => TextEditingController()));
 
-final responsesCountProvider = StateProvider.autoDispose((ref) => 3);
+// final responsesCountProvider = StateProvider.autoDispose((ref) => 3);
+
+final termTextProvider = StateProvider<String>((ref) => '');
+final definitionTextProvider = StateProvider<String>((ref) => '');
+// final termSavedProvider = StateProvider<bool>((ref) => false);
+// final definitionSavedProvider = StateProvider<bool>((ref) => true);
 
 // Hive Database Providers
 
