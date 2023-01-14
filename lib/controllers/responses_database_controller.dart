@@ -69,13 +69,17 @@ class ResponsesDataBaseController extends StateNotifier<List> {
     //   ref.read(responsesCountProvider.notifier).state = state[index][2];
     //   myBox.put('responsesDataBase', state);
     // ref.read(responsesCountProvider.notifier).state--;
-    await ref.read(answerTextProvider.notifier).getText(promptText: term);
-    state[index] = [
-      term,
-      ref.read(answerTextProvider).toString(),
-      state[index][2] - 1
-    ];
-    myBox.put('responsesDataBase', state);
+    if (term.isNotEmpty) {
+      await ref.read(answerTextProvider.notifier).getText(promptText: term);
+      state[index] = [
+        term,
+        ref.read(answerTextProvider).toString(),
+        state[index][2] - 1
+      ];
+      myBox.put('responsesDataBase', state);
+    } else {
+      // TODO: add some error message
+    }
 
     print(state[index][2]);
   }

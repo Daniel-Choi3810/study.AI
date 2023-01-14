@@ -29,14 +29,30 @@ class _HomePageState extends ConsumerState<HomePage> {
         ref.watch(isValidProvider); // Watch for changes in isValidProvider
     return SafeArea(
       child: Scaffold(
-        floatingActionButton: Padding(
-          padding: const EdgeInsets.only(bottom: 10, right: 20.0),
-          child: FloatingActionButton.extended(
-              label: const Text("Clear All",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-              onPressed: () {
-                ref.read(dbProvider.notifier).clearList();
-              }),
+        floatingActionButton: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: FloatingActionButton(
+                  onPressed: () async {
+                    await ref
+                        .read(dbProvider.notifier)
+                        .addToList(term: '', definition: '');
+                  },
+                  child: const Icon(Icons.add)),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: FloatingActionButton.extended(
+                  label: const Text("Clear All",
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                  onPressed: () {
+                    ref.read(dbProvider.notifier).clearList();
+                  }),
+            ),
+          ],
         ),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         resizeToAvoidBottomInset: false,
