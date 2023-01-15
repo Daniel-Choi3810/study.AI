@@ -21,6 +21,8 @@ class OpenAIRequestModel {
   dynamic url; // This is the url that the post request is being sent to
   String apiToken; // This is the api token
 
+  // String stop; // This is the stop responses
+
   OpenAIRequestModel({
     // This is the constructor for the class
     required this.prompt,
@@ -35,6 +37,7 @@ class OpenAIRequestModel {
     required this.model,
     required this.url,
     required this.apiToken,
+    // required this.stop,
   });
 // This map is used to convert the object to json, which is then used to make the post request
   Map<String, dynamic> toJson() {
@@ -73,7 +76,8 @@ class OpenAIRequestModel {
           "top_p": topP,
           "n": n,
           "stream": stream,
-          "logprobs": logprobs
+          "logprobs": logprobs,
+          // "stop": stop
         },
       ),
     );

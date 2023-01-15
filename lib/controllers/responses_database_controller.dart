@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intellistudy/controllers/providers.dart';
+import 'package:intellistudy/providers/providers.dart';
 
 final myBox = Hive.box('responsesDataBase');
 
@@ -13,9 +13,7 @@ class ResponsesDataBaseController extends StateNotifier<List> {
   void loadData() {
     print(myBox.get('responsesDataBase'));
     if (myBox.get('responsesDataBase') == null) {
-      state = [
-        ["Example term", "Example definition", 3]
-      ];
+      state = [];
       myBox.put('responsesDataBase', state);
     } else {
       state = myBox.get('responsesDataBase');
@@ -50,8 +48,12 @@ class ResponsesDataBaseController extends StateNotifier<List> {
     print('definition edited: $definition');
   }
 
-  Future<void> placeCurrentResponse({required int index}) async {
-    state[index] = [state[index][0], state[index][1], state[index][2]];
+  Future<void> loadPreviousResponse({required int index}) async {
+    state[index] = [
+      myBox.get('responsesDataBase')[index][0],
+      myBox.get('responsesDataBase')[index][1],
+      myBox.get('responsesDataBase')[index][2]
+    ];
     myBox.put('responsesDataBase', state);
   }
 
@@ -78,7 +80,7 @@ class ResponsesDataBaseController extends StateNotifier<List> {
       ];
       myBox.put('responsesDataBase', state);
     } else {
-      // TODO: add some error message
+      // TODO: add some error message or some other way to notify the user
     }
 
     print(state[index][2]);

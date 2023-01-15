@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../controllers/providers.dart';
+import '../../../providers/providers.dart';
 
 class FormattedResponse extends ConsumerStatefulWidget {
   const FormattedResponse({
@@ -28,15 +28,22 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
 
   @override
   void initState() {
+    // TODO: implement some way to make both text fields focusable at the same time
     super.initState();
     termFocusNode.addListener(() {
       if (!termFocusNode.hasFocus) {
+        print("in if statement");
         ref.read(termSavedProvider.notifier).state = true;
         ref.read(dbProvider.notifier).editTerm(
             index: widget.id,
-            term: ref.read(termTextProvider.notifier).state.toString().trim());
+            term: ref
+                .read(termTextStateProvider.notifier)
+                .state
+                .toString()
+                .trim());
       } else {
-        ref.read(dbProvider.notifier).placeCurrentResponse(index: widget.id);
+        print('in else statement');
+        ref.read(dbProvider.notifier).loadPreviousResponse(index: widget.id);
         ref.read(termSavedProvider.notifier).state = false;
       }
     });
@@ -46,12 +53,12 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
         ref.read(dbProvider.notifier).editDefinition(
             index: widget.id,
             definition: ref
-                .read(definitionTextProvider.notifier)
+                .read(definitionTextStateProvider.notifier)
                 .state
                 .toString()
                 .trim());
       } else {
-        ref.read(dbProvider.notifier).placeCurrentResponse(index: widget.id);
+        ref.read(dbProvider.notifier).loadPreviousResponse(index: widget.id);
         ref.read(definitionSavedProvider.notifier).state = false;
       }
     });
@@ -59,7 +66,6 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     termFocusNode.dispose();
     definitionFocusNode.dispose();
     super.dispose();
@@ -115,12 +121,14 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                     child: TextFormField(
                       initialValue: "${widget.searchList[widget.id][0]}",
                       focusNode: termFocusNode,
+                      onTap: () => ref
+                          .read(termTextStateProvider.notifier)
+                          .state = "${widget.searchList[widget.id][0]}",
                       onChanged: (term) {
-                        ref.read(termTextProvider.notifier).state = term.trim();
-
-                        print(ref.read(termTextProvider));
+                        ref.read(termTextStateProvider.notifier).state =
+                            term.trim();
+                        print(ref.read(termTextStateProvider));
                       },
-                      maxLines: 6,
                     ),
                   ),
                   const SizedBox(
@@ -130,12 +138,14 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                     child: TextFormField(
                       initialValue: "${widget.searchList[widget.id][1]}",
                       focusNode: definitionFocusNode,
+                      onTap: () => ref
+                          .read(definitionTextStateProvider.notifier)
+                          .state = "${widget.searchList[widget.id][1]}",
                       onChanged: (definition) {
-                        ref.read(definitionTextProvider.notifier).state =
+                        ref.read(definitionTextStateProvider.notifier).state =
                             definition.trim();
-                        print(ref.read(definitionTextProvider));
+                        print(ref.read(definitionTextStateProvider));
                       },
-                      maxLines: 6,
                     ),
                   ),
                 ],
@@ -154,16 +164,11 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                       },
                       icon: const Icon(Icons.delete)),
                   Text(
-                    termSaved ? "Term saved" : "Term not saved",
-                    style:
-                        TextStyle(color: termSaved ? Colors.white : Colors.red),
-                  ),
-                  Text(
-                    definitionSaved
-                        ? "Definition saved"
-                        : "Definition not saved",
+                    termSaved && definitionSaved ? '' : "Unsaved changes",
                     style: TextStyle(
-                        color: definitionSaved ? Colors.white : Colors.red),
+                        color: termSaved && definitionSaved
+                            ? Colors.white
+                            : Colors.red),
                   ),
                   IconButton(
                       onPressed: () async {

@@ -15,22 +15,22 @@ final answerTextProvider =
 /// This is the provider that is used to access
 /// the circular progress indicator when the generated
 /// response is loading
-final isLoadingProvider = StateProvider.autoDispose((ref) => false);
+final isLoadingStateProvider = StateProvider.autoDispose((ref) => false);
 
 /// This is the provider that is used to access
 /// the valid prompt message when the user does not
 /// enter a valid prompt
-final isValidProvider = StateProvider.autoDispose((ref) => true);
+final isValidStateProvider = StateProvider.autoDispose((ref) => true);
 
 /// This is the provider that is used to access
 /// the search field text controller
-final searchFieldProvider =
+final searchFieldStateProvider =
     StateProvider.autoDispose(((ref) => TextEditingController()));
 
 // final responsesCountProvider = StateProvider.autoDispose((ref) => 3);
 
-final termTextProvider = StateProvider<String>((ref) => '');
-final definitionTextProvider = StateProvider<String>((ref) => '');
+final termTextStateProvider = StateProvider<String>((ref) => '');
+final definitionTextStateProvider = StateProvider<String>((ref) => '');
 // final termSavedProvider = StateProvider<bool>((ref) => false);
 // final definitionSavedProvider = StateProvider<bool>((ref) => true);
 

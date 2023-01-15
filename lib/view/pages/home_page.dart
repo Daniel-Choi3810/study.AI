@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intellistudy/controllers/providers.dart';
+import 'package:intellistudy/providers/providers.dart';
 import '../components/home_page/formatted_response.dart';
 import '../components/home_page/search_field.dart';
 
@@ -22,11 +22,11 @@ class _HomePageState extends ConsumerState<HomePage> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     final db = ref.watch(dbProvider);
-    final searchFieldTextController = ref.watch(searchFieldProvider);
-    final isLoading =
-        ref.watch(isLoadingProvider); // Watch for changes in isLoadingProvider
+    final searchFieldTextController = ref.watch(searchFieldStateProvider);
+    final isLoading = ref.watch(
+        isLoadingStateProvider); // Watch for changes in isLoadingProvider
     final isValid =
-        ref.watch(isValidProvider); // Watch for changes in isValidProvider
+        ref.watch(isValidStateProvider); // Watch for changes in isValidProvider
     return SafeArea(
       child: Scaffold(
         floatingActionButton: Row(
@@ -90,9 +90,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                     // print(prompt);
                     //ref.read(answerTextProvider.notifier).clearAnswer();
                     // TODO: REFACTOR THIS METHOD TO SEPARATE FILE
-                    if (prompt.isNotEmpty) {
+                    if (prompt.isNotEmpty && prompt.trim().isNotEmpty) {
                       ref
-                          .read(isValidProvider.notifier)
+                          .read(isValidStateProvider.notifier)
                           .update((state) => true);
                       // If search field is not empty, get answer text with prompt text
                       await ref
@@ -107,7 +107,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     } else {
                       // If search field is empty, get answer text with default prompt text
                       ref
-                          .read(isValidProvider.notifier)
+                          .read(isValidStateProvider.notifier)
                           .update((state) => false);
                     }
                     //print(ref.read(responsesProvider));
