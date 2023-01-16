@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
       title: 'StudyAI',
       theme: ThemeData(
           brightness: Brightness.dark,
-          fontFamily: GoogleFonts.montserrat().fontFamily),
+          fontFamily: GoogleFonts.poppins().fontFamily),
       home: const HomePage(),
     );
   }
