@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
+import 'package:intellistudy/view/components/home_page/create_response_button.dart';
 import '../components/home_page/formatted_response.dart';
 import '../components/home_page/search_field.dart';
 
@@ -14,7 +15,6 @@ class HomePage extends ConsumerStatefulWidget {
 }
 
 class _HomePageState extends ConsumerState<HomePage> {
-  // ResponsesDataBaseController db = ResponsesDataBaseController();
   final _responseBox = Hive.box('responsesDataBase');
 
   @override
@@ -77,46 +77,8 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: MaterialButton(
-                  // TODO: REFACTOR THIS SEARCH BUTTON TO SEPARATE FILE
-                  color: Colors.black,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30.0),
-                  ),
-                  minWidth: 225,
-                  onPressed: () async {
-                    String prompt = searchFieldTextController.text.trim();
-                    searchFieldTextController.clear();
-                    // print(prompt);
-                    //ref.read(answerTextProvider.notifier).clearAnswer();
-                    // TODO: REFACTOR THIS METHOD TO SEPARATE FILE
-                    if (prompt.isNotEmpty && prompt.trim().isNotEmpty) {
-                      ref
-                          .read(isValidStateProvider.notifier)
-                          .update((state) => true);
-                      // If search field is not empty, get answer text with prompt text
-                      await ref
-                          .read(answerTextProvider.notifier)
-                          .getText(promptText: prompt);
-                      // await ref.read(responsesProvider.notifier).addToList(
-                      //     term: prompt,
-                      //     definition: ref.read(answerTextProvider).toString());
-                      await ref.read(dbProvider.notifier).addToList(
-                          term: prompt,
-                          definition: ref.read(answerTextProvider).toString());
-                    } else {
-                      // If search field is empty, get answer text with default prompt text
-                      ref
-                          .read(isValidStateProvider.notifier)
-                          .update((state) => false);
-                    }
-                    //print(ref.read(responsesProvider));
-                  },
-                  child: const Text(
-                    'Generate Answer',
-                    style: TextStyle(fontSize: 20),
-                  ),
-                ),
+                child: CreateResponseButton(
+                    searchFieldTextController: searchFieldTextController),
               ),
               isValid
                   ? const SizedBox(

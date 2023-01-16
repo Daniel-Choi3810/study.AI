@@ -9,7 +9,7 @@ import 'package:intellistudy/controllers/text_controller_notifier.dart';
 /// the text controller notifier to generate the answer
 final answerTextProvider =
     StateNotifierProvider<TextControllerNotifier, String?>(
-  (ref) => TextControllerNotifier(ref),
+     (ref) => TextControllerNotifier(ref),
 );
 
 /// This is the provider that is used to access
@@ -29,10 +29,14 @@ final searchFieldStateProvider =
 
 // final responsesCountProvider = StateProvider.autoDispose((ref) => 3);
 
+/// This is the provider that is used to access
+/// the term text during editing
 final termTextStateProvider = StateProvider<String>((ref) => '');
+
+/// This is the provider that is used to access
+/// the definition text during editing
 final definitionTextStateProvider = StateProvider<String>((ref) => '');
-// final termSavedProvider = StateProvider<bool>((ref) => false);
-// final definitionSavedProvider = StateProvider<bool>((ref) => true);
+
 
 // Hive Database Providers
 

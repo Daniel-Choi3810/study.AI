@@ -28,7 +28,6 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
 
   @override
   void initState() {
-    // TODO: implement some way to make both text fields focusable at the same time
     super.initState();
     termFocusNode.addListener(() {
       if (!termFocusNode.hasFocus) {
