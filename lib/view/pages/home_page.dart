@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/components/home_page/create_response_button.dart';
+import '../components/home_page/clear_all_dialog/clear_all_alert_dialog.dart';
 import '../components/home_page/formatted_response.dart';
 import '../components/home_page/search_field.dart';
 
@@ -49,7 +50,9 @@ class _HomePageState extends ConsumerState<HomePage> {
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
                   onPressed: () {
-                    ref.read(dbProvider.notifier).clearList();
+                    if (db.isNotEmpty) {
+                      showAlertDialog(context, ref);
+                    }
                   }),
             ),
           ],

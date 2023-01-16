@@ -63,7 +63,6 @@ class TextControllerNotifier extends StateNotifier<String?> {
           false); // This is used to update the loading progress of the app to false
       if (request.statusCode == 200) {
         // if the request is successful, then the state is updated to the response
-
         state = await jsonDecode(utf8.decode(request.bodyBytes))['choices'][0]
                 ['text']
             .trim();
@@ -73,6 +72,7 @@ class TextControllerNotifier extends StateNotifier<String?> {
         state = "${request.statusCode} error, please try again";
       }
     } catch (e) {
+      ref.read(isLoadingStateProvider.notifier).update((state) => false);
       state = "$e, please reload and try again";
     }
   }

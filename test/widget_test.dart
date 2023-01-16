@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intellistudy/view/components/home_page/formatted_response.dart';
-import '../main.dart';
-import '../view/components/home_page/search_field.dart';
+import '../lib/main.dart';
+import '../lib/view/components/home_page/search_field.dart';
 
 void main() {
   testWidgets('update the UI when generating a response', (tester) async {
