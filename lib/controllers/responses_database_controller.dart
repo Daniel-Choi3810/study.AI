@@ -10,6 +10,9 @@ class ResponsesDataBaseController extends StateNotifier<List> {
     loadData();
   }
 
+  /// state format is as follows:
+  /// [term, definition, # of regenerations, isStarred]
+
   void loadData() {
     print(myBox.get('responsesDataBase'));
     if (myBox.get('responsesDataBase') == null) {
@@ -23,7 +26,7 @@ class ResponsesDataBaseController extends StateNotifier<List> {
   Future<void> addToList(
       {required String term, required String definition}) async {
     state = [
-      [term, definition, 3],
+      [term, definition, 3, false],
       ...state,
     ];
     myBox.put('responsesDataBase', state);
@@ -36,14 +39,14 @@ class ResponsesDataBaseController extends StateNotifier<List> {
   }
 
   Future<void> editTerm({required int index, required String term}) async {
-    state[index] = [term, state[index][1], 3];
+    state[index] = [term, state[index][1], 3, state[index][3]];
     myBox.put('responsesDataBase', state);
     print('term edited: $term');
   }
 
   Future<void> editDefinition(
       {required int index, required String definition}) async {
-    state[index] = [state[index][0], definition, 3];
+    state[index] = [state[index][0], definition, 3, state[index][3]];
     myBox.put('responsesDataBase', state);
     print('definition edited: $definition');
   }
@@ -52,7 +55,8 @@ class ResponsesDataBaseController extends StateNotifier<List> {
     state[index] = [
       myBox.get('responsesDataBase')[index][0],
       myBox.get('responsesDataBase')[index][1],
-      myBox.get('responsesDataBase')[index][2]
+      myBox.get('responsesDataBase')[index][2],
+      myBox.get('responsesDataBase')[index][3]
     ];
     myBox.put('responsesDataBase', state);
   }
@@ -76,14 +80,13 @@ class ResponsesDataBaseController extends StateNotifier<List> {
       state[index] = [
         term,
         ref.read(answerTextProvider).toString(),
-        state[index][2] - 1
+        state[index][2] - 1,
+        state[index][3]
       ];
       myBox.put('responsesDataBase', state);
     } else {
       // TODO: add some error message or some other way to notify the user
     }
-
-    print(state[index][2]);
   }
 
   Future<void> clearList() async {

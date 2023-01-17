@@ -37,9 +37,13 @@ class _CardSideState extends State<CardSide> {
         children: [
           Align(
             alignment: Alignment.center,
-            child: Text(
-              widget.text,
-              style: Theme.of(context).textTheme.headline5,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                textAlign: TextAlign.center,
+                widget.text,
+                style: Theme.of(context).textTheme.headline5,
+              ),
             ),
           ),
           Align(

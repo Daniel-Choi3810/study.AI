@@ -1,6 +1,6 @@
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
-import 'package:intellistudy/view/components/flash_card/card_view.dart';
+import 'package:intellistudy/view/components/flash_card/card_side.dart';
 
 class FlashCard extends StatefulWidget {
   const FlashCard({super.key, required this.term, required this.definition});

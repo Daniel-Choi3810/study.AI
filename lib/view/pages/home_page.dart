@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/components/home_page/create_response_button.dart';
+import 'package:intellistudy/view/pages/flash_card_view_page.dart';
 import '../components/home_page/clear_all_dialog/clear_all_alert_dialog.dart';
 import '../components/home_page/formatted_response.dart';
 import '../components/home_page/search_field.dart';
@@ -36,6 +37,7 @@ class _HomePageState extends ConsumerState<HomePage> {
             Padding(
               padding: const EdgeInsets.all(30.0),
               child: FloatingActionButton(
+                  heroTag: null,
                   onPressed: () async {
                     await ref
                         .read(dbProvider.notifier)
@@ -44,8 +46,25 @@ class _HomePageState extends ConsumerState<HomePage> {
                   child: const Icon(Icons.add)),
             ),
             Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: FloatingActionButton.extended(
+                heroTag: null,
+                onPressed: () async {
+                  if (db.isNotEmpty) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const FlashCardViewPage()),
+                    );
+                  }
+                },
+                label: const Text("Go to flashcards"),
+              ),
+            ),
+            Padding(
               padding: const EdgeInsets.all(20.0),
               child: FloatingActionButton.extended(
+                  heroTag: null,
                   label: const Text("Clear All",
                       style:
                           TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
