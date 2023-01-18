@@ -12,7 +12,6 @@ class ResponsesDataBaseController extends StateNotifier<List> {
 
   /// state format is as follows:
   /// [term, definition, # of regenerations, isStarred]
-  /// test
 
   void loadData() {
     print(myBox.get('responsesDataBase'));
