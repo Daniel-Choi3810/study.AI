@@ -176,7 +176,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                               term: "${widget.searchList[widget.id][0]}",
                             );
                       },
-                      icon: const Icon(Icons.redo_rounded))
+                      icon: const Icon(Icons.restart_alt_rounded))
                   //  : const Text("No more responses left"),
                 ],
               ),

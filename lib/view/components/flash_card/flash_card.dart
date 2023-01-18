@@ -1,22 +1,30 @@
 import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/view/components/flash_card/card_side.dart';
+import '../../../providers/providers.dart';
 
-class FlashCard extends StatefulWidget {
-  const FlashCard({super.key, required this.term, required this.definition});
-
+class FlashCard extends ConsumerStatefulWidget {
+  const FlashCard(
+      {required this.term,
+      required this.definition,
+      required this.id,
+      super.key});
   final String term;
   final String definition;
+  final int id;
 
   @override
-  State<FlashCard> createState() => _FlashCardState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _FlashCardState();
 }
 
-class _FlashCardState extends State<FlashCard> {
-  bool isStarred = false;
-
+class _FlashCardState extends ConsumerState<FlashCard> {
   @override
   Widget build(BuildContext context) {
+    final isStarredProvider =
+        StateProvider<bool>((ref) => ref.watch(dbProvider)[widget.id][3]);
+
+    final isStarred = ref.watch(isStarredProvider);
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
     return FlipCard(
@@ -29,7 +37,11 @@ class _FlashCardState extends State<FlashCard> {
           height: height * 0.8,
           width: width * 0.7,
           onPressed: () {
-            setStar();
+            print('initial value in db: ${ref.read(dbProvider)[widget.id][3]}');
+            ref.read(dbProvider.notifier).starCard(index: widget.id);
+            ref.read(isStarredProvider.notifier).state =
+                ref.read(dbProvider)[widget.id][3];
+            print("On the frontside: ${ref.read(dbProvider)}");
           },
         ),
         back: CardSide(
@@ -39,14 +51,11 @@ class _FlashCardState extends State<FlashCard> {
           height: height * 0.8,
           width: width * 0.7,
           onPressed: () {
-            setStar();
+            ref.read(dbProvider.notifier).starCard(index: widget.id);
+            ref.read(isStarredProvider.notifier).state =
+                ref.read(dbProvider)[widget.id][3];
+            print("On the backside: ${ref.read(dbProvider)}");
           },
         ));
-  }
-
-  void setStar() {
-    return setState(() {
-      isStarred = !isStarred;
-    });
   }
 }

@@ -50,7 +50,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               child: FloatingActionButton.extended(
                 heroTag: null,
                 onPressed: () async {
-                  if (db.isNotEmpty) {
+                  if (db.length >= 2) {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
@@ -58,7 +58,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                     );
                   }
                 },
-                label: const Text("Go to flashcards"),
+                label: const Text("Create flashcards"),
               ),
             ),
             Padding(
