@@ -12,13 +12,14 @@ import 'firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 void main() async {
-  await Hive.initFlutter();
-  await Hive.openBox('responsesDataBase');
-  await dotenv.load(fileName: ".env");
   //Initialize Firebase
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  await Hive.initFlutter();
+  await Hive.openBox('responsesDataBase');
+  await dotenv.load(fileName: ".env");
   runApp(
     const ProviderScope(
       child: MyApp(),
@@ -41,7 +42,7 @@ void main() async {
   }
 
   //Firebase Firestore Demo
-   FirebaseFirestore db = FirebaseFirestore.instance;
+  FirebaseFirestore db = FirebaseFirestore.instance;
   final user = <String, dynamic>{
     "first": "Ada",
     "last": "Lovelace",
@@ -49,8 +50,11 @@ void main() async {
   };
 
 // Add a new document with a generated ID
-  db.collection(FirebaseAuth.instance.currentUser!.uid.toString()).add(user).then((DocumentReference doc) =>
-      print('DocumentSnapshot added with ID: ${doc.id}'));
+  db
+      .collection(FirebaseAuth.instance.currentUser!.uid.toString())
+      .add(user)
+      .then((DocumentReference doc) =>
+          print('DocumentSnapshot added with ID: ${doc.id}'));
 }
 
 class MyApp extends StatelessWidget {
@@ -69,4 +73,3 @@ class MyApp extends StatelessWidget {
     );
   }
 }
-

@@ -75,6 +75,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
     final termSaved = ref.watch(termSavedProvider);
     final definitionSaved = ref.watch(definitionSavedProvider);
     // final count = ref.watch(responsesCountProvider);
+    final isStarred = ref.watch(dbProvider)[widget.id][3];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 200.0, vertical: 20),
       child: Container(
@@ -96,6 +97,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
               ],
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Align(
                   alignment: Alignment(0, 0),
@@ -107,9 +109,26 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                 SizedBox(
                   width: widget.width * 0.337,
                 ),
-                const Text("Definition:",
-                    style:
-                        TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                const Padding(
+                  padding: EdgeInsets.only(right: 400.0),
+                  child: Text("Definition:",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    ref.read(dbProvider.notifier).starCard(index: widget.id);
+                    ref
+                        .read(dbProvider.notifier)
+                        .updateStarState(index: widget.id);
+                  },
+                  child: isStarred
+                      ? const Icon(Icons.star, color: Colors.yellow)
+                      : const Icon(Icons.star_border),
+                ),
+                SizedBox(
+                  width: widget.width * 0.02,
+                ),
               ],
             ),
             Expanded(

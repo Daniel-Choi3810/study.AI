@@ -104,4 +104,8 @@ class ResponsesDataBaseController extends StateNotifier<List> {
 
     myBox.put('responsesDataBase', state);
   }
+
+  Future<void> updateStarState({required int index}) async {
+    state = [...state];
+  }
 }

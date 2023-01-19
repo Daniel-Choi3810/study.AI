@@ -23,7 +23,10 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(15.0),
         child: FloatingActionButton.extended(
-          onPressed: () => Navigator.pop(context),
+          onPressed: () {
+            ref.read(dbProvider.notifier).updateStarState(index: currentIndex);
+            Navigator.pop(context);
+          },
           label: const Text('Back to Home page'),
         ),
       ),
