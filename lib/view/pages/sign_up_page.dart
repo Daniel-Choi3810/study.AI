@@ -1,8 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/providers/providers.dart';
+import 'package:intellistudy/view/components/authentication/auth_button.dart';
+import 'package:intellistudy/view/components/authentication/auth_confirm_password_field.dart';
+import 'package:intellistudy/view/components/authentication/auth_text_field.dart';
 import '../../controllers/auth_method_status_controller.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
@@ -22,9 +24,6 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       resizeToAvoidBottomInset: false,
       body: SafeArea(
         child: Consumer(builder: (context, ref, _) {
-          //  Consuming a provider using watch method and storing it in a variable
-          //  Now we will use this variable to access all the functions of the
-          //  authentication
           final auth = ref.watch(authProvider);
           final isLoading = ref.watch(firstIsLoadingStateProvider);
           final emailText = ref.watch(emailTextProvider);
@@ -39,15 +38,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                 Status.login) {
               ref.read(firstIsLoadingStateProvider.notifier).state =
                   !ref.read(firstIsLoadingStateProvider.notifier).state;
-              print(
-                  "on login press before authenticating: ${ref.read(firstIsLoadingStateProvider.notifier).state}");
               await auth.signInWithEmailAndPassword(
                   emailText.text, passwordText.text, context);
             } else {
               ref.read(firstIsLoadingStateProvider.notifier).state =
                   !ref.read(firstIsLoadingStateProvider.notifier).state;
-              print(
-                  "on sign up press before authenticating: ${ref.read(firstIsLoadingStateProvider.notifier).state}");
               await auth.signUpWithEmailAndPassword(
                   emailText.text, passwordText.text, context);
             }
@@ -67,96 +62,46 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       children: [
                         const Center(child: FlutterLogo(size: 81)),
                         const Spacer(flex: 1),
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 16),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 4),
-                          decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(25)),
-                          child: TextFormField(
-                            controller: emailText,
-                            autocorrect: true,
-                            enableSuggestions: true,
-                            keyboardType: TextInputType.emailAddress,
-                            onSaved: (value) {},
-                            decoration: InputDecoration(
-                              hintText: 'Email address',
-                              hintStyle: const TextStyle(color: Colors.white),
-                              icon: Icon(Icons.email_outlined,
-                                  color: Colors.blue.shade700, size: 24),
-                              alignLabelWithHint: true,
-                              border: InputBorder.none,
-                            ),
-                            validator: (value) {
-                              // TODO: Create more conditional checks
-                              if (value!.isEmpty || !value.contains('@')) {
-                                return 'Invalid email!';
-                              }
-                              return null;
-                            },
-                          ),
+                        AuthTextField(
+                          textController: emailText,
+                          hintText: 'Email Address',
+                          icon: Icons.email_outlined,
+                          keyboard: TextInputType.emailAddress,
+                          obscureText: false,
+                          validator: (value) {
+                            // TODO: Create more conditional checks
+                            if (value!.isEmpty || !value.contains('@')) {
+                              return 'Invalid email!';
+                            }
+                            return null;
+                          },
                         ),
-                        Container(
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 8),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 16, vertical: 4),
-                          decoration: BoxDecoration(
-                              color: Colors.black,
-                              borderRadius: BorderRadius.circular(25)),
-                          child: TextFormField(
-                            controller: passwordText,
-                            obscureText: true,
-                            validator: (value) {
-                              // TODO: Create more conditional checks
-                              if (value!.isEmpty || value.length < 8) {
-                                return 'Password is too short!';
-                              }
-                              return null;
-                            },
-                            decoration: InputDecoration(
-                              hintText: 'Password',
-                              hintStyle: const TextStyle(color: Colors.white),
-                              icon: Icon(CupertinoIcons.lock_circle,
-                                  color: Colors.blue.shade700, size: 24),
-                              alignLabelWithHint: true,
-                              border: InputBorder.none,
-                            ),
-                          ),
+                        AuthTextField(
+                          textController: passwordText,
+                          hintText: 'Password',
+                          icon: Icons.lock,
+                          keyboard: TextInputType.text,
+                          obscureText: true,
+                          validator: (value) {
+                            // TODO: Create more conditional checks
+                            if (value!.isEmpty || value.length < 8) {
+                              return 'Password is too short!';
+                            }
+                            return null;
+                          },
                         ),
                         if (ref.read(authStatusNotifierProvider) ==
                             Status.signUp)
-                          AnimatedContainer(
-                            duration: const Duration(milliseconds: 600),
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 24, vertical: 8),
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 4),
-                            decoration: BoxDecoration(
-                                color: Colors.black,
-                                borderRadius: BorderRadius.circular(25)),
-                            child: TextFormField(
-                              obscureText: true,
-                              decoration: InputDecoration(
-                                hintText: 'Confirm password',
-                                hintStyle: const TextStyle(color: Colors.white),
-                                icon: Icon(CupertinoIcons.lock_circle,
-                                    color: Colors.blue.shade700, size: 24),
-                                alignLabelWithHint: true,
-                                border: InputBorder.none,
-                              ),
-                              validator: ref.read(authStatusNotifierProvider) ==
-                                      Status.signUp
-                                  ? (value) {
-                                      if (value != passwordText.text) {
-                                        return 'Passwords do not match!';
-                                      }
-                                      return null;
+                          AuthConfirmPasswordField(
+                            validator: ref.read(authStatusNotifierProvider) ==
+                                    Status.signUp
+                                ? (value) {
+                                    if (value != passwordText.text) {
+                                      return 'Passwords do not match!';
                                     }
-                                  : null,
-                            ),
+                                    return null;
+                                  }
+                                : null,
                           ),
                         const Spacer()
                       ],
@@ -178,24 +123,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           width: double.infinity,
                           child: isLoading
                               ? const Center(child: CircularProgressIndicator())
-                              : MaterialButton(
+                              : AuthButton(
                                   onPressed: onAuthPress,
-                                  textColor: Colors.blue.shade700,
-                                  textTheme: ButtonTextTheme.primary,
-                                  minWidth: 100,
-                                  padding: const EdgeInsets.all(18),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(25),
-                                    side:
-                                        BorderSide(color: Colors.blue.shade700),
-                                  ),
-                                  child: Text(
-                                    authStatus == Status.login
-                                        ? 'Log in'
-                                        : 'Sign up',
-                                    style: const TextStyle(
-                                        fontWeight: FontWeight.w600),
-                                  ),
+                                  statusText: authStatus == Status.login
+                                      ? 'Log in'
+                                      : 'Sign up',
                                 ),
                         ),
                         const Spacer(),
