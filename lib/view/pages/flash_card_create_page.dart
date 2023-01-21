@@ -30,67 +30,67 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
         isLoadingStateProvider); // Watch for changes in isLoadingProvider
     final isValid =
         ref.watch(isValidStateProvider); // Watch for changes in isValidProvider
-    return SafeArea(
-      child: Scaffold(
-        floatingActionButton: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: FloatingActionButton(
-                  heroTag: null,
-                  onPressed: () async {
-                    await ref
-                        .read(dbProvider.notifier)
-                        .addToList(term: '', definition: '');
-                  },
-                  child: const Icon(Icons.add)),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: FloatingActionButton.extended(
+    return Scaffold(
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: FloatingActionButton(
                 heroTag: null,
                 onPressed: () async {
-                  if (db.length >= 2) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const FlashCardViewPage()),
-                    );
-                  }
+                  await ref
+                      .read(dbProvider.notifier)
+                      .addToList(term: '', definition: '');
                 },
-                label: const Text("Create flashcards"),
-              ),
+                child: const Icon(Icons.add)),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: FloatingActionButton.extended(
+              heroTag: null,
+              onPressed: () async {
+                if (db.length >= 2) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const FlashCardViewPage()),
+                  );
+                }
+              },
+              label: const Text("Create flashcards"),
             ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: FloatingActionButton.extended(
-                  heroTag: null,
-                  label: const Text("Clear All",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  onPressed: () {
-                    if (db.isNotEmpty) {
-                      showAlertDialog(context, ref);
-                    }
-                  }),
-            ),
-          ],
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          title: const Text("Flash Card Generate Page"),
-          actions: const [
-            // IconButton(
-            //     onPressed: () async {
-            //       await auth.signOut();
-            //     },
-            //     icon: const Icon(Icons.logout)),
-          ],
-        ),
-        body: SingleChildScrollView(
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: FloatingActionButton.extended(
+                heroTag: null,
+                label: const Text("Clear All",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                onPressed: () {
+                  if (db.isNotEmpty) {
+                    showAlertDialog(context, ref);
+                  }
+                }),
+          ),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        title: const Text("Flash Card Generate Page"),
+        actions: const [
+          // IconButton(
+          //     onPressed: () async {
+          //       await auth.signOut();
+          //     },
+          //     icon: const Icon(Icons.logout)),
+        ],
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

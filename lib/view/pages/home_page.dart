@@ -30,82 +30,86 @@ class _HomePageState extends ConsumerState<HomePage> {
     final isValid =
         ref.watch(isValidStateProvider); // Watch for changes in isValidProvider
     final auth = ref.watch(authProvider);
-    return SafeArea(
-      child: Scaffold(
-        floatingActionButton: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(30.0),
-              child: FloatingActionButton(
-                  heroTag: null,
-                  onPressed: () async {
-                    await ref
-                        .read(dbProvider.notifier)
-                        .addToList(term: '', definition: '');
-                  },
-                  child: const Icon(Icons.add)),
-            ),
-            // Padding(
-            //   padding: const EdgeInsets.all(30.0),
-            //   child: FloatingActionButton.extended(
-            //     heroTag: null,
-            //     onPressed: () async {
-            //       if (db.length >= 2) {
-            //         Navigator.push(
-            //           context,
-            //           MaterialPageRoute(
-            //               builder: (context) => const FlashCardViewPage()),
-            //         );
-            //       }
-            //     },
-            //     label: const Text("Create flashcards"),
-            //   ),
-            // ),
-            Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: FloatingActionButton.extended(
-                  heroTag: null,
-                  label: const Text("Clear All",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                  onPressed: () {
-                    if (db.isNotEmpty) {
-                      showAlertDialog(context, ref);
-                    }
-                  }),
-            ),
-          ],
-        ),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          backgroundColor: Colors.black,
-          title: const Text("Search browser page "),
-          actions: [
-            IconButton(
+    return Scaffold(
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(30.0),
+            child: FloatingActionButton(
+                heroTag: null,
                 onPressed: () async {
-                  await auth.signOut();
-                  if (!mounted) return;
+                  await ref
+                      .read(dbProvider.notifier)
+                      .addToList(term: '', definition: '');
+                },
+                child: const Icon(Icons.add)),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: FloatingActionButton.extended(
+                heroTag: null,
+                label: const Text("Clear All",
+                    style:
+                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                onPressed: () {
+                  if (db.isNotEmpty) {
+                    showAlertDialog(context, ref);
+                  }
+                }),
+          ),
+        ],
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        centerTitle: true,
+        title: const Text("Search browser page "),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextButton.icon(
+              label: const Text(
+                'Logout',
+                style: TextStyle(color: Colors.white),
+              ),
+              onPressed: () async {
+                await auth.signOut();
+                if (!mounted) return;
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const AuthCheckerPage()),
+                );
+              },
+              icon: const Icon(
+                Icons.logout,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextButton.icon(
+                label: const Text('Create Flashcards',
+                    style: TextStyle(color: Colors.white)),
+                onPressed: () async {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
                         builder: (context) => const AuthCheckerPage()),
                   );
                 },
-                icon: const Icon(Icons.logout)),
-            IconButton(
-                onPressed: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AuthCheckerPage()),
-                  );
-                },
-                icon: const Icon(Icons.golf_course)),
-          ],
-        ),
-        body: SingleChildScrollView(
+                icon: const Icon(
+                  Icons.card_giftcard,
+                  color: Colors.white,
+                )),
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: SingleChildScrollView(
           scrollDirection: Axis.vertical,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/controllers/responses_database_controller.dart';
 import 'package:intellistudy/controllers/text_controller_notifier.dart';
-
 import '../models/auth_model.dart';
 
 // HomePage Providers
@@ -77,3 +76,9 @@ final authStateProvider = StreamProvider<User?>((ref) {
 // final authStateProvider = StreamProvider<User?>((ref) {
 //   return ref.read(authenticationProvider).authStateChange;
 // });
+
+/// Authentication Providers
+
+/// This is the provider that is used to access
+/// the text fields for the email and password
+

@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
 
 //  Instead of creating Two Screens, I have Added both Login and Signup Screen in one Screen
@@ -14,13 +13,11 @@ import 'package:intellistudy/providers/providers.dart';
 //  and I have made a Global Variable type of Status, to use in LoginPage
 // It's actually not recommended to use Global Variables , but I am using it here to make it simple
 //  The main motive here was to teach Firebase Authentication using Riverpod as state management
-
+//TODO: Make Status provider
 enum Status {
   login,
   signUp,
 }
-
-Status type = Status.login;
 
 //  I have used stateful widget to use setstate functions in LoginPage
 //  we could also managed the state using Riverpod but I am not using it here
@@ -28,7 +25,6 @@ Status type = Status.login;
 //  flutter developer would not think of it in the first place.
 
 class LoginPage extends StatefulWidget {
-  static const routename = '/LoginPage';
   const LoginPage({Key? key}) : super(key: key);
 
   @override
@@ -36,15 +32,19 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  Status type = Status.login;
+
   //  GlobalKey is used to validate the Form
   final GlobalKey<FormState> _formKey = GlobalKey();
 
   //  TextEditingController to get the data from the TextFields
   //  we can also use Riverpod to manage the state of the TextFields
   //  but again I am not using it here
+  // TODO: Make textediting controller providers
   final _email = TextEditingController();
   final _password = TextEditingController();
 
+  // TODO: Make providers for loading
   //  A loading variable to show the loading animation when you a function is ongoing
   bool _isLoading = false;
   bool _isLoading2 = false;
@@ -249,100 +249,98 @@ class _LoginPageState extends State<LoginPage> {
                 Expanded(
                   flex: 2,
                   child: Container(
-                      width: double.infinity,
-                      decoration: const BoxDecoration(color: Colors.black),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.only(top: 32.0),
-                            margin: const EdgeInsets.symmetric(horizontal: 16),
-                            width: double.infinity,
-                            child: _isLoading
-                                ? const Center(
-                                    child: CircularProgressIndicator())
-                                : MaterialButton(
-                                    onPressed: _onPressedFunction,
-                                    textColor: Colors.blue.shade700,
-                                    textTheme: ButtonTextTheme.primary,
-                                    minWidth: 100,
-                                    padding: const EdgeInsets.all(18),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25),
-                                      side: BorderSide(
-                                          color: Colors.blue.shade700),
-                                    ),
-                                    child: Text(
-                                      type == Status.login
-                                          ? 'Log in'
-                                          : 'Sign up',
-                                      style: const TextStyle(
-                                          fontWeight: FontWeight.w600),
-                                    ),
+                    width: double.infinity,
+                    decoration: const BoxDecoration(color: Colors.black),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.only(top: 32.0),
+                          margin: const EdgeInsets.symmetric(horizontal: 16),
+                          width: double.infinity,
+                          child: _isLoading
+                              ? const Center(child: CircularProgressIndicator())
+                              : MaterialButton(
+                                  onPressed: _onPressedFunction,
+                                  textColor: Colors.blue.shade700,
+                                  textTheme: ButtonTextTheme.primary,
+                                  minWidth: 100,
+                                  padding: const EdgeInsets.all(18),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(25),
+                                    side:
+                                        BorderSide(color: Colors.blue.shade700),
                                   ),
-                          ),
-                          Container(
-                            padding: const EdgeInsets.only(top: 32.0),
-                            margin: const EdgeInsets.symmetric(horizontal: 16),
-                            width: double.infinity,
-                            child: _isLoading2
-                                ? const Center(
-                                    child: CircularProgressIndicator())
-                                : MaterialButton(
-                                    onPressed: _loginWithGoogle,
-                                    textColor: Colors.blue.shade700,
-                                    textTheme: ButtonTextTheme.primary,
-                                    minWidth: 100,
-                                    padding: const EdgeInsets.all(18),
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(25),
-                                      side: BorderSide(
-                                          color: Colors.blue.shade700),
-                                    ),
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: const [
-                                        //  A google icon here
-                                        //  an External Package used here
-                                        //  Font_awesome_flutter package used
-                                        FaIcon(FontAwesomeIcons.google),
-                                        Text(
-                                          ' Login with Google',
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                      ],
-                                    ),
+                                  child: Text(
+                                    type == Status.login ? 'Log in' : 'Sign up',
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w600),
                                   ),
-                          ),
-                          const Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.only(bottom: 24.0),
-                            child: RichText(
-                              text: TextSpan(
-                                text: type == Status.login
-                                    ? 'Don\'t have an account? '
-                                    : 'Already have an account? ',
-                                style: const TextStyle(color: Colors.white),
-                                children: [
-                                  TextSpan(
-                                      text: type == Status.login
-                                          ? 'Sign up now'
-                                          : 'Log in',
-                                      style: TextStyle(
-                                          color: Colors.blue.shade700),
-                                      recognizer: TapGestureRecognizer()
-                                        ..onTap = () {
-                                          _switchType();
-                                        })
-                                ],
-                              ),
+                                ),
+                        ),
+                        // Container(
+                        //   padding: const EdgeInsets.only(top: 32.0),
+                        //   margin: const EdgeInsets.symmetric(horizontal: 16),
+                        //   width: double.infinity,
+                        //   child: _isLoading2
+                        //       ? const Center(
+                        //           child: CircularProgressIndicator())
+                        //       : MaterialButton(
+                        //           onPressed: _loginWithGoogle,
+                        //           textColor: Colors.blue.shade700,
+                        //           textTheme: ButtonTextTheme.primary,
+                        //           minWidth: 100,
+                        //           padding: const EdgeInsets.all(18),
+                        //           shape: RoundedRectangleBorder(
+                        //             borderRadius: BorderRadius.circular(25),
+                        //             side: BorderSide(
+                        //                 color: Colors.blue.shade700),
+                        //           ),
+                        //           child: Row(
+                        //             mainAxisAlignment:
+                        //                 MainAxisAlignment.center,
+                        //             children: const [
+                        //               //  A google icon here
+                        //               //  an External Package used here
+                        //               //  Font_awesome_flutter package used
+                        //               FaIcon(FontAwesomeIcons.google),
+                        //               Text(
+                        //                 ' Login with Google',
+                        //                 style: TextStyle(
+                        //                     fontWeight: FontWeight.w600),
+                        //               ),
+                        //             ],
+                        //           ),
+                        //         ),
+                        // ),
+                        const Spacer(),
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 24.0),
+                          child: RichText(
+                            text: TextSpan(
+                              text: type == Status.login
+                                  ? 'Don\'t have an account? '
+                                  : 'Already have an account? ',
+                              style: const TextStyle(color: Colors.white),
+                              children: [
+                                TextSpan(
+                                  text: type == Status.login
+                                      ? 'Sign up now'
+                                      : 'Log in',
+                                  style: TextStyle(color: Colors.blue.shade700),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      _switchType();
+                                    },
+                                )
+                              ],
                             ),
                           ),
-                        ],
-                      )),
+                        ),
+                      ],
+                    ),
+                  ),
                 )
               ],
             ),
