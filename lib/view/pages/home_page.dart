@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/components/home_page/create_response_button.dart';
-import 'package:intellistudy/view/pages/auth_checker_page.dart';
+import 'package:intellistudy/view/pages/flash_card_create_page.dart';
 import '../components/home_page/clear_all_dialog/clear_all_alert_dialog.dart';
 import '../components/home_page/formatted_response.dart';
 import '../components/home_page/search_field.dart';
@@ -23,7 +23,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    final db = ref.watch(dbProvider);
+    final db = ref.watch(localDBProvider);
     final searchFieldTextController = ref.watch(searchFieldStateProvider);
     final isLoading = ref.watch(
         isLoadingStateProvider); // Watch for changes in isLoadingProvider
@@ -40,7 +40,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 heroTag: null,
                 onPressed: () async {
                   await ref
-                      .read(dbProvider.notifier)
+                      .read(localDBProvider.notifier)
                       .addToList(term: '', definition: '');
                 },
                 child: const Icon(Icons.add)),
@@ -76,12 +76,11 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               onPressed: () async {
                 await auth.signOut();
-                if (!mounted) return;
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const AuthCheckerPage()),
-                );
+                // if (!mounted) return;
+                // Navigator.push(
+                //   context,
+                //   MaterialPageRoute(builder: (context) => const LoginPage()),
+                // );
               },
               icon: const Icon(
                 Icons.logout,
@@ -98,7 +97,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const AuthCheckerPage()),
+                        builder: (context) => const FlashCardCreatePage()),
                   );
                 },
                 icon: const Icon(

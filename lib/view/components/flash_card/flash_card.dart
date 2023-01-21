@@ -22,7 +22,7 @@ class _FlashCardState extends ConsumerState<FlashCard> {
   @override
   Widget build(BuildContext context) {
     final isStarredProvider =
-        StateProvider<bool>((ref) => ref.watch(dbProvider)[widget.id][3]);
+        StateProvider<bool>((ref) => ref.watch(localDBProvider)[widget.id][3]);
 
     final isStarred = ref.watch(isStarredProvider);
     final height = MediaQuery.of(context).size.height;
@@ -37,11 +37,12 @@ class _FlashCardState extends ConsumerState<FlashCard> {
           height: height * 0.8,
           width: width * 0.7,
           onPressed: () {
-            print('initial value in db: ${ref.read(dbProvider)[widget.id][3]}');
-            ref.read(dbProvider.notifier).starCard(index: widget.id);
+            print(
+                'initial value in db: ${ref.read(localDBProvider)[widget.id][3]}');
+            ref.read(localDBProvider.notifier).starCard(index: widget.id);
             ref.read(isStarredProvider.notifier).state =
-                ref.read(dbProvider)[widget.id][3];
-            print("On the frontside: ${ref.read(dbProvider)}");
+                ref.read(localDBProvider)[widget.id][3];
+            print("On the frontside: ${ref.read(localDBProvider)}");
           },
         ),
         back: CardSide(
@@ -51,10 +52,10 @@ class _FlashCardState extends ConsumerState<FlashCard> {
           height: height * 0.8,
           width: width * 0.7,
           onPressed: () {
-            ref.read(dbProvider.notifier).starCard(index: widget.id);
+            ref.read(localDBProvider.notifier).starCard(index: widget.id);
             ref.read(isStarredProvider.notifier).state =
-                ref.read(dbProvider)[widget.id][3];
-            print("On the backside: ${ref.read(dbProvider)}");
+                ref.read(localDBProvider)[widget.id][3];
+            print("On the backside: ${ref.read(localDBProvider)}");
           },
         ));
   }

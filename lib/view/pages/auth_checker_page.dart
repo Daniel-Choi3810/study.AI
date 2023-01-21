@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/pages/flash_card_create_page.dart';
-import 'sign_up_page.dart';
+import 'login_page.dart';
 
 class AuthCheckerPage extends ConsumerStatefulWidget {
   const AuthCheckerPage({super.key});

@@ -5,7 +5,6 @@ class AuthButton extends StatelessWidget {
       {super.key, required this.onPressed, required this.statusText});
   final void Function()? onPressed;
   final String statusText;
-
   @override
   Widget build(BuildContext context) {
     return MaterialButton(

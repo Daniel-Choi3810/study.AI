@@ -17,14 +17,16 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    final db = ref.watch(dbProvider);
+    final db = ref.watch(localDBProvider);
     final currentIndex = ref.watch(flashcardIndexStateProvider);
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(15.0),
         child: FloatingActionButton.extended(
           onPressed: () {
-            ref.read(dbProvider.notifier).updateStarState(index: currentIndex);
+            ref
+                .read(localDBProvider.notifier)
+                .updateStarState(index: currentIndex);
             Navigator.pop(context);
           },
           label: const Text('Back to Home page'),
@@ -187,7 +189,7 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                           ElevatedButton.icon(
                               onPressed: () async {
                                 await ref
-                                    .read(dbProvider.notifier)
+                                    .read(localDBProvider.notifier)
                                     .shuffleList();
                               },
                               icon: const Icon(Icons.shuffle),

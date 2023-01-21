@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/components/home_page/create_response_button.dart';
+import 'package:intellistudy/view/pages/login_page.dart';
 import '../components/home_page/clear_all_dialog/clear_all_alert_dialog.dart';
 import '../components/home_page/formatted_response.dart';
 import '../components/home_page/search_field.dart';
@@ -24,12 +25,13 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    final db = ref.watch(dbProvider);
+    final db = ref.watch(localDBProvider);
     final searchFieldTextController = ref.watch(searchFieldStateProvider);
     final isLoading = ref.watch(
         isLoadingStateProvider); // Watch for changes in isLoadingProvider
     final isValid =
         ref.watch(isValidStateProvider); // Watch for changes in isValidProvider
+    final authState = ref.watch(authStateProvider);
     return Scaffold(
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -40,7 +42,7 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                 heroTag: null,
                 onPressed: () async {
                   await ref
-                      .read(dbProvider.notifier)
+                      .read(localDBProvider.notifier)
                       .addToList(term: '', definition: '');
                 },
                 child: const Icon(Icons.add)),
@@ -89,68 +91,80 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
           //     icon: const Icon(Icons.logout)),
         ],
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.vertical,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              SizedBox(
-                height: height * 0.05,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(18.0),
-                child: SearchField(
-                  width: width,
-                  textFieldController: searchFieldTextController,
+      body: ref.read(authProvider).auth.currentUser == null
+          ? AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              content: Container(
+                height: height * 0.7,
+                width: width * 0.7,
+                decoration: const BoxDecoration(
+                  color: Colors.white,
                 ),
+                child: const LoginPage(),
               ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: CreateResponseButton(
-                    searchFieldTextController: searchFieldTextController),
-              ),
-              isValid
-                  ? const SizedBox(
-                      height: 18,
-                    )
-                  : const SizedBox(
-                      height: 18,
-                      child: Text(
-                        'Please enter a valid prompt',
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
+            )
+          : SafeArea(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.vertical,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    SizedBox(
+                      height: height * 0.05,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(18.0),
+                      child: SearchField(
+                        width: width,
+                        textFieldController: searchFieldTextController,
                       ),
                     ),
-              isLoading
-                  ? const CircularProgressIndicator()
-                  : const SizedBox(), // If isLoading is true, show CircularProgressIndicator, else show SizedBox
-              SizedBox(
-                height: height * 0.06,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: CreateResponseButton(
+                          searchFieldTextController: searchFieldTextController),
+                    ),
+                    isValid
+                        ? const SizedBox(
+                            height: 18,
+                          )
+                        : const SizedBox(
+                            height: 18,
+                            child: Text(
+                              'Please enter a valid prompt',
+                              style: TextStyle(
+                                color: Colors.red,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ),
+                          ),
+                    isLoading
+                        ? const CircularProgressIndicator()
+                        : const SizedBox(), // If isLoading is true, show CircularProgressIndicator, else show SizedBox
+                    SizedBox(
+                      height: height * 0.06,
+                    ),
+                    // Create a scrollable vertical list view
+                    ListView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: db
+                          .length, // Watch for changes in responsesProvider (list of responses)
+                      itemBuilder: ((_, index) {
+                        return FormattedResponse(
+                            key:
+                                UniqueKey(), //TODO: Figure this out, why does valueKey Not work?
+                            height: height,
+                            width: width,
+                            searchList: db,
+                            id: index);
+                      }),
+                    ),
+                  ],
+                ),
               ),
-              // Create a scrollable vertical list view
-              ListView.builder(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: db
-                    .length, // Watch for changes in responsesProvider (list of responses)
-                itemBuilder: ((_, index) {
-                  return FormattedResponse(
-                      key:
-                          UniqueKey(), //TODO: Figure this out, why does valueKey Not work?
-                      height: height,
-                      width: width,
-                      searchList: db,
-                      id: index);
-                }),
-              ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 }

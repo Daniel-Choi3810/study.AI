@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,8 +46,9 @@ final definitionTextStateProvider = StateProvider<String>((ref) => '');
 /// This is the provider that is used to access
 /// the database controller to store the responses
 /// in the database and display them in the list view
-final dbProvider = StateNotifierProvider<ResponsesDataBaseController, List>(
-    ((ref) => ResponsesDataBaseController(ref)));
+final localDBProvider =
+    StateNotifierProvider<ResponsesDataBaseController, List>(
+        ((ref) => ResponsesDataBaseController(ref)));
 
 // Flashcard Providers
 
@@ -63,8 +65,19 @@ final flashcardIndexStateProvider = StateProvider.autoDispose((ref) => 0);
 //   return await Firebase.initializeApp();
 // });
 
-final authProvider = Provider<AuthenticationModel>(
-    (ref) => AuthenticationModel(FirebaseAuth.instance, ref));
+final authInstanceProvider = Provider<FirebaseAuth>((ref) {
+  return FirebaseAuth.instance;
+});
+
+final fireStoreProvider = Provider<FirebaseFirestore>((ref) {
+  return FirebaseFirestore.instance;
+});
+
+final authProvider = Provider<AuthenticationModel>((ref) => AuthenticationModel(
+      ref.watch(authInstanceProvider),
+      ref,
+      ref.watch(fireStoreProvider),
+    ));
 
 final authStateProvider = StreamProvider<User?>((ref) {
   return ref.watch(authProvider).authStateChange;
@@ -84,10 +97,8 @@ final authStateProvider = StreamProvider<User?>((ref) {
 /// the text fields for the email and password
 final firstIsLoadingStateProvider = StateProvider.autoDispose((ref) => false);
 // final secondIsLoadingStateProvider = StateProvider.autoDispose((ref) => false);
-final emailTextProvider =
-    StateProvider.autoDispose(((ref) => TextEditingController()));
-final passwordTextProvider =
-    StateProvider.autoDispose((ref) => TextEditingController());
+final emailTextProvider = StateProvider(((ref) => TextEditingController()));
+final passwordTextProvider = StateProvider((ref) => TextEditingController());
 
 final authStatusNotifierProvider =
     StateNotifierProvider<AuthMethodStatusController, Status>((ref) {

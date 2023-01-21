@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -5,14 +6,17 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:intellistudy/providers/providers.dart';
 
 class AuthenticationModel {
-  const AuthenticationModel(this._auth, this.ref);
+  const AuthenticationModel(this._auth, this.ref, this._firestore);
   // For Authentication related functions you need an instance of FirebaseAuth
   final FirebaseAuth _auth;
+  final FirebaseFirestore _firestore;
   final Ref ref;
 
   //  This getter will be returning a Stream of User object.
   //  It will be used to check if the user is logged in or not.
   Stream<User?> get authStateChange => _auth.idTokenChanges();
+  //  This getter will be returning the firebase auth instance
+  FirebaseAuth get auth => _auth;
 
   // Now This Class Contains 3 Functions currently
   // 1. signInWithGoogle
@@ -25,8 +29,8 @@ class AuthenticationModel {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
-      ref.read(firstIsLoadingStateProvider.notifier).state =
-          !ref.read(firstIsLoadingStateProvider.notifier).state;
+      // TODO: Figure out proper way to load the circular progress indicator
+      ref.read(firstIsLoadingStateProvider.notifier).state = false;
       // Alert dialog that displays the error with an OK button to dismiss it
       await showDialog(
         context: context,
@@ -35,25 +39,50 @@ class AuthenticationModel {
           content: Text(e.toString()),
           actions: [
             TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("OK"))
+              onPressed: () {
+                Navigator.pop(context);
+                // ref.read(firstIsLoadingStateProvider.notifier).state =
+                //     !ref.read(firstIsLoadingStateProvider.notifier).state;
+              },
+              child: const Text("OK"),
+            )
           ],
         ),
       );
+    } catch (e) {
+      // Catches error if the email is already in use or if there is an error
+      print('Error at login: $e');
     }
   }
 
   // SignUp the user using Email and Password
   Future<void> signUpWithEmailAndPassword(
-      String email, String password, BuildContext context) async {
+      // TODO: Figure out proper way to load the circular progress indicator
+      String email,
+      String password,
+      BuildContext context) async {
     try {
-      _auth.createUserWithEmailAndPassword(
+      // print("in try statement, with $email and $password");
+      await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      // print(
+      //     "The user's email after signing up is: ${_auth.currentUser!.email}");
+
+      await _firestore.collection('users').add({
+        'username': email.substring(0, email.indexOf('@')),
+        'email': email.trim(),
+        'image_url': '',
+        'userId': _auth.currentUser!.uid
+            .toString(), // TODO: Make a provider for the user's UID
+      });
+      // print the _firestore user's email
+      // print(
+      //     'The user\'s email after signing up is: ${_auth.currentUser!.email}');
     } on FirebaseAuthException catch (e) {
+      ref.read(firstIsLoadingStateProvider.notifier).state = false;
+
       // Alert dialog that displays the error with an OK button to dismiss it
       await showDialog(
           context: context,
@@ -62,17 +91,18 @@ class AuthenticationModel {
                   content: Text(e.toString()),
                   actions: [
                     TextButton(
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("OK"))
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                      child: const Text("OK"),
+                    )
                   ]));
     } catch (e) {
       // Catches error if the email is already in use or if there is an error
       if (e == 'email-already-in-use') {
         print('Email already in use.');
       } else {
-        print('Error: $e');
+        print('Error at signup: $e');
       }
     }
   }
@@ -117,11 +147,3 @@ class AuthenticationModel {
     await _auth.signOut();
   }
 }
-
-// class ModelException implements Exception {
-//   const ModelException(this.message);
-//   final String message;
-
-//   @override
-//   String toString() => message;
-// }

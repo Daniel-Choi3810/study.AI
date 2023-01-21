@@ -33,7 +33,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
       if (!termFocusNode.hasFocus) {
         print("in if statement");
         ref.read(termSavedProvider.notifier).state = true;
-        ref.read(dbProvider.notifier).editTerm(
+        ref.read(localDBProvider.notifier).editTerm(
             index: widget.id,
             term: ref
                 .read(termTextStateProvider.notifier)
@@ -42,14 +42,16 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                 .trim());
       } else {
         print('in else statement');
-        ref.read(dbProvider.notifier).loadPreviousResponse(index: widget.id);
+        ref
+            .read(localDBProvider.notifier)
+            .loadPreviousResponse(index: widget.id);
         ref.read(termSavedProvider.notifier).state = false;
       }
     });
     definitionFocusNode.addListener(() {
       if (!definitionFocusNode.hasFocus) {
         ref.read(definitionSavedProvider.notifier).state = true;
-        ref.read(dbProvider.notifier).editDefinition(
+        ref.read(localDBProvider.notifier).editDefinition(
             index: widget.id,
             definition: ref
                 .read(definitionTextStateProvider.notifier)
@@ -57,7 +59,9 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                 .toString()
                 .trim());
       } else {
-        ref.read(dbProvider.notifier).loadPreviousResponse(index: widget.id);
+        ref
+            .read(localDBProvider.notifier)
+            .loadPreviousResponse(index: widget.id);
         ref.read(definitionSavedProvider.notifier).state = false;
       }
     });
@@ -75,7 +79,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
     final termSaved = ref.watch(termSavedProvider);
     final definitionSaved = ref.watch(definitionSavedProvider);
     // final count = ref.watch(responsesCountProvider);
-    final isStarred = ref.watch(dbProvider)[widget.id][3];
+    final isStarred = ref.watch(localDBProvider)[widget.id][3];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 200.0, vertical: 20),
       child: Container(
@@ -117,9 +121,11 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    ref.read(dbProvider.notifier).starCard(index: widget.id);
                     ref
-                        .read(dbProvider.notifier)
+                        .read(localDBProvider.notifier)
+                        .starCard(index: widget.id);
+                    ref
+                        .read(localDBProvider.notifier)
                         .updateStarState(index: widget.id);
                   },
                   child: isStarred
@@ -177,7 +183,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                   IconButton(
                       onPressed: () async {
                         await ref
-                            .read(dbProvider.notifier)
+                            .read(localDBProvider.notifier)
                             .removeFromList(index: widget.id);
                       },
                       icon: const Icon(Icons.delete)),
@@ -190,7 +196,9 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                   ),
                   IconButton(
                       onPressed: () async {
-                        await ref.read(dbProvider.notifier).regenerateResponse(
+                        await ref
+                            .read(localDBProvider.notifier)
+                            .regenerateResponse(
                               index: widget.id,
                               term: "${widget.searchList[widget.id][0]}",
                             );
