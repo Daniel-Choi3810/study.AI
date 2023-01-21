@@ -1,7 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/controllers/responses_database_controller.dart';
 import 'package:intellistudy/controllers/text_controller_notifier.dart';
+
+import '../models/auth_model.dart';
 
 // HomePage Providers
 
@@ -51,3 +54,26 @@ final dbProvider = StateNotifierProvider<ResponsesDataBaseController, List>(
 /// the flashcard index to display the flashcards
 /// in the list view
 final flashcardIndexStateProvider = StateProvider.autoDispose((ref) => 0);
+
+/// Firebase Providers
+
+/// This is the provider that is used to access
+/// the firebase auth instance
+// final firebaseinitializerProvider = FutureProvider<FirebaseApp>((ref) async {
+//   return await Firebase.initializeApp();
+// });
+
+final authProvider = Provider<AuthenticationModel>(
+    (ref) => AuthenticationModel(FirebaseAuth.instance));
+
+final authStateProvider = StreamProvider<User?>((ref) {
+  return ref.watch(authProvider).authStateChange;
+}); 
+
+// final authenticationProvider = Provider<AuthenticationModel>((ref) {
+//   return const AuthenticationModel();
+// });
+
+// final authStateProvider = StreamProvider<User?>((ref) {
+//   return ref.read(authenticationProvider).authStateChange;
+// });

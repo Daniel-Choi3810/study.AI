@@ -3,21 +3,22 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/components/home_page/create_response_button.dart';
-import 'package:intellistudy/view/pages/auth_checker_page.dart';
 import '../components/home_page/clear_all_dialog/clear_all_alert_dialog.dart';
 import '../components/home_page/formatted_response.dart';
 import '../components/home_page/search_field.dart';
+import 'flash_card_view_page.dart';
 
-// Consumer Stateful Widget is a widget that can be used to read providers
-class HomePage extends ConsumerStatefulWidget {
-  const HomePage({super.key});
+class FlashCardCreatePage extends ConsumerStatefulWidget {
+  const FlashCardCreatePage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _HomePageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _FlashCardCreatePageState();
 }
 
-class _HomePageState extends ConsumerState<HomePage> {
-  final _responseBox = Hive.box('responsesDataBase');
+class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
+  @override
+  final responseBox = Hive.box('responsesDataBase');
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,6 @@ class _HomePageState extends ConsumerState<HomePage> {
         isLoadingStateProvider); // Watch for changes in isLoadingProvider
     final isValid =
         ref.watch(isValidStateProvider); // Watch for changes in isValidProvider
-    final auth = ref.watch(authProvider);
     return SafeArea(
       child: Scaffold(
         floatingActionButton: Row(
@@ -46,22 +46,22 @@ class _HomePageState extends ConsumerState<HomePage> {
                   },
                   child: const Icon(Icons.add)),
             ),
-            // Padding(
-            //   padding: const EdgeInsets.all(30.0),
-            //   child: FloatingActionButton.extended(
-            //     heroTag: null,
-            //     onPressed: () async {
-            //       if (db.length >= 2) {
-            //         Navigator.push(
-            //           context,
-            //           MaterialPageRoute(
-            //               builder: (context) => const FlashCardViewPage()),
-            //         );
-            //       }
-            //     },
-            //     label: const Text("Create flashcards"),
-            //   ),
-            // ),
+            Padding(
+              padding: const EdgeInsets.all(30.0),
+              child: FloatingActionButton.extended(
+                heroTag: null,
+                onPressed: () async {
+                  if (db.length >= 2) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const FlashCardViewPage()),
+                    );
+                  }
+                },
+                label: const Text("Create flashcards"),
+              ),
+            ),
             Padding(
               padding: const EdgeInsets.all(20.0),
               child: FloatingActionButton.extended(
@@ -81,28 +81,13 @@ class _HomePageState extends ConsumerState<HomePage> {
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
           backgroundColor: Colors.black,
-          title: const Text("Search browser page "),
-          actions: [
-            IconButton(
-                onPressed: () async {
-                  await auth.signOut();
-                  if (!mounted) return;
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AuthCheckerPage()),
-                  );
-                },
-                icon: const Icon(Icons.logout)),
-            IconButton(
-                onPressed: () async {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const AuthCheckerPage()),
-                  );
-                },
-                icon: const Icon(Icons.golf_course)),
+          title: const Text("Flash Card Generate Page"),
+          actions: const [
+            // IconButton(
+            //     onPressed: () async {
+            //       await auth.signOut();
+            //     },
+            //     icon: const Icon(Icons.logout)),
           ],
         ),
         body: SingleChildScrollView(
