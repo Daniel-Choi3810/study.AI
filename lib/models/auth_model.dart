@@ -1,11 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:intellistudy/providers/providers.dart';
 
 class AuthenticationModel {
-  const AuthenticationModel(this._auth);
+  const AuthenticationModel(this._auth, this.ref);
   // For Authentication related functions you need an instance of FirebaseAuth
   final FirebaseAuth _auth;
+  final Ref ref;
 
   //  This getter will be returning a Stream of User object.
   //  It will be used to check if the user is logged in or not.
@@ -22,6 +25,8 @@ class AuthenticationModel {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
+      ref.read(firstIsLoadingStateProvider.notifier).state =
+          !ref.read(firstIsLoadingStateProvider.notifier).state;
       // Alert dialog that displays the error with an OK button to dismiss it
       await showDialog(
         context: context,

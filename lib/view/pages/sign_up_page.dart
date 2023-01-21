@@ -3,75 +3,18 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/providers/providers.dart';
+import '../../controllers/auth_method_status_controller.dart';
 
-//  Instead of creating Two Screens, I have Added both Login and Signup Screen in one Screen
-//  Yes , I am Lazy , But I am not going to create two screens , I am going to create one screen
-
-//  So for to monitor we are in which State we are i.e Login or signUp , I have used enums here
-//  So I have created and Enum Status which contains two things Login and SignUp
-
-//  and I have made a Global Variable type of Status, to use in LoginPage
-// It's actually not recommended to use Global Variables , but I am using it here to make it simple
-//  The main motive here was to teach Firebase Authentication using Riverpod as state management
-//TODO: Make Status provider
-enum Status {
-  login,
-  signUp,
-}
-
-//  I have used stateful widget to use setstate functions in LoginPage
-//  we could also managed the state using Riverpod but I am not using it here
-//  Remember Stateful widgets are made for a reason. If it would be bad
-//  flutter developer would not think of it in the first place.
-
-class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+class LoginPage extends ConsumerStatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  _LoginPageState createState() => _LoginPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
-  Status type = Status.login;
-
+class _LoginPageState extends ConsumerState<LoginPage> {
   //  GlobalKey is used to validate the Form
-  final GlobalKey<FormState> _formKey = GlobalKey();
-
-  //  TextEditingController to get the data from the TextFields
-  //  we can also use Riverpod to manage the state of the TextFields
-  //  but again I am not using it here
-  // TODO: Make textediting controller providers
-  final _email = TextEditingController();
-  final _password = TextEditingController();
-
-  // TODO: Make providers for loading
-  //  A loading variable to show the loading animation when you a function is ongoing
-  bool _isLoading = false;
-  bool _isLoading2 = false;
-  void loading() {
-    setState(() {
-      _isLoading = !_isLoading;
-    });
-  }
-
-  void loading2() {
-    setState(() {
-      _isLoading2 = !_isLoading2;
-    });
-  }
-
-  void _switchType() {
-    if (type == Status.signUp) {
-      setState(() {
-        type = Status.login;
-      });
-    } else {
-      setState(() {
-        type = Status.signUp;
-      });
-    }
-    // print(type);
-  }
+  final GlobalKey<FormState> formKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -83,65 +26,35 @@ class _LoginPageState extends State<LoginPage> {
           //  Now we will use this variable to access all the functions of the
           //  authentication
           final auth = ref.watch(authProvider);
+          final isLoading = ref.watch(firstIsLoadingStateProvider);
+          final emailText = ref.watch(emailTextProvider);
+          final passwordText = ref.watch(passwordTextProvider);
+          final authStatus = ref.watch(authStatusNotifierProvider);
 
-          //  Instead of creating a clutter on the onPressed Function
-          //  I have decided to create a seperate function and pass them into the
-          //  respective parameters.
-          //  if you want you can write the exact code in the onPressed function
-          //  it all depends on personal preference and code readability
-          Future<void> _onPressedFunction() async {
-            if (!_formKey.currentState!.validate()) {
+          Future<void> onAuthPress() async {
+            if (!formKey.currentState!.validate()) {
               return;
             }
-            // print(_email.text); // This are your best friend for debugging things
-            //  not to mention the debugging tools
-            // print(_password.text);
-            if (type == Status.login) {
-              loading();
-              await auth
-                  .signInWithEmailAndPassword(
-                      _email.text, _password.text, context)
-                  .whenComplete(
-                      () => auth.authStateChange.listen((event) async {
-                            if (event == null) {
-                              loading();
-                              return;
-                            }
-                          }));
+            if (ref.read(authStatusNotifierProvider.notifier).status ==
+                Status.login) {
+              ref.read(firstIsLoadingStateProvider.notifier).state =
+                  !ref.read(firstIsLoadingStateProvider.notifier).state;
+              print(
+                  "on login press before authenticating: ${ref.read(firstIsLoadingStateProvider.notifier).state}");
+              await auth.signInWithEmailAndPassword(
+                  emailText.text, passwordText.text, context);
             } else {
-              loading();
-              await auth
-                  .signUpWithEmailAndPassword(
-                      _email.text, _password.text, context)
-                  .whenComplete(
-                      () => auth.authStateChange.listen((event) async {
-                            if (event == null) {
-                              loading();
-                              return;
-                            }
-                          }));
+              ref.read(firstIsLoadingStateProvider.notifier).state =
+                  !ref.read(firstIsLoadingStateProvider.notifier).state;
+              print(
+                  "on sign up press before authenticating: ${ref.read(firstIsLoadingStateProvider.notifier).state}");
+              await auth.signUpWithEmailAndPassword(
+                  emailText.text, passwordText.text, context);
             }
-
-            //  I had said that we would be using a Loading spinner when
-            //  some functions are being performed. we need to check if some
-            //  error occured then we need to stop loading spinner so we can retry
-            //  Authenticating
-          }
-
-          Future<void> _loginWithGoogle() async {
-            loading2();
-            await auth
-                .signInWithGoogle(context)
-                .whenComplete(() => auth.authStateChange.listen((event) async {
-                      if (event == null) {
-                        loading2();
-                        return;
-                      }
-                    }));
           }
 
           return Form(
-            key: _formKey,
+            key: formKey,
             child: Column(
               children: [
                 Expanded(
@@ -163,7 +76,7 @@ class _LoginPageState extends State<LoginPage> {
                               color: Colors.black,
                               borderRadius: BorderRadius.circular(25)),
                           child: TextFormField(
-                            controller: _email,
+                            controller: emailText,
                             autocorrect: true,
                             enableSuggestions: true,
                             keyboardType: TextInputType.emailAddress,
@@ -177,6 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                               border: InputBorder.none,
                             ),
                             validator: (value) {
+                              // TODO: Create more conditional checks
                               if (value!.isEmpty || !value.contains('@')) {
                                 return 'Invalid email!';
                               }
@@ -193,9 +107,10 @@ class _LoginPageState extends State<LoginPage> {
                               color: Colors.black,
                               borderRadius: BorderRadius.circular(25)),
                           child: TextFormField(
-                            controller: _password,
+                            controller: passwordText,
                             obscureText: true,
                             validator: (value) {
+                              // TODO: Create more conditional checks
                               if (value!.isEmpty || value.length < 8) {
                                 return 'Password is too short!';
                               }
@@ -211,7 +126,8 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
                         ),
-                        if (type == Status.signUp)
+                        if (ref.read(authStatusNotifierProvider) ==
+                            Status.signUp)
                           AnimatedContainer(
                             duration: const Duration(milliseconds: 600),
                             margin: const EdgeInsets.symmetric(
@@ -231,9 +147,10 @@ class _LoginPageState extends State<LoginPage> {
                                 alignLabelWithHint: true,
                                 border: InputBorder.none,
                               ),
-                              validator: type == Status.signUp
+                              validator: ref.read(authStatusNotifierProvider) ==
+                                      Status.signUp
                                   ? (value) {
-                                      if (value != _password.text) {
+                                      if (value != passwordText.text) {
                                         return 'Passwords do not match!';
                                       }
                                       return null;
@@ -259,10 +176,10 @@ class _LoginPageState extends State<LoginPage> {
                           padding: const EdgeInsets.only(top: 32.0),
                           margin: const EdgeInsets.symmetric(horizontal: 16),
                           width: double.infinity,
-                          child: _isLoading
+                          child: isLoading
                               ? const Center(child: CircularProgressIndicator())
                               : MaterialButton(
-                                  onPressed: _onPressedFunction,
+                                  onPressed: onAuthPress,
                                   textColor: Colors.blue.shade700,
                                   textTheme: ButtonTextTheme.primary,
                                   minWidth: 100,
@@ -273,67 +190,37 @@ class _LoginPageState extends State<LoginPage> {
                                         BorderSide(color: Colors.blue.shade700),
                                   ),
                                   child: Text(
-                                    type == Status.login ? 'Log in' : 'Sign up',
+                                    authStatus == Status.login
+                                        ? 'Log in'
+                                        : 'Sign up',
                                     style: const TextStyle(
                                         fontWeight: FontWeight.w600),
                                   ),
                                 ),
                         ),
-                        // Container(
-                        //   padding: const EdgeInsets.only(top: 32.0),
-                        //   margin: const EdgeInsets.symmetric(horizontal: 16),
-                        //   width: double.infinity,
-                        //   child: _isLoading2
-                        //       ? const Center(
-                        //           child: CircularProgressIndicator())
-                        //       : MaterialButton(
-                        //           onPressed: _loginWithGoogle,
-                        //           textColor: Colors.blue.shade700,
-                        //           textTheme: ButtonTextTheme.primary,
-                        //           minWidth: 100,
-                        //           padding: const EdgeInsets.all(18),
-                        //           shape: RoundedRectangleBorder(
-                        //             borderRadius: BorderRadius.circular(25),
-                        //             side: BorderSide(
-                        //                 color: Colors.blue.shade700),
-                        //           ),
-                        //           child: Row(
-                        //             mainAxisAlignment:
-                        //                 MainAxisAlignment.center,
-                        //             children: const [
-                        //               //  A google icon here
-                        //               //  an External Package used here
-                        //               //  Font_awesome_flutter package used
-                        //               FaIcon(FontAwesomeIcons.google),
-                        //               Text(
-                        //                 ' Login with Google',
-                        //                 style: TextStyle(
-                        //                     fontWeight: FontWeight.w600),
-                        //               ),
-                        //             ],
-                        //           ),
-                        //         ),
-                        // ),
                         const Spacer(),
                         Padding(
                           padding: const EdgeInsets.only(bottom: 24.0),
                           child: RichText(
                             text: TextSpan(
-                              text: type == Status.login
+                              text: authStatus == Status.login
                                   ? 'Don\'t have an account? '
                                   : 'Already have an account? ',
                               style: const TextStyle(color: Colors.white),
                               children: [
                                 TextSpan(
-                                  text: type == Status.login
+                                  text: authStatus == Status.login
                                       ? 'Sign up now'
                                       : 'Log in',
                                   style: TextStyle(color: Colors.blue.shade700),
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
-                                      _switchType();
+                                      ref
+                                          .read(authStatusNotifierProvider
+                                              .notifier)
+                                          .changeStatus();
                                     },
-                                )
+                                ),
                               ],
                             ),
                           ),
@@ -341,7 +228,7 @@ class _LoginPageState extends State<LoginPage> {
                       ],
                     ),
                   ),
-                )
+                ),
               ],
             ),
           );

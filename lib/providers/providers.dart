@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/controllers/responses_database_controller.dart';
 import 'package:intellistudy/controllers/text_controller_notifier.dart';
+import '../controllers/auth_method_status_controller.dart';
 import '../models/auth_model.dart';
 
 // HomePage Providers
@@ -63,11 +64,11 @@ final flashcardIndexStateProvider = StateProvider.autoDispose((ref) => 0);
 // });
 
 final authProvider = Provider<AuthenticationModel>(
-    (ref) => AuthenticationModel(FirebaseAuth.instance));
+    (ref) => AuthenticationModel(FirebaseAuth.instance, ref));
 
 final authStateProvider = StreamProvider<User?>((ref) {
   return ref.watch(authProvider).authStateChange;
-}); 
+});
 
 // final authenticationProvider = Provider<AuthenticationModel>((ref) {
 //   return const AuthenticationModel();
@@ -81,4 +82,14 @@ final authStateProvider = StreamProvider<User?>((ref) {
 
 /// This is the provider that is used to access
 /// the text fields for the email and password
+final firstIsLoadingStateProvider = StateProvider.autoDispose((ref) => false);
+// final secondIsLoadingStateProvider = StateProvider.autoDispose((ref) => false);
+final emailTextProvider =
+    StateProvider.autoDispose(((ref) => TextEditingController()));
+final passwordTextProvider =
+    StateProvider.autoDispose((ref) => TextEditingController());
 
+final authStatusNotifierProvider =
+    StateNotifierProvider<AuthMethodStatusController, Status>((ref) {
+  return AuthMethodStatusController(ref);
+});
