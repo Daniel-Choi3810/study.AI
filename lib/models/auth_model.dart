@@ -28,8 +28,10 @@ class AuthenticationModel {
       String email, String password, BuildContext context) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+      ref.read(emailTextProvider).clear();
+      ref.read(passwordTextProvider).clear();
     } on FirebaseAuthException catch (e) {
-      // TODO: Figure out proper way to load the circular progress indicator
+      ref.read(passwordTextProvider).clear();
       ref.read(firstIsLoadingStateProvider.notifier).state = false;
       // Alert dialog that displays the error with an OK button to dismiss it
       await showDialog(
@@ -67,21 +69,31 @@ class AuthenticationModel {
         email: email,
         password: password,
       );
-      // print(
-      //     "The user's email after signing up is: ${_auth.currentUser!.email}");
 
-      await _firestore.collection('users').add({
+      _firestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid.toString())
+          .collection('flashcardSets')
+          .doc()
+          .set({});
+
+      await _firestore
+          .collection('users')
+          .doc(_auth.currentUser!.uid.toString())
+          .set({
         'username': email.substring(0, email.indexOf('@')),
         'email': email.trim(),
         'image_url': '',
         'userId': _auth.currentUser!.uid
             .toString(), // TODO: Make a provider for the user's UID
       });
-      // print the _firestore user's email
-      // print(
-      //     'The user\'s email after signing up is: ${_auth.currentUser!.email}');
+      print(
+          'The user\'s email after signing up is: ${_auth.currentUser!.email}');
+      ref.read(emailTextProvider).clear();
+      ref.read(passwordTextProvider).clear();
     } on FirebaseAuthException catch (e) {
       ref.read(firstIsLoadingStateProvider.notifier).state = false;
+      ref.read(passwordTextProvider).clear();
 
       // Alert dialog that displays the error with an OK button to dismiss it
       await showDialog(
@@ -92,7 +104,7 @@ class AuthenticationModel {
                   actions: [
                     TextButton(
                       onPressed: () {
-                        Navigator.of(context).pop();
+                        Navigator.pop(context);
                       },
                       child: const Text("OK"),
                     )
