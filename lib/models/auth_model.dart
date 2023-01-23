@@ -68,7 +68,7 @@ class AuthenticationModel {
           .doc(_auth.currentUser!.uid.toString())
           .collection('flashcardSets')
           .doc()
-          .set({}).then((value) => print('Flashcard set created'));
+          .set({});
 
       await _firestore
           .collection('users')
@@ -78,7 +78,7 @@ class AuthenticationModel {
         'email': email.trim(),
         'image_url': '',
         'userId': _auth.currentUser!.uid.toString(),
-      }).then((value) => print('User added to database'));
+      });
 
       ref.read(emailTextProvider).clear();
       ref.read(passwordTextProvider).clear();

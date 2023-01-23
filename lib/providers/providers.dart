@@ -52,6 +52,11 @@ final termTextStateProvider = StateProvider<String>((ref) => '');
 /// the definition text during editing
 final definitionTextStateProvider = StateProvider<String>((ref) => '');
 
+final setTitleTextStateProvider =
+    StateProvider.autoDispose((ref) => TextEditingController());
+final setDescriptionTextStateProvider =
+    StateProvider.autoDispose((ref) => TextEditingController());
+
 // Hive Database Providers
 
 /// This is the provider that is used to access
