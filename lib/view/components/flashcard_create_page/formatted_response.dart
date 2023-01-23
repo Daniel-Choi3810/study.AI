@@ -190,11 +190,14 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                       },
                       icon: const Icon(Icons.delete)),
                   Text(
-                    termSaved && definitionSaved ? '' : "Unsaved changes",
+                    termSaved ? '' : "Unsaved term changes",
+                    style:
+                        TextStyle(color: termSaved ? Colors.white : Colors.red),
+                  ),
+                  Text(
+                    definitionSaved ? '' : "Unsaved definition changes",
                     style: TextStyle(
-                        color: termSaved && definitionSaved
-                            ? Colors.white
-                            : Colors.red),
+                        color: definitionSaved ? Colors.white : Colors.red),
                   ),
                   IconButton(
                       onPressed: () async {

@@ -24,8 +24,9 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    final auth = ref.watch(authProvider);
     final db = ref.watch(localFlashcardDBProvider);
-    final searchFieldTextController = ref.watch(searchFieldStateProvider);
+    final searchFieldTextController = ref.watch(flashcardFieldStateProvider);
     final isLoading = ref.watch(
         isLoadingStateProvider); // Watch for changes in isLoadingProvider
     final isValid =
@@ -91,7 +92,7 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
           //     icon: const Icon(Icons.logout)),
         ],
       ),
-      body: ref.read(authProvider).auth.currentUser == null
+      body: auth.auth.currentUser == null
           ? AlertDialog(
               contentPadding: EdgeInsets.zero,
               content: Container(

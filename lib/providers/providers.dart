@@ -3,11 +3,22 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/controllers/flashcard_database_controller.dart';
+import 'package:intellistudy/controllers/search_database_controller_notifier.dart';
+import 'package:intellistudy/controllers/search_text_controller_notifier.dart';
 import 'package:intellistudy/controllers/text_controller_notifier.dart';
 import '../controllers/auth_method_status_controller.dart';
 import '../models/auth_model.dart';
 
-// HomePage Providers
+// Search Page Providers
+
+final searchIsLoadingStateProvider = StateProvider.autoDispose((ref) => false);
+final searchIsValidStateProvider = StateProvider.autoDispose((ref) => true);
+final searchAnswerTextProvider =
+    StateNotifierProvider<SearchTextControllerNotifier, String?>(
+        (ref) => SearchTextControllerNotifier(ref));
+final searchFieldStateProvider =
+    StateProvider.autoDispose(((ref) => TextEditingController()));
+// Flashcard Create Page Providers
 
 /// This is the provider that is used to access
 /// the text controller notifier to generate the answer
@@ -28,7 +39,7 @@ final isValidStateProvider = StateProvider.autoDispose((ref) => true);
 
 /// This is the provider that is used to access
 /// the search field text controller
-final searchFieldStateProvider =
+final flashcardFieldStateProvider =
     StateProvider.autoDispose(((ref) => TextEditingController()));
 
 // final responsesCountProvider = StateProvider.autoDispose((ref) => 3);
@@ -51,8 +62,8 @@ final localFlashcardDBProvider =
         ((ref) => FlashCardDataBaseController(ref)));
 
 final localSearchDBProvider =
-    StateNotifierProvider<FlashCardDataBaseController, List>(
-        ((ref) => FlashCardDataBaseController(ref)));
+    StateNotifierProvider<SearchDataBaseControllerNotifier, List>(
+        ((ref) => SearchDataBaseControllerNotifier(ref)));
 
 // Flashcard Providers
 
