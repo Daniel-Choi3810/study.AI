@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intellistudy/controllers/responses_database_controller.dart';
+import 'package:intellistudy/controllers/flashcard_database_controller.dart';
 import 'package:intellistudy/controllers/text_controller_notifier.dart';
 import '../controllers/auth_method_status_controller.dart';
 import '../models/auth_model.dart';
@@ -46,9 +46,13 @@ final definitionTextStateProvider = StateProvider<String>((ref) => '');
 /// This is the provider that is used to access
 /// the database controller to store the responses
 /// in the database and display them in the list view
-final localDBProvider =
-    StateNotifierProvider<ResponsesDataBaseController, List>(
-        ((ref) => ResponsesDataBaseController(ref)));
+final localFlashcardDBProvider =
+    StateNotifierProvider<FlashCardDataBaseController, List>(
+        ((ref) => FlashCardDataBaseController(ref)));
+
+final localSearchDBProvider =
+    StateNotifierProvider<FlashCardDataBaseController, List>(
+        ((ref) => FlashCardDataBaseController(ref)));
 
 // Flashcard Providers
 
@@ -82,14 +86,6 @@ final authProvider = Provider<AuthenticationModel>((ref) => AuthenticationModel(
 final authStateProvider = StreamProvider<User?>((ref) {
   return ref.watch(authProvider).authStateChange;
 });
-
-// final authenticationProvider = Provider<AuthenticationModel>((ref) {
-//   return const AuthenticationModel();
-// });
-
-// final authStateProvider = StreamProvider<User?>((ref) {
-//   return ref.read(authenticationProvider).authStateChange;
-// });
 
 /// Authentication Providers
 

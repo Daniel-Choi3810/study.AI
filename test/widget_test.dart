@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:intellistudy/view/components/home_page/formatted_response.dart';
-import '../lib/main.dart';
-import '../lib/view/components/home_page/search_field.dart';
+import 'package:intellistudy/view/components/flashcard_create_page/formatted_response.dart';
+import 'package:intellistudy/main.dart';
+import 'package:intellistudy/view/components/flashcard_create_page/search_field.dart';
 
 void main() {
   testWidgets('update the UI when generating a response', (tester) async {

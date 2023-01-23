@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intellistudy/view/components/home_page/clear_all_dialog/cancel_button.dart';
-import 'package:intellistudy/view/components/home_page/clear_all_dialog/clear_button.dart';
+import 'package:intellistudy/view/components/flashcard_create_page/clear_all_dialog/cancel_button.dart';
+import 'package:intellistudy/view/components/flashcard_create_page/clear_all_dialog/clear_button.dart';
 
 void showAlertDialog(BuildContext context, WidgetRef ref) {
   // set up the buttons

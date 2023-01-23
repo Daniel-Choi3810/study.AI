@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
-import 'package:intellistudy/view/components/home_page/create_response_button.dart';
+import 'package:intellistudy/view/components/flashcard_create_page/create_response_button.dart';
 import 'package:intellistudy/view/pages/login_page.dart';
-import '../components/home_page/clear_all_dialog/clear_all_alert_dialog.dart';
-import '../components/home_page/formatted_response.dart';
-import '../components/home_page/search_field.dart';
+import '../components/flashcard_create_page/clear_all_dialog/clear_all_alert_dialog.dart';
+import '../components/flashcard_create_page/formatted_response.dart';
+import '../components/flashcard_create_page/search_field.dart';
 import 'flash_card_view_page.dart';
 
 class FlashCardCreatePage extends ConsumerStatefulWidget {
@@ -18,20 +18,18 @@ class FlashCardCreatePage extends ConsumerStatefulWidget {
 }
 
 class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
-  @override
-  final responseBox = Hive.box('responsesDataBase');
+  final flashcardBox = Hive.box('flashcardDataBase');
 
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    final db = ref.watch(localDBProvider);
+    final db = ref.watch(localFlashcardDBProvider);
     final searchFieldTextController = ref.watch(searchFieldStateProvider);
     final isLoading = ref.watch(
         isLoadingStateProvider); // Watch for changes in isLoadingProvider
     final isValid =
         ref.watch(isValidStateProvider); // Watch for changes in isValidProvider
-    final authState = ref.watch(authStateProvider);
     return Scaffold(
       floatingActionButton: ref.read(authProvider).auth.currentUser == null
           ? null
@@ -44,7 +42,7 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                       heroTag: null,
                       onPressed: () async {
                         await ref
-                            .read(localDBProvider.notifier)
+                            .read(localFlashcardDBProvider.notifier)
                             .addToList(term: '', definition: '');
                       },
                       child: const Icon(Icons.add)),

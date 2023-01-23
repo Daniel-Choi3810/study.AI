@@ -21,8 +21,8 @@ class FlashCard extends ConsumerStatefulWidget {
 class _FlashCardState extends ConsumerState<FlashCard> {
   @override
   Widget build(BuildContext context) {
-    final isStarredProvider =
-        StateProvider<bool>((ref) => ref.watch(localDBProvider)[widget.id][3]);
+    final isStarredProvider = StateProvider<bool>(
+        (ref) => ref.watch(localFlashcardDBProvider)[widget.id][3]);
 
     final isStarred = ref.watch(isStarredProvider);
     final height = MediaQuery.of(context).size.height;
@@ -38,11 +38,13 @@ class _FlashCardState extends ConsumerState<FlashCard> {
           width: width * 0.7,
           onPressed: () {
             print(
-                'initial value in db: ${ref.read(localDBProvider)[widget.id][3]}');
-            ref.read(localDBProvider.notifier).starCard(index: widget.id);
+                'initial value in db: ${ref.read(localFlashcardDBProvider)[widget.id][3]}');
+            ref
+                .read(localFlashcardDBProvider.notifier)
+                .starCard(index: widget.id);
             ref.read(isStarredProvider.notifier).state =
-                ref.read(localDBProvider)[widget.id][3];
-            print("On the frontside: ${ref.read(localDBProvider)}");
+                ref.read(localFlashcardDBProvider)[widget.id][3];
+            print("On the frontside: ${ref.read(localFlashcardDBProvider)}");
           },
         ),
         back: CardSide(
@@ -52,10 +54,12 @@ class _FlashCardState extends ConsumerState<FlashCard> {
           height: height * 0.8,
           width: width * 0.7,
           onPressed: () {
-            ref.read(localDBProvider.notifier).starCard(index: widget.id);
+            ref
+                .read(localFlashcardDBProvider.notifier)
+                .starCard(index: widget.id);
             ref.read(isStarredProvider.notifier).state =
-                ref.read(localDBProvider)[widget.id][3];
-            print("On the backside: ${ref.read(localDBProvider)}");
+                ref.read(localFlashcardDBProvider)[widget.id][3];
+            print("On the backside: ${ref.read(localFlashcardDBProvider)}");
           },
         ));
   }

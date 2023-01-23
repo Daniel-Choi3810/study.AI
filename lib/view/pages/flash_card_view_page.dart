@@ -17,7 +17,7 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    final db = ref.watch(localDBProvider);
+    final db = ref.watch(localFlashcardDBProvider);
     final currentIndex = ref.watch(flashcardIndexStateProvider);
     return Scaffold(
       floatingActionButton: Padding(
@@ -25,7 +25,7 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
         child: FloatingActionButton.extended(
           onPressed: () {
             ref
-                .read(localDBProvider.notifier)
+                .read(localFlashcardDBProvider.notifier)
                 .updateStarState(index: currentIndex);
             Navigator.pop(context);
           },
@@ -189,7 +189,7 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                           ElevatedButton.icon(
                               onPressed: () async {
                                 await ref
-                                    .read(localDBProvider.notifier)
+                                    .read(localFlashcardDBProvider.notifier)
                                     .shuffleList();
                               },
                               icon: const Icon(Icons.shuffle),

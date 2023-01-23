@@ -4,9 +4,9 @@ import 'package:intellistudy/providers/providers.dart';
 
 final myBox = Hive.box('responsesDataBase');
 
-class ResponsesDataBaseController extends StateNotifier<List> {
+class SearchDataBaseControllerNotifier extends StateNotifier<List> {
   final Ref ref;
-  ResponsesDataBaseController(this.ref) : super([]) {
+  SearchDataBaseControllerNotifier(this.ref) : super([]) {
     loadData();
   }
 

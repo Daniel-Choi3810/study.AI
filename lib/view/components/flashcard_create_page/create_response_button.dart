@@ -38,7 +38,7 @@ class _CreateResponseButtonState extends ConsumerState<CreateResponseButton> {
       ref.read(isValidStateProvider.notifier).update((state) => true);
       // If search field is not empty, get answer text with prompt text
       await ref.read(answerTextProvider.notifier).getText(promptText: prompt);
-      await ref.read(localDBProvider.notifier).addToList(
+      await ref.read(localFlashcardDBProvider.notifier).addToList(
           term: prompt, definition: ref.read(answerTextProvider).toString());
     } else {
       // If search field is empty, get answer text with default prompt text

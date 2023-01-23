@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
-import 'package:intellistudy/view/components/home_page/create_response_button.dart';
+import 'package:intellistudy/view/components/flashcard_create_page/create_response_button.dart';
 import 'package:intellistudy/view/pages/flash_card_create_page.dart';
-import '../components/home_page/clear_all_dialog/clear_all_alert_dialog.dart';
-import '../components/home_page/formatted_response.dart';
-import '../components/home_page/search_field.dart';
+import '../components/flashcard_create_page/clear_all_dialog/clear_all_alert_dialog.dart';
+import '../components/flashcard_create_page/formatted_response.dart';
+import '../components/flashcard_create_page/search_field.dart';
 
 // Consumer Stateful Widget is a widget that can be used to read providers
 class HomePage extends ConsumerStatefulWidget {
@@ -23,7 +23,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
-    final db = ref.watch(localDBProvider);
+    final db = ref.watch(localSearchDBProvider);
     final searchFieldTextController = ref.watch(searchFieldStateProvider);
     final isLoading = ref.watch(
         isLoadingStateProvider); // Watch for changes in isLoadingProvider
@@ -40,7 +40,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 heroTag: null,
                 onPressed: () async {
                   await ref
-                      .read(localDBProvider.notifier)
+                      .read(localSearchDBProvider.notifier)
                       .addToList(term: '', definition: '');
                 },
                 child: const Icon(Icons.add)),

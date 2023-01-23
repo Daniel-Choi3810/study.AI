@@ -10,7 +10,7 @@ class ClearButton extends ConsumerWidget {
     return TextButton(
       child: const Text("Clear All"),
       onPressed: () {
-        ref.read(localDBProvider.notifier).clearList();
+        ref.read(localFlashcardDBProvider.notifier).clearList();
         Navigator.pop(context);
       },
     );

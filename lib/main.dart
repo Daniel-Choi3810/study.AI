@@ -17,6 +17,7 @@ void main() async {
   );
 
   await Hive.initFlutter();
+  await Hive.openBox('flashcardDataBase');
   await Hive.openBox('responsesDataBase');
   await dotenv.load(fileName: ".env");
   runApp(

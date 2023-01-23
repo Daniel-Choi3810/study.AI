@@ -33,7 +33,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
       if (!termFocusNode.hasFocus) {
         print("in if statement");
         ref.read(termSavedProvider.notifier).state = true;
-        ref.read(localDBProvider.notifier).editTerm(
+        ref.read(localFlashcardDBProvider.notifier).editTerm(
             index: widget.id,
             term: ref
                 .read(termTextStateProvider.notifier)
@@ -43,7 +43,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
       } else {
         print('in else statement');
         ref
-            .read(localDBProvider.notifier)
+            .read(localFlashcardDBProvider.notifier)
             .loadPreviousResponse(index: widget.id);
         ref.read(termSavedProvider.notifier).state = false;
       }
@@ -51,7 +51,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
     definitionFocusNode.addListener(() {
       if (!definitionFocusNode.hasFocus) {
         ref.read(definitionSavedProvider.notifier).state = true;
-        ref.read(localDBProvider.notifier).editDefinition(
+        ref.read(localFlashcardDBProvider.notifier).editDefinition(
             index: widget.id,
             definition: ref
                 .read(definitionTextStateProvider.notifier)
@@ -60,7 +60,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                 .trim());
       } else {
         ref
-            .read(localDBProvider.notifier)
+            .read(localFlashcardDBProvider.notifier)
             .loadPreviousResponse(index: widget.id);
         ref.read(definitionSavedProvider.notifier).state = false;
       }
@@ -79,7 +79,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
     final termSaved = ref.watch(termSavedProvider);
     final definitionSaved = ref.watch(definitionSavedProvider);
     // final count = ref.watch(responsesCountProvider);
-    final isStarred = ref.watch(localDBProvider)[widget.id][3];
+    final isStarred = ref.watch(localFlashcardDBProvider)[widget.id][3];
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 200.0, vertical: 20),
       child: Container(
@@ -114,7 +114,9 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                   width: widget.width * 0.337,
                 ),
                 const Padding(
-                  padding: EdgeInsets.only(right: 400.0),
+                  padding: EdgeInsets.only(
+                    right: 100.0,
+                  ),
                   child: Text("Definition:",
                       style:
                           TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
@@ -122,10 +124,10 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                 GestureDetector(
                   onTap: () {
                     ref
-                        .read(localDBProvider.notifier)
+                        .read(localFlashcardDBProvider.notifier)
                         .starCard(index: widget.id);
                     ref
-                        .read(localDBProvider.notifier)
+                        .read(localFlashcardDBProvider.notifier)
                         .updateStarState(index: widget.id);
                   },
                   child: isStarred
@@ -183,7 +185,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                   IconButton(
                       onPressed: () async {
                         await ref
-                            .read(localDBProvider.notifier)
+                            .read(localFlashcardDBProvider.notifier)
                             .removeFromList(index: widget.id);
                       },
                       icon: const Icon(Icons.delete)),
@@ -197,7 +199,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                   IconButton(
                       onPressed: () async {
                         await ref
-                            .read(localDBProvider.notifier)
+                            .read(localFlashcardDBProvider.notifier)
                             .regenerateResponse(
                               index: widget.id,
                               term: "${widget.searchList[widget.id][0]}",
