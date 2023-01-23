@@ -7,7 +7,6 @@ import 'package:intellistudy/providers/providers.dart';
 
 class AuthenticationModel {
   const AuthenticationModel(this._auth, this.ref, this._firestore);
-  // For Authentication related functions you need an instance of FirebaseAuth
   final FirebaseAuth _auth;
   final FirebaseFirestore _firestore;
   final Ref ref;
@@ -43,8 +42,6 @@ class AuthenticationModel {
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
-                // ref.read(firstIsLoadingStateProvider.notifier).state =
-                //     !ref.read(firstIsLoadingStateProvider.notifier).state;
               },
               child: const Text("OK"),
             )
@@ -59,12 +56,8 @@ class AuthenticationModel {
 
   // SignUp the user using Email and Password
   Future<void> signUpWithEmailAndPassword(
-      // TODO: Figure out proper way to load the circular progress indicator
-      String email,
-      String password,
-      BuildContext context) async {
+      String email, String password, BuildContext context) async {
     try {
-      // print("in try statement, with $email and $password");
       await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
@@ -75,7 +68,7 @@ class AuthenticationModel {
           .doc(_auth.currentUser!.uid.toString())
           .collection('flashcardSets')
           .doc()
-          .set({});
+          .set({}).then((value) => print('Flashcard set created'));
 
       await _firestore
           .collection('users')
@@ -84,11 +77,9 @@ class AuthenticationModel {
         'username': email.substring(0, email.indexOf('@')),
         'email': email.trim(),
         'image_url': '',
-        'userId': _auth.currentUser!.uid
-            .toString(), // TODO: Make a provider for the user's UID
-      });
-      print(
-          'The user\'s email after signing up is: ${_auth.currentUser!.email}');
+        'userId': _auth.currentUser!.uid.toString(),
+      }).then((value) => print('User added to database'));
+
       ref.read(emailTextProvider).clear();
       ref.read(passwordTextProvider).clear();
     } on FirebaseAuthException catch (e) {

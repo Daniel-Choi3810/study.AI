@@ -96,7 +96,6 @@ final authStateProvider = StreamProvider<User?>((ref) {
 /// This is the provider that is used to access
 /// the text fields for the email and password
 final firstIsLoadingStateProvider = StateProvider.autoDispose((ref) => false);
-// final secondIsLoadingStateProvider = StateProvider.autoDispose((ref) => false);
 final emailTextProvider = StateProvider(((ref) => TextEditingController()));
 final passwordTextProvider = StateProvider((ref) => TextEditingController());
 

@@ -33,51 +33,53 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
         ref.watch(isValidStateProvider); // Watch for changes in isValidProvider
     final authState = ref.watch(authStateProvider);
     return Scaffold(
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: FloatingActionButton(
-                heroTag: null,
-                onPressed: () async {
-                  await ref
-                      .read(localDBProvider.notifier)
-                      .addToList(term: '', definition: '');
-                },
-                child: const Icon(Icons.add)),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: FloatingActionButton.extended(
-              heroTag: null,
-              onPressed: () async {
-                if (db.length >= 2) {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const FlashCardViewPage()),
-                  );
-                }
-              },
-              label: const Text("Create flashcards"),
+      floatingActionButton: ref.read(authProvider).auth.currentUser == null
+          ? null
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: FloatingActionButton(
+                      heroTag: null,
+                      onPressed: () async {
+                        await ref
+                            .read(localDBProvider.notifier)
+                            .addToList(term: '', definition: '');
+                      },
+                      child: const Icon(Icons.add)),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child: FloatingActionButton.extended(
+                    heroTag: null,
+                    onPressed: () async {
+                      if (db.length >= 2) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const FlashCardViewPage()),
+                        );
+                      }
+                    },
+                    label: const Text("Create flashcards"),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: FloatingActionButton.extended(
+                      heroTag: null,
+                      label: const Text("Clear All",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold)),
+                      onPressed: () {
+                        if (db.isNotEmpty) {
+                          showAlertDialog(context, ref);
+                        }
+                      }),
+                ),
+              ],
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: FloatingActionButton.extended(
-                heroTag: null,
-                label: const Text("Clear All",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                onPressed: () {
-                  if (db.isNotEmpty) {
-                    showAlertDialog(context, ref);
-                  }
-                }),
-          ),
-        ],
-      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
@@ -95,10 +97,10 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
           ? AlertDialog(
               contentPadding: EdgeInsets.zero,
               content: Container(
-                height: height * 0.7,
-                width: width * 0.7,
+                height: height * 0.9,
+                width: width * 0.9,
                 decoration: const BoxDecoration(
-                  color: Colors.white,
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
                 ),
                 child: const LoginPage(),
               ),
