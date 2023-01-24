@@ -6,7 +6,6 @@ import 'package:intellistudy/view/components/flashcard_create_page/create_respon
 import '../components/flashcard_create_page/clear_all_dialog/clear_all_alert_dialog.dart';
 import '../components/flashcard_create_page/formatted_response.dart';
 import '../components/flashcard_create_page/search_field.dart';
-import 'flash_card_view_page.dart';
 
 class FlashCardCreatePage extends ConsumerStatefulWidget {
   const FlashCardCreatePage({super.key});
@@ -28,7 +27,9 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     final auth = ref.watch(authProvider);
-    final db = ref.watch(localFlashcardDBProvider);
+    final firestore = ref.watch(fireStoreProvider);
+
+    final List db = ref.watch(localFlashcardDBProvider);
     final searchFieldTextController = ref.watch(flashcardFieldStateProvider);
     final isLoading = ref.watch(
         isLoadingStateProvider); // Watch for changes in isLoadingProvider
@@ -54,22 +55,22 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                       },
                       child: const Icon(Icons.add)),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(30.0),
-                  child: FloatingActionButton.extended(
-                    heroTag: null,
-                    onPressed: () async {
-                      if (db.length >= 2) {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const FlashCardViewPage()),
-                        );
-                      }
-                    },
-                    label: const Text("Create flashcards"),
-                  ),
-                ),
+                // Padding(
+                //   padding: const EdgeInsets.all(30.0),
+                //   child: FloatingActionButton.extended(
+                //     heroTag: null,
+                //     onPressed: () async {
+                //       if (db.length >= 2) {
+                //         Navigator.push(
+                //           context,
+                //           MaterialPageRoute(
+                //               builder: (context) => const FlashCardViewPage()),
+                //         );
+                //       }
+                //     },
+                //     label: const Text("Create flashcards"),
+                //   ),
+                // ),
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: FloatingActionButton.extended(
@@ -170,6 +171,42 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                             print('title: ${titleTextController.text}');
                             print(
                                 'description: ${descriptionTextController.text}');
+                            if (db.length >= 2) {
+                              List<Map> flashcardList =
+                                  []; // TODO: create method for this in DB controller class
+                              for (var flashcard in db) {
+                                Map step = {
+                                  'term': flashcard[0],
+                                  'definition': flashcard[1],
+                                  'regenerations': flashcard[2],
+                                  'isStarred': flashcard[3],
+                                };
+                                flashcardList.add(step);
+                              }
+                              print("The flashcard list is: $flashcardList");
+                              // await firestore
+                              //     .collection('users')
+                              //     .doc(auth.auth.currentUser!.uid.toString())
+                              //     .collection('flashcardSets')
+                              //     .doc()
+                              //     .set({
+
+                              // });
+                              await firestore
+                                  .collection('users')
+                                  .doc(auth.auth.currentUser!.uid.toString())
+                                  .collection('flashcardSets')
+                                  .doc(titleTextController.text.trim())
+                                  .set({
+                                'title': titleTextController.text.trim(),
+                                'description':
+                                    descriptionTextController.text.isEmpty
+                                        ? ' '
+                                        : descriptionTextController.text.trim(),
+                                'dateCreated': DateTime.now().toString(),
+                                'flashcards': flashcardList,
+                              });
+                            }
                           }
                         }),
                   ),

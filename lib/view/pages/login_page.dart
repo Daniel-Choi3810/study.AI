@@ -39,7 +39,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ref.read(emailTextProvider).text.trim(),
             ref.read(passwordTextProvider).text.trim(),
             context);
-        ref.read(authProvider);
+        // ref.read(authProvider);
         // if (ref.read(authProvider).auth.currentUser != null) {
         //   if (!mounted) return;
         //   Navigator.pop(context);
@@ -48,7 +48,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       } else {
         await auth.signUpWithEmailAndPassword(
             emailText.text.trim(), passwordText.text.trim(), context);
-        ref.read(authProvider);
+        // ref.read(authProvider);
         ref.read(firstIsLoadingStateProvider.notifier).state = false;
       }
       if (!mounted) return;

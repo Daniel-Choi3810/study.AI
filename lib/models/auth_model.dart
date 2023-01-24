@@ -62,14 +62,6 @@ class AuthenticationModel {
         email: email,
         password: password,
       );
-
-      _firestore
-          .collection('users')
-          .doc(_auth.currentUser!.uid.toString())
-          .collection('flashcardSets')
-          .doc()
-          .set({});
-
       await _firestore
           .collection('users')
           .doc(_auth.currentUser!.uid.toString())
@@ -79,6 +71,11 @@ class AuthenticationModel {
         'image_url': '',
         'userId': _auth.currentUser!.uid.toString(),
       });
+
+      // _firestore
+      //     .collection('users')
+      //     .doc(_auth.currentUser!.uid.toString())
+      //     .collection('flashcardSets');
 
       ref.read(emailTextProvider).clear();
       ref.read(passwordTextProvider).clear();
