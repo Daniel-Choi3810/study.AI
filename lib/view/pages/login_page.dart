@@ -27,6 +27,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     final isLoading = ref.watch(firstIsLoadingStateProvider);
     final emailText = ref.watch(emailTextProvider);
     final passwordText = ref.watch(passwordTextProvider);
+    final confirmPasswordText = ref.watch(confirmPasswordTextProvider);
     final authStatus = ref.watch(authStatusNotifierProvider);
     Future<void> onAuthPress() async {
       if (!formKey.currentState!.validate()) {
@@ -44,12 +45,12 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         //   if (!mounted) return;
         //   Navigator.pop(context);
         // }
-        ref.read(firstIsLoadingStateProvider.notifier).state = false;
+        // ref.read(firstIsLoadingStateProvider.notifier).state = false;
       } else {
         await auth.signUpWithEmailAndPassword(
             emailText.text.trim(), passwordText.text.trim(), context);
         // ref.read(authProvider);
-        ref.read(firstIsLoadingStateProvider.notifier).state = false;
+        // ref.read(firstIsLoadingStateProvider.notifier).state = false;
       }
       if (!mounted) return;
       // Navigator.pop(context);
@@ -105,6 +106,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                       ),
                       if (ref.read(authStatusNotifierProvider) == Status.signUp)
                         AuthConfirmPasswordField(
+                          textController: confirmPasswordText,
                           validator: ref.read(authStatusNotifierProvider) ==
                                   Status.signUp
                               ? (value) {

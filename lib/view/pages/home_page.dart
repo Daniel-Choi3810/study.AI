@@ -17,6 +17,7 @@ class HomePage extends ConsumerStatefulWidget {
 
 class _HomePageState extends ConsumerState<HomePage> {
   final _responseBox = Hive.box('responsesDataBase');
+  // final myBox = Hive.box('isAuthenticated');
 
   @override
   Widget build(BuildContext context) {

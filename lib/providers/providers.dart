@@ -110,6 +110,8 @@ final authStateProvider = StreamProvider<User?>((ref) {
 final firstIsLoadingStateProvider = StateProvider.autoDispose((ref) => false);
 final emailTextProvider = StateProvider(((ref) => TextEditingController()));
 final passwordTextProvider = StateProvider((ref) => TextEditingController());
+final confirmPasswordTextProvider =
+    StateProvider((ref) => TextEditingController());
 
 final authStatusNotifierProvider =
     StateNotifierProvider<AuthMethodStatusController, Status>((ref) {

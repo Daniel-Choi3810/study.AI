@@ -19,6 +19,7 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox('flashcardDataBase');
   await Hive.openBox('responsesDataBase');
+  // await Hive.openBox('isAuthenticated');
   await dotenv.load(fileName: ".env");
   runApp(
     const ProviderScope(

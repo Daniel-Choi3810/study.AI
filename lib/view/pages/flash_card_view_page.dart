@@ -4,7 +4,8 @@ import '../../providers/providers.dart';
 import '../components/flash_card/flash_card.dart';
 
 class FlashCardViewPage extends ConsumerStatefulWidget {
-  const FlashCardViewPage({super.key});
+  const FlashCardViewPage({required this.title, super.key});
+  final String title;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -17,6 +18,8 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
+    final auth = ref.watch(authProvider);
+    final firestore = ref.watch(fireStoreProvider);
     final db = ref.watch(localFlashcardDBProvider);
     final currentIndex = ref.watch(flashcardIndexStateProvider);
     return Scaffold(

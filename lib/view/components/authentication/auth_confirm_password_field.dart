@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AuthConfirmPasswordField extends ConsumerWidget {
-  const AuthConfirmPasswordField({required this.validator, super.key});
+  const AuthConfirmPasswordField(
+      {required this.validator, super.key, required this.textController});
   final String? Function(String?)? validator;
+  final TextEditingController textController;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return AnimatedContainer(
@@ -13,6 +15,7 @@ class AuthConfirmPasswordField extends ConsumerWidget {
       decoration: BoxDecoration(
           color: Colors.black, borderRadius: BorderRadius.circular(25)),
       child: TextFormField(
+        controller: textController,
         obscureText: true,
         decoration: InputDecoration(
           hintText: 'Confirm password',

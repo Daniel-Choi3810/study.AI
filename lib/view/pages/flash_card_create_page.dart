@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/components/flashcard_create_page/create_response_button.dart';
+import 'package:intellistudy/view/pages/flash_card_view_page.dart';
 import '../components/flashcard_create_page/clear_all_dialog/clear_all_alert_dialog.dart';
 import '../components/flashcard_create_page/formatted_response.dart';
 import '../components/flashcard_create_page/search_field.dart';
@@ -171,7 +172,7 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                           for (var doc in setsSnapshot.docs) {
                             titles.add(doc['title']);
                           }
-                          print(titles);
+                          // print(titles);
 
                           if (titleTextController.text.isNotEmpty &&
                               titleTextController.text.trim() != ' ' &&
@@ -219,6 +220,14 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                               'dateCreated': DateTime.now().toString(),
                               'flashcards': flashcardList,
                             });
+                            if (!mounted) return;
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => FlashCardViewPage(
+                                        title: titleTextController.text.trim(),
+                                      )),
+                            );
                           }
                         }),
                   ),
