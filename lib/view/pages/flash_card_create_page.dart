@@ -172,17 +172,26 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                             print(
                                 'description: ${descriptionTextController.text}');
                             if (db.length >= 2) {
-                              List<Map> flashcardList =
-                                  []; // TODO: create method for this in DB controller class
-                              for (var flashcard in db) {
-                                Map step = {
-                                  'term': flashcard[0],
-                                  'definition': flashcard[1],
-                                  'regenerations': flashcard[2],
-                                  'isStarred': flashcard[3],
-                                };
-                                flashcardList.add(step);
-                              }
+                              // List<Map> flashcardList =
+                              //     []; // TODO: create method for this in DB controller class
+                              // for (var flashcard in db) {
+                              //   Map step = {
+                              //     'term': flashcard[0],
+                              //     'definition': flashcard[1],
+                              //     'regenerations': flashcard[2],
+                              //     'isStarred': flashcard[3],
+                              //   };
+                              //   flashcardList.add(step);
+                              // }
+                              List<Map> flashcardList = db
+                                  .map((flashcard) => {
+                                        'term': flashcard[0],
+                                        'definition': flashcard[1],
+                                        'regenerations': flashcard[2],
+                                        'isStarred': flashcard[3],
+                                      })
+                                  .toList();
+
                               print("The flashcard list is: $flashcardList");
                               // await firestore
                               //     .collection('users')
@@ -193,9 +202,14 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
 
                               // });
                               await firestore
-                                  .collection('users')
-                                  .doc(auth.auth.currentUser!.uid.toString())
                                   .collection('flashcardSets')
+                                  .doc(auth.auth.currentUser!.uid.toString())
+                                  .set({});
+
+                              await firestore
+                                  .collection('flashcardSets')
+                                  .doc(auth.auth.currentUser!.uid.toString())
+                                  .collection('sets')
                                   .doc(titleTextController.text.trim())
                                   .set({
                                 'title': titleTextController.text.trim(),

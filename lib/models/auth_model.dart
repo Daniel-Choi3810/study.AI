@@ -72,11 +72,6 @@ class AuthenticationModel {
         'userId': _auth.currentUser!.uid.toString(),
       });
 
-      // _firestore
-      //     .collection('users')
-      //     .doc(_auth.currentUser!.uid.toString())
-      //     .collection('flashcardSets');
-
       ref.read(emailTextProvider).clear();
       ref.read(passwordTextProvider).clear();
     } on FirebaseAuthException catch (e) {
