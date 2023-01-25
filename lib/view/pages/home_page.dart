@@ -4,7 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/components/search_page/clear_all_dialog/search_clear_all_dialog/search_clear_all_alert_dialog.dart';
 import 'package:intellistudy/view/components/search_page/create_search_response_button.dart';
-import 'package:intellistudy/view/pages/auth_checker_page.dart';
+import 'package:intellistudy/view/pages/test_auth_checker_page.dart';
 import '../components/flashcard_create_page/search_field.dart';
 
 // Consumer Stateful Widget is a widget that can be used to read providers
@@ -97,7 +97,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const AuthCheckerPage()),
+                        builder: (context) => const TestAuthCheckerPage()),
                   );
                 },
                 icon: const Icon(

@@ -3,8 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/components/flashcard_create_page/create_response_button.dart';
-import 'package:intellistudy/view/pages/flash_card_view_page.dart';
-import '../components/flashcard_create_page/clear_all_dialog/clear_all_alert_dialog.dart';
+import '../components/flashcard_create_page/clear_all_dialog/clear_all_alert_cards_dialog.dart';
 import '../components/flashcard_create_page/formatted_response.dart';
 import '../components/flashcard_create_page/search_field.dart';
 
@@ -78,7 +77,7 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                               fontSize: 16, fontWeight: FontWeight.bold)),
                       onPressed: () {
                         if (db.isNotEmpty) {
-                          showAlertDialog(context, ref);
+                          showClearAlertCardsDialog(context, ref);
                         }
                       }),
                 ),
@@ -193,14 +192,6 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                                 .toList();
 
                             print("The flashcard list is: $flashcardList");
-                            // await firestore
-                            //     .collection('users')
-                            //     .doc(auth.auth.currentUser!.uid.toString())
-                            //     .collection('flashcardSets')
-                            //     .doc()
-                            //     .set({
-
-                            // });
                             await firestore
                                 .collection('flashcardSets')
                                 .doc(auth.auth.currentUser!.uid.toString())
@@ -220,14 +211,9 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                               'dateCreated': DateTime.now().toString(),
                               'flashcards': flashcardList,
                             });
-                            if (!mounted) return;
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => FlashCardViewPage(
-                                        title: titleTextController.text.trim(),
-                                      )),
-                            );
+                            ref
+                                .read(localFlashcardDBProvider.notifier)
+                                .clearList();
                           }
                         }),
                   ),
