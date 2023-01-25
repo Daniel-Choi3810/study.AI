@@ -18,9 +18,6 @@ class FlashCardCreatePage extends ConsumerStatefulWidget {
 class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
   final flashcardBox = Hive.box('flashcardDataBase');
   final GlobalKey<FormState> formKey = GlobalKey();
-  // if (!formKey.currentState!.validate()) {
-  //       return;
-  //     }
 
   @override
   Widget build(BuildContext context) {
@@ -165,62 +162,63 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                     child: FloatingActionButton.extended(
                         label: const Text("Create Flashcard Set"),
                         onPressed: () async {
-                          if (titleTextController.text.isNotEmpty) {
+                          List<String> titles = [];
+                          final setsRef = firestore
+                              .collection('flashcardSets')
+                              .doc(auth.auth.currentUser!.uid.toString())
+                              .collection('sets');
+                          final setsSnapshot = await setsRef.get();
+                          for (var doc in setsSnapshot.docs) {
+                            titles.add(doc['title']);
+                          }
+                          print(titles);
+
+                          if (titleTextController.text.isNotEmpty &&
+                              titleTextController.text.trim() != ' ' &&
+                              db.length >= 2 &&
+                              !titles.contains(titleTextController.text)) {
                             // titleTextController.clear();
                             // descriptionTextController.clear();
                             print('title: ${titleTextController.text}');
                             print(
                                 'description: ${descriptionTextController.text}');
-                            if (db.length >= 2) {
-                              // List<Map> flashcardList =
-                              //     []; // TODO: create method for this in DB controller class
-                              // for (var flashcard in db) {
-                              //   Map step = {
-                              //     'term': flashcard[0],
-                              //     'definition': flashcard[1],
-                              //     'regenerations': flashcard[2],
-                              //     'isStarred': flashcard[3],
-                              //   };
-                              //   flashcardList.add(step);
-                              // }
-                              List<Map> flashcardList = db
-                                  .map((flashcard) => {
-                                        'term': flashcard[0],
-                                        'definition': flashcard[1],
-                                        'regenerations': flashcard[2],
-                                        'isStarred': flashcard[3],
-                                      })
-                                  .toList();
+                            List<Map> flashcardList = db
+                                .map((flashcard) => {
+                                      'term': flashcard[0],
+                                      'definition': flashcard[1],
+                                      'regenerations': flashcard[2],
+                                      'isStarred': flashcard[3],
+                                    })
+                                .toList();
 
-                              print("The flashcard list is: $flashcardList");
-                              // await firestore
-                              //     .collection('users')
-                              //     .doc(auth.auth.currentUser!.uid.toString())
-                              //     .collection('flashcardSets')
-                              //     .doc()
-                              //     .set({
+                            print("The flashcard list is: $flashcardList");
+                            // await firestore
+                            //     .collection('users')
+                            //     .doc(auth.auth.currentUser!.uid.toString())
+                            //     .collection('flashcardSets')
+                            //     .doc()
+                            //     .set({
 
-                              // });
-                              await firestore
-                                  .collection('flashcardSets')
-                                  .doc(auth.auth.currentUser!.uid.toString())
-                                  .set({});
+                            // });
+                            await firestore
+                                .collection('flashcardSets')
+                                .doc(auth.auth.currentUser!.uid.toString())
+                                .set({});
 
-                              await firestore
-                                  .collection('flashcardSets')
-                                  .doc(auth.auth.currentUser!.uid.toString())
-                                  .collection('sets')
-                                  .doc(titleTextController.text.trim())
-                                  .set({
-                                'title': titleTextController.text.trim(),
-                                'description':
-                                    descriptionTextController.text.isEmpty
-                                        ? ' '
-                                        : descriptionTextController.text.trim(),
-                                'dateCreated': DateTime.now().toString(),
-                                'flashcards': flashcardList,
-                              });
-                            }
+                            await firestore
+                                .collection('flashcardSets')
+                                .doc(auth.auth.currentUser!.uid.toString())
+                                .collection('sets')
+                                .doc(titleTextController.text.trim())
+                                .set({
+                              'title': titleTextController.text.trim(),
+                              'description':
+                                  descriptionTextController.text.isEmpty
+                                      ? ' '
+                                      : descriptionTextController.text.trim(),
+                              'dateCreated': DateTime.now().toString(),
+                              'flashcards': flashcardList,
+                            });
                           }
                         }),
                   ),
