@@ -4,7 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/components/search_page/clear_all_dialog/search_clear_all_dialog/search_clear_all_alert_dialog.dart';
 import 'package:intellistudy/view/components/search_page/create_search_response_button.dart';
-import 'package:intellistudy/view/pages/test_auth_checker_page.dart';
+import 'package:intellistudy/view/pages/flashcard_create_page.dart';
 import '../components/flashcard_create_page/search_field.dart';
 
 // Consumer Stateful Widget is a widget that can be used to read providers
@@ -31,36 +31,19 @@ class _HomePageState extends ConsumerState<HomePage> {
         searchIsValidStateProvider); // Watch for changes in isValidProvider
     final auth = ref.watch(authProvider);
     return Scaffold(
-      floatingActionButton: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(30.0),
-            child: FloatingActionButton(
-                heroTag: null,
-                onPressed: () async {
-                  await ref
-                      .read(localSearchDBProvider.notifier)
-                      .addToList(term: '', definition: '');
-                },
-                child: const Icon(Icons.add)),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: FloatingActionButton.extended(
-                heroTag: null,
-                label: const Text("Clear All",
-                    style:
-                        TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
-                onPressed: () {
-                  if (db.isNotEmpty) {
-                    showSearchAlertDialog(context, ref);
-                  }
-                }),
-          ),
-        ],
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: FloatingActionButton.extended(
+            heroTag: null,
+            label: const Text("Clear All",
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+            onPressed: () {
+              if (db.isNotEmpty) {
+                showSearchAlertDialog(context, ref);
+              }
+            }),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Colors.black,
@@ -97,7 +80,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const TestAuthCheckerPage()),
+                        builder: (context) => const FlashCardCreatePage()),
                   );
                 },
                 icon: const Icon(

@@ -3,20 +3,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/components/flashcard_create_page/clear_all_dialog/clear_all_alert_cards_dialog.dart';
+import 'package:intellistudy/view/pages/flashcard_master_view_page.dart';
 import '../components/flashcard_create_page/create_response_button.dart';
 import '../components/flashcard_create_page/formatted_response.dart';
 import '../components/flashcard_create_page/search_field.dart';
 import 'login_page.dart';
 
-class TestAuthCheckerPage extends ConsumerStatefulWidget {
-  const TestAuthCheckerPage({super.key});
+class FlashCardCreatePage extends ConsumerStatefulWidget {
+  const FlashCardCreatePage({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _TestAuthCheckerPageState();
+      _FlashCardCreatePageState();
 }
 
-class _TestAuthCheckerPageState extends ConsumerState<TestAuthCheckerPage> {
+class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
   final flashcardBox = Hive.box('flashcardDataBase');
   final GlobalKey<FormState> formKey = GlobalKey();
 
@@ -190,9 +191,15 @@ class _TestAuthCheckerPageState extends ConsumerState<TestAuthCheckerPage> {
                                     'dateCreated': DateTime.now().toString(),
                                     'flashcards': flashcardList,
                                   });
-                                  ref
+                                  await ref
                                       .read(localFlashcardDBProvider.notifier)
                                       .clearList();
+                                  if (!mounted) return;
+                                  Navigator.push(context,
+                                      MaterialPageRoute(builder: (context) {
+                                    return FlashcardMasterViewPage(
+                                        title: titleTextController.text.trim());
+                                  }));
                                 }
                               }),
                         ),

@@ -117,3 +117,14 @@ final authStatusNotifierProvider =
     StateNotifierProvider<AuthMethodStatusController, Status>((ref) {
   return AuthMethodStatusController(ref);
 });
+
+/// FlashCard View Page Providers
+
+// final firestoreStreamProvider =
+//     StreamProvider<DocumentSnapshot<Map<String, dynamic>>>((ref) =>
+//         FirebaseFirestore.instance
+//             .collection('flashcardSets')
+//             .doc(ref.watch(authProvider).auth.currentUser!.uid.toString())
+//             .collection('sets')
+//             .doc(ref.watch().toString())
+//             .snapshots());
