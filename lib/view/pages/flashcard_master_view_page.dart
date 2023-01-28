@@ -18,57 +18,79 @@ class _FlashcardMasterViewPageState
   Widget build(BuildContext context) {
     final firestore = ref.watch(fireStoreProvider);
     final auth = ref.watch(authProvider);
-    // final firestoreStreamProvider =
-    //     StreamProvider<DocumentSnapshot<Map<String, dynamic>>>((ref) {
-    //   return firestore
-    //       .collection('flashcardSets')
-    //       .doc(auth.auth.currentUser!.uid.toString())
-    //       .collection('sets')
-    //       .doc(widget.title)
-    //       .snapshots();
-    // });
-    // final firestoreStream = ref.watch(firestoreStreamProvider);
-    // return Scaffold(
-    //   body: Center(
-    //     child: firestoreStream.when(
-    //       data: (snapshot) {
-    //         // return ListView.builder(
-    //           itemCount: snapshot.data()!['flashcards'].length;
-    //           itemBuilder: (context, index) {
-    //             return Container(
-    //               decoration: const BoxDecoration(
-    //                 border: Border(
-    //                   bottom: BorderSide(
-    //                     color: Colors.black,
-    //                     width: 1.0,
-    //                   ),
-    //                 ),
-    //               ),
-    //               child: Row(
-    //                 mainAxisAlignment: MainAxisAlignment.center,
-    //                 children: [
-    //                   Text(snapshot.data()!['flashcards'][index]['term']),
-    //                   Text(snapshot.data()!['flashcards'][index]['definition']),
-    //                 ],
-    //               ),
-    //             );
-    //           };
-    //       },
-    //       loading: () => const Center(child: CircularProgressIndicator()),
-    //       error: (error, stack) => const Text('Error'),
-    //     ),
-    //   ),
-    // );
-
+    Stream<DocumentSnapshot<Map<String, dynamic>>> flashcardStream = firestore
+        .collection('flashcardSets')
+        .doc(auth.auth.currentUser!.uid.toString())
+        .collection('sets')
+        .doc(widget.title)
+        .snapshots();
     return Scaffold(
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FloatingActionButton.extended(
+                onPressed: () async {
+                  await firestore
+                      .collection('flashcardSets')
+                      .doc(auth.auth.currentUser!.uid.toString())
+                      .collection('sets')
+                      .doc(widget.title)
+                      .update({
+                    'flashcards': FieldValue.arrayUnion([
+                      {
+                        'definition': 'test asdd def',
+                        'isStarred': false,
+                        'regenerations': 3,
+                        'term': 'test adsd term',
+                      }
+                    ])
+                  });
+                },
+                icon: const Icon(Icons.add),
+                label: const Text('Add')),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FloatingActionButton.extended(
+                onPressed: () async {
+                  Map<String, dynamic> deleteCard = {};
+                  print('is error before?');
+                  // deleteCard["flashcards"][0] = FieldValue.arrayRemove([
+                  //   {
+                  //     'flashcards': [
+                  //       {
+                  //         'definition': 'test asdd def',
+                  //         'isStarred': false,
+                  //         'regenerations': 3,
+                  //         'term': 'test adsd term',
+                  //       }
+                  //     ],
+                  //   }
+                  // ]);
+                  // todo: fix thisf
+                  print('is error after?');
+                  await firestore
+                      .collection('flashcardSets')
+                      .doc(auth.auth.currentUser!.uid.toString())
+                      .collection('sets')
+                      .doc(widget.title)
+                      .update(deleteCard);
+                },
+                label: const Text('Delete')),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: FloatingActionButton.extended(
+                onPressed: () {}, label: const Text('Clear All')),
+          )
+        ],
+      ),
       body: Center(
         child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-          stream: firestore
-              .collection('flashcardSets')
-              .doc(auth.auth.currentUser!.uid.toString())
-              .collection('sets')
-              .doc(widget.title)
-              .snapshots(),
+          stream: flashcardStream,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return ListView.builder(
@@ -76,10 +98,20 @@ class _FlashcardMasterViewPageState
                 itemBuilder: (context, index) {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(snapshot.data!.data()!['flashcards'][index]['term']),
+                      const SizedBox(
+                        width: 20,
+                      ),
                       Text(snapshot.data!.data()!['flashcards'][index]
                           ['definition']),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(snapshot.data!
+                            .data()!['flashcards'][index]['isStarred']
+                            .toString()),
+                      ),
                     ],
                   );
                 },
