@@ -21,7 +21,7 @@ class SearchTextControllerNotifier extends StateNotifier<String?> {
     return state.toString();
   }
 
-  Future getText({required String promptText}) async {
+  Future<void> getText({required String promptText}) async {
     // This function is used to make the post request
     OpenAIRequestModel openAIRequestModel = OpenAIRequestModel(
       // This is the object that is used to make the post request
@@ -34,7 +34,7 @@ class SearchTextControllerNotifier extends StateNotifier<String?> {
       logprobs: null,
       contentType: 'application/json',
       authorization: 'Bearer $_apiToken',
-      model: 'text-ada-001',
+      model: 'text-davinci-002',
       url: url,
       apiToken: _apiToken!,
       // stop: '. ',
@@ -44,26 +44,19 @@ class SearchTextControllerNotifier extends StateNotifier<String?> {
       // This try catch block is used to make the post request and update the state of the app
       ref.read(searchIsLoadingStateProvider.notifier).update((state) =>
           true); // This is used to update the loading progress of the app to true
-      Stopwatch stopwatch = Stopwatch()..start();
-      Response request =
-          await openAIRequestModel.postRequest(); // This is the post request
-      if (stopwatch.elapsed.inSeconds > 10) {
-        // This is used to check if the request is taking longer than 10 seconds
-        print(stopwatch.elapsed.inSeconds);
-        print(
-            'API Request timed out in ${stopwatch.elapsed.inSeconds} seconds');
-        // This is used to check if the request is taking too long
-        state = "Request has timed out, please reload and try again";
+      Response request = await openAIRequestModel
+          .postRequest()
+          .timeout(const Duration(seconds: 10), onTimeout: () {
         ref
             .read(searchIsLoadingStateProvider.notifier)
             .update((state) => false);
-        return;
-      }
-      stopwatch.stop();
-      print('API Request executed in ${stopwatch.elapsed.inSeconds} seconds');
-      ref.read(searchIsLoadingStateProvider.notifier).update((state) =>
-          false); // This is used to update the loading progress of the app to false
+        return Response('error', 404);
+      }); // This is the post request
+
       if (request.statusCode == 200) {
+        ref
+            .read(searchIsLoadingStateProvider.notifier)
+            .update((state) => false);
         // if the request is successful, then the state is updated to the response
         state = await jsonDecode(utf8.decode(request.bodyBytes))['choices'][0]
                 ['text']

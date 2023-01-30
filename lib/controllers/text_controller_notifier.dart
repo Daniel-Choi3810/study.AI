@@ -34,7 +34,7 @@ class TextControllerNotifier extends StateNotifier<String?> {
       logprobs: null,
       contentType: 'application/json',
       authorization: 'Bearer $_apiToken',
-      model: 'text-ada-001',
+      model: 'text-davinci-002',
       url: url,
       apiToken: _apiToken!,
       // stop: '. ',

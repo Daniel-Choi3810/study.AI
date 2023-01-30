@@ -7,6 +7,7 @@ import 'package:intellistudy/controllers/search_database_controller_notifier.dar
 import 'package:intellistudy/controllers/search_text_controller_notifier.dart';
 import 'package:intellistudy/controllers/text_controller_notifier.dart';
 import '../controllers/auth_method_status_controller.dart';
+import '../controllers/master_view_database_controller_notifier.dart';
 import '../models/auth_model.dart';
 
 // Search Page Providers
@@ -69,6 +70,10 @@ final localFlashcardDBProvider =
 final localSearchDBProvider =
     StateNotifierProvider<SearchDataBaseControllerNotifier, List>(
         ((ref) => SearchDataBaseControllerNotifier(ref)));
+
+final localMasterViewDBProvider =
+    StateNotifierProvider<MasterViewDataBaseControllerNotifier, List>(
+        ((ref) => MasterViewDataBaseControllerNotifier(ref)));
 
 // Flashcard Providers
 

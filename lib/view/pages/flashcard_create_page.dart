@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -208,6 +210,7 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                     Padding(
                       padding: const EdgeInsets.all(18.0),
                       child: SearchField(
+                        height: height,
                         width: width,
                         textFieldController: searchFieldTextController,
                       ),
@@ -262,15 +265,21 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
               ),
             );
           }
-          return AlertDialog(
-            contentPadding: EdgeInsets.zero,
-            content: Container(
-              height: height * 0.75,
-              width: width * 0.75,
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          return BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: 2,
+              sigmaY: 2,
+            ),
+            child: AlertDialog(
+              contentPadding: EdgeInsets.zero,
+              content: Container(
+                height: height * 0.75,
+                width: width * 0.75,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                ),
+                child: const LoginPage(),
               ),
-              child: const LoginPage(),
             ),
           );
         },

@@ -77,7 +77,16 @@ class _FlashcardMasterViewPageState
                       .doc(auth.auth.currentUser!.uid.toString())
                       .collection('sets')
                       .doc(widget.title)
-                      .update(deleteCard);
+                      .update({
+                    'flashcards': FieldValue.arrayRemove([
+                      {
+                        'definition': 'test asdd def',
+                        'isStarred': false,
+                        'regenerations': 3,
+                        'term': 'test adsd term',
+                      }
+                    ])
+                  });
                 },
                 label: const Text('Delete')),
           ),

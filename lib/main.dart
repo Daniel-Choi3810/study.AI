@@ -6,7 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 //Firebase
 import 'package:firebase_core/firebase_core.dart';
-import 'package:intellistudy/view/pages/flashcard_master_view_page.dart';
+import 'package:intellistudy/view/pages/home_page.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -19,6 +19,7 @@ void main() async {
   await Hive.initFlutter();
   await Hive.openBox('flashcardDataBase');
   await Hive.openBox('responsesDataBase');
+  await Hive.openBox('masterViewDataBase');
   // await Hive.openBox('isAuthenticated');
   await dotenv.load(fileName: ".env");
   runApp(
@@ -45,13 +46,13 @@ class MyApp extends ConsumerWidget {
     //     ),
     //   );
     return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'StudyAI',
-        theme: ThemeData(
-            brightness: Brightness.dark,
-            fontFamily: GoogleFonts.poppins().fontFamily),
-        home: const FlashcardMasterViewPage(
-          title: 'stream test',
-        ));
+      debugShowCheckedModeBanner: false,
+      title: 'StudyAI',
+      theme: ThemeData(
+          // scaffoldBackgroundColor: Colors.black,
+          brightness: Brightness.dark,
+          fontFamily: GoogleFonts.poppins().fontFamily),
+      home: const HomePage(),
+    );
   }
 }
