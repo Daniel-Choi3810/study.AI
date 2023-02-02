@@ -46,48 +46,54 @@ class _HomePageState extends ConsumerState<HomePage> {
                   ),
                   backgroundColor: Colors.blueGrey),
               // Page controller to manage a PageView
-              controller: sideMenu,
-              // Will shows on top of all items, it can be a logo or a Title text
-              title: Column(
-                children: [
-                  MediaQuery.of(context).size.width > 650
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: const [
-                            Icon(
+              controller:
+                  sideMenu, // Will shows on top of all items, it can be a logo or a Title text
+              title: Center(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Center(
+                      child: Row(
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.only(left: 10.0),
+                            child: Icon(
                               Icons.book,
                               color: Colors.white,
+                              size: 30,
                             ),
-                            Padding(
-                              padding: EdgeInsets.all(8.0),
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
                               child: AutoSizeText(
-                                'Cram.AI',
-                                style: TextStyle(
+                                minFontSize: 10,
+                                stepGranularity: 10,
+                                maxLines: 1,
+                                MediaQuery.of(context).size.width > 600
+                                    ? 'Cram.AI'
+                                    : '',
+                                style: const TextStyle(
                                   color: Colors.white,
                                   fontSize: 30,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
-                          ],
-                        )
-                      : const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Icon(
-                            Icons.book,
-                            color: Colors.white,
-                            size: 30,
                           ),
-                        ),
-                  const Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: Divider(
-                      color: Colors.white,
-                      indent: 8.0,
-                      endIndent: 8.0,
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Divider(
+                        color: Colors.white,
+                        indent: 8.0,
+                        endIndent: 8.0,
+                      ),
+                    ),
+                  ],
+                ),
               ),
               // Will show on bottom of SideMenu when displayMode was SideMenuDisplayMode.open
               footer: Column(
