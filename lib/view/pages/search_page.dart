@@ -4,11 +4,8 @@ import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/utils/utils.dart';
 import 'package:intellistudy/view/components/search_page/clear_all_dialog/clear_all_button.dart';
 import 'package:intellistudy/view/components/search_page/clear_all_dialog/search_clear_all_dialog/search_clear_all_alert_dialog.dart';
-
 import '../components/flashcard_create_page/search_field.dart';
 import '../components/search_page/create_search_response_button.dart';
-
-// Consumer Stateful Widget is a widget that can be used to read providers
 
 class SearchPage extends ConsumerStatefulWidget {
   const SearchPage({super.key});
@@ -35,7 +32,9 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(20.0),
         child: ClearAllButton(onPressed: () {
+          // Clear all button for clearing all search results
           if (db.isNotEmpty) {
+            // If the search results are not empty, show the clear all dialog
             showSearchAlertDialog(context, ref);
           }
         }),
@@ -83,17 +82,41 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       //   ],
       // ),
       body: SafeArea(
-        child: Stack(
+        child: Column(
           children: [
+            SizedBox(
+              height: height * 0.125,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10.0, top: 1.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Expanded(
+                      child: SearchField(
+                        height: height,
+                        width: width,
+                        textFieldController: searchFieldTextController,
+                      ),
+                    ),
+                    SizedBox(
+                      width: width * 0.01,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 35.0),
+                      child: SearchButton(
+                          height: height,
+                          width: width,
+                          searchFieldTextController: searchFieldTextController),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             SingleChildScrollView(
               scrollDirection: Axis.vertical,
-              // physics: const NeverScrollableScrollPhysics(),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  SizedBox(
-                    height: height * 0.125,
-                  ),
                   isValid
                       ? SizedBox(
                           height: height * 0.02,
@@ -109,7 +132,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                             ),
                           ),
                         ),
-                  isLoading
+                  isLoading // TODO: Make loading indicator container match the size of the cards
                       ? Padding(
                           padding:
                               const EdgeInsets.only(bottom: 30.0, right: 34.0),
@@ -169,35 +192,6 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                     }),
                   ),
                 ],
-              ),
-            ),
-            SizedBox(
-              height: height * 0.125,
-              //decoration: const BoxDecoration(color: Colors.black),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 10.0, top: 1.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Expanded(
-                      child: SearchField(
-                        height: height,
-                        width: width,
-                        textFieldController: searchFieldTextController,
-                      ),
-                    ),
-                    SizedBox(
-                      width: width * 0.01,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(right: 35.0),
-                      child: SearchButton(
-                          height: height,
-                          width: width,
-                          searchFieldTextController: searchFieldTextController),
-                    ),
-                  ],
-                ),
               ),
             ),
           ],

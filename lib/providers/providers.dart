@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intellistudy/controllers/flashcard_database_controller.dart';
+import 'package:intellistudy/controllers/flashcard_database_controller_notifier.dart';
 import 'package:intellistudy/controllers/search_database_controller_notifier.dart';
 import 'package:intellistudy/controllers/search_text_controller_notifier.dart';
 import 'package:intellistudy/controllers/text_controller_notifier.dart';
@@ -64,8 +64,8 @@ final setDescriptionTextStateProvider =
 /// the database controller to store the responses
 /// in the database and display them in the list view
 final localFlashcardDBProvider =
-    StateNotifierProvider<FlashCardDataBaseController, List>(
-        ((ref) => FlashCardDataBaseController(ref)));
+    StateNotifierProvider<FlashCardDataBaseControllerNotifier, List>(
+        ((ref) => FlashCardDataBaseControllerNotifier(ref)));
 
 final localSearchDBProvider =
     StateNotifierProvider<SearchDataBaseControllerNotifier, List>(
@@ -125,11 +125,5 @@ final authStatusNotifierProvider =
 
 /// FlashCard View Page Providers
 
-// final firestoreStreamProvider =
-//     StreamProvider<DocumentSnapshot<Map<String, dynamic>>>((ref) =>
-//         FirebaseFirestore.instance
-//             .collection('flashcardSets')
-//             .doc(ref.watch(authProvider).auth.currentUser!.uid.toString())
-//             .collection('sets')
-//             .doc(ref.watch().toString())
-//             .snapshots());
+/// Navbar Providers
+///

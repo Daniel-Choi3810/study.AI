@@ -4,9 +4,9 @@ import 'package:intellistudy/providers/providers.dart';
 
 final myBox = Hive.box('flashcardDataBase');
 
-class FlashCardDataBaseController extends StateNotifier<List> {
+class FlashCardDataBaseControllerNotifier extends StateNotifier<List> {
   final Ref ref;
-  FlashCardDataBaseController(this.ref) : super([]) {
+  FlashCardDataBaseControllerNotifier(this.ref) : super([]) {
     loadData();
   }
 

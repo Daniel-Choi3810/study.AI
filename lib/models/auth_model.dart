@@ -162,7 +162,7 @@ class AuthenticationModel {
   Future<void> signOut() async {
     await _auth.signOut();
     ref.read(localFlashcardDBProvider.notifier).clearList();
-    ref.read(localSearchDBProvider.notifier).clearList();
+    //ref.read(localSearchDBProvider.notifier).clearList();
     // isAuthenticatedBox.put('isAuthenticated', false);
   }
 }

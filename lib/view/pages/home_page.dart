@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/utils/utils.dart';
 import 'package:intellistudy/view/pages/flashcard_create_page.dart';
 import 'package:intellistudy/view/pages/search_page.dart';
-
 import '../../providers/providers.dart';
 
 class HomePage extends ConsumerStatefulWidget {
@@ -18,20 +17,17 @@ class HomePage extends ConsumerStatefulWidget {
 class _HomePageState extends ConsumerState<HomePage> {
   @override
   void initState() {
+    super.initState();
     sideMenu.addListener((p0) {
       page.jumpToPage(p0);
     });
-    super.initState();
-    super.initState();
   }
 
   final PageController page = PageController();
   final SideMenuController sideMenu = SideMenuController();
-
   @override
   Widget build(BuildContext context) {
     final auth = ref.watch(authProvider); // Watch for changes in authProvider
-
     return Scaffold(
       body: Row(
         children: [
@@ -53,19 +49,37 @@ class _HomePageState extends ConsumerState<HomePage> {
               controller: sideMenu,
               // Will shows on top of all items, it can be a logo or a Title text
               title: Column(
-                children: const [
-                  Padding(
-                    padding: EdgeInsets.all(8.0),
-                    child: AutoSizeText(
-                      'Cram.AI',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 30,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                  Padding(
+                children: [
+                  MediaQuery.of(context).size.width > 650
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(
+                              Icons.book,
+                              color: Colors.white,
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: AutoSizeText(
+                                'Cram.AI',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 30,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ],
+                        )
+                      : const Padding(
+                          padding: EdgeInsets.all(8.0),
+                          child: Icon(
+                            Icons.book,
+                            color: Colors.white,
+                            size: 30,
+                          ),
+                        ),
+                  const Padding(
                     padding: EdgeInsets.all(8.0),
                     child: Divider(
                       color: Colors.white,
@@ -96,6 +110,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               onDisplayModeChanged: (mode) {
                 print(mode);
               },
+
               // List of SideMenuItem to show them on SideMenu
               items: [
                 SideMenuItem(
@@ -128,6 +143,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
           Expanded(
             child: PageView(
+              physics: const NeverScrollableScrollPhysics(),
               controller: page,
               children: const [SearchPage(), FlashCardCreatePage()],
             ),

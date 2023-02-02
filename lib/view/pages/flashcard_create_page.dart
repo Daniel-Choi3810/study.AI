@@ -1,11 +1,11 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/components/flashcard_create_page/clear_all_dialog/clear_all_alert_cards_dialog.dart';
 import 'package:intellistudy/view/pages/flashcard_master_view_page.dart';
+import '../../utils/utils.dart';
 import '../components/flashcard_create_page/create_response_button.dart';
 import '../components/flashcard_create_page/formatted_response.dart';
 import '../components/flashcard_create_page/search_field.dart';
@@ -27,7 +27,6 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
   Widget build(BuildContext context) {
     final auth = ref.watch(authProvider);
     final firestore = ref.watch(fireStoreProvider);
-
     final List db = ref.watch(localFlashcardDBProvider);
     final searchFieldTextController = ref.watch(flashcardFieldStateProvider);
     final isLoading = ref.watch(
@@ -49,6 +48,7 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                 Padding(
                   padding: const EdgeInsets.all(30.0),
                   child: FloatingActionButton(
+                      // TODO: create a custom button
                       heroTag: null,
                       onPressed: () async {
                         await ref
@@ -60,6 +60,7 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                 Padding(
                   padding: const EdgeInsets.all(20.0),
                   child: FloatingActionButton.extended(
+                      // TODO: create a custom button
                       heroTag: null,
                       label: const Text("Clear All",
                           style: TextStyle(
@@ -74,11 +75,6 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
             ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Colors.black,
-        title: const Text("Flash Card Generate Page"),
-        actions: const [],
-      ),
       body: authState.when(
         data: (data) {
           if (data != null) {
@@ -137,8 +133,17 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                         ),
                         Padding(
                           padding: const EdgeInsets.all(8.0),
-                          child: FloatingActionButton.extended(
-                              label: const Text("Create Flashcard Set"),
+                          child: MaterialButton(
+                              hoverElevation: 10,
+                              hoverColor:
+                                  const Color.fromARGB(255, 63, 50, 179),
+                              color: AppColors.purple,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              minWidth: width * 0.01,
+                              height: height * 0.08,
+                              child: const Text("Create Flashcard Set"),
                               onPressed: () async {
                                 List<String> titles = [];
                                 final setsRef = firestore
