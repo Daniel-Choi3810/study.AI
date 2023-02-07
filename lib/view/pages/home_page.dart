@@ -48,52 +48,70 @@ class _HomePageState extends ConsumerState<HomePage> {
               // Page controller to manage a PageView
               controller:
                   sideMenu, // Will shows on top of all items, it can be a logo or a Title text
-              title: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Center(
-                      child: Row(
-                        children: [
-                          const Padding(
-                            padding: EdgeInsets.only(left: 10.0),
-                            child: Icon(
-                              Icons.book,
-                              color: Colors.white,
-                              size: 30,
-                            ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: AutoSizeText(
-                                minFontSize: 10,
-                                stepGranularity: 10,
-                                maxLines: 1,
-                                MediaQuery.of(context).size.width > 600
-                                    ? 'Cram.AI'
-                                    : '',
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 30,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
+              title: Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 40.0),
+                    child: Icon(
+                      Icons.book,
+                      size: 40,
                     ),
-                    const Padding(
-                      padding: EdgeInsets.all(8.0),
-                      child: Divider(
-                        color: Colors.white,
-                        indent: 8.0,
-                        endIndent: 8.0,
-                      ),
+                  ),
+                  AutoSizeText(
+                    MediaQuery.of(context).size.width > 600 ? 'Cram.AI' : '',
+                    minFontSize: 10,
+                    stepGranularity: 10,
+                    maxLines: 1,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
                     ),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.0125,
+                  ),
+                  // Center(
+                  //   child: Row(
+                  //     children: [
+                  //       const Padding(
+                  //         padding: EdgeInsets.only(left: 10.0),
+                  //         child: Icon(
+                  //           Icons.book,
+                  //           color: Colors.white,
+                  //           size: 30,
+                  //         ),
+                  //       ),
+                  //       Expanded(
+                  //         child: Padding(
+                  //           padding: const EdgeInsets.all(8.0),
+                  //           child: AutoSizeText(
+                  //             minFontSize: 10,
+                  //             stepGranularity: 10,
+                  //             maxLines: 1,
+                  //             MediaQuery.of(context).size.width > 600
+                  //                 ? 'Cram.AI'
+                  //                 : '',
+                  //             style: const TextStyle(
+                  //               color: Colors.white,
+                  //               fontSize: 30,
+                  //               fontWeight: FontWeight.bold,
+                  //             ),
+                  //           ),
+                  //         ),
+                  //       ),
+                  //     ],
+                  //   ),
+                  // ),
+                  const Padding(
+                    padding: EdgeInsets.all(2.0),
+                    child: Divider(
+                      color: Colors.white,
+                      indent: 10.0,
+                      endIndent: 10.0,
+                    ),
+                  ),
+                ],
               ),
               // Will show on bottom of SideMenu when displayMode was SideMenuDisplayMode.open
               footer: Column(
