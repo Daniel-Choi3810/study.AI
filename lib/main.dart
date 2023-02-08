@@ -35,22 +35,11 @@ class MyApp extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final initialize = ref.watch(firebaseinitializerProvider);
-    // initialize.when(
-    //     data: (data) => const AuthChecker(),
-    //     loading: () => const Center(child: CircularProgressIndicator()),
-    //     error: (e, stackTrace) => Center(
-    //       child: Text(
-    //         e.toString(),
-    //       )
-    //     ),
-    //   );
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'StudyAI',
       theme: ThemeData(
           // scaffoldBackgroundColor: Colors.black,
-          brightness: Brightness.dark,
           fontFamily: GoogleFonts.poppins().fontFamily),
       home: const HomePage(),
     );

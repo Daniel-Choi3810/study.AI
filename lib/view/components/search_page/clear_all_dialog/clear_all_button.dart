@@ -15,17 +15,20 @@ class _ClearAllButtonState extends State<ClearAllButton> {
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
         // TODO: Refactor this button to a custom widget
-        icon: const Icon(
+        icon: Icon(
           Icons.delete,
-          color: Colors.white,
+          color: Colors.grey.shade100,
         ),
-        backgroundColor: AppColors.purple,
+        backgroundColor: AppColors.accent,
+        hoverColor: AppColors.accentDark,
         heroTag: null,
-        label: const Text("Clear All",
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontWeight: FontWeight.bold)),
+        label: Text(
+          "Clear All",
+          style: TextStyle(
+            color: Colors.grey.shade100,
+            fontSize: 16,
+          ),
+        ),
         onPressed: widget.onPressed);
   }
 }

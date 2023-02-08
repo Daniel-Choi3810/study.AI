@@ -22,8 +22,8 @@ class _SearchButtonState extends ConsumerState<SearchButton> {
   Widget build(BuildContext context) {
     return MaterialButton(
       hoverElevation: 10,
-      hoverColor: const Color.fromARGB(255, 63, 50, 179),
-      color: AppColors.purple,
+      hoverColor: AppColors.accentDark,
+      color: AppColors.accent,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),
@@ -32,7 +32,11 @@ class _SearchButtonState extends ConsumerState<SearchButton> {
       onPressed: createResponse,
       child: const Text(
         'Search',
-        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: 22,
+          //fontWeight: FontWeight.bold,
+          color: Colors.white,
+        ),
       ),
     );
   }

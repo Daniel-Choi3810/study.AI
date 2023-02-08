@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const purple = Color.fromRGBO(126, 114, 243, 1);
-  static const grey = Color.fromRGBO(30, 31, 35, 1);
-  static const blue = Color.fromRGBO(84, 164, 234, 1);
+  static const dominant = Colors.white;
+  static const complementary = Color(0xff52d0e7);
+  static const complementaryLight = Color(0xff9be4f1);
+  static const accent = Color(0xff07cc96);
+  static const accentLight = Color(0xff7ed9d9);
+  static const accentDark = Color(0xff25adae);
 }

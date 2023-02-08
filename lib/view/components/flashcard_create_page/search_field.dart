@@ -20,11 +20,11 @@ class SearchField extends StatelessWidget {
       // height: height * 0.07,
       width: width * 0.5,
       child: TextField(
-        cursorColor: AppColors.purple,
+        cursorColor: Colors.grey,
         controller: _textFieldController,
         decoration: const InputDecoration(
           filled: true,
-          fillColor: AppColors.grey,
+          fillColor: AppColors.dominant,
           isDense: true, // Added this
           contentPadding: EdgeInsets.all(25), // Added this
           prefixIcon: Padding(
@@ -36,20 +36,22 @@ class SearchField extends StatelessWidget {
               padding: EdgeInsets.only(left: 8.0),
               child: Icon(
                 Icons.search_rounded,
-                color: Colors.white,
+                color: AppColors.complementary,
                 size: 30,
               ),
             ),
           ),
           enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(width: 2, color: Colors.grey),
             borderRadius: BorderRadius.all(Radius.circular(12.0)),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 2, color: AppColors.purple),
+            borderSide: BorderSide(width: 2, color: AppColors.complementary),
             borderRadius: BorderRadius.all(Radius.circular(12.0)),
           ),
           hintText: 'Enter your question...',
           hintStyle: TextStyle(
+            fontStyle: FontStyle.italic,
             color: Colors.grey,
             // fontStyle: FontStyle.italic,
           ),

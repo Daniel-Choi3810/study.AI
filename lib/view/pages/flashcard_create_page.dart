@@ -137,7 +137,7 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                               hoverElevation: 10,
                               hoverColor:
                                   const Color.fromARGB(255, 63, 50, 179),
-                              color: AppColors.purple,
+                              color: AppColors.accent,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12.0),
                               ),
