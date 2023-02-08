@@ -16,6 +16,7 @@ class _FlashcardMasterViewPageState
     extends ConsumerState<FlashcardMasterViewPage> {
   @override
   Widget build(BuildContext context) {
+    // TODO: Master view page of cards created, like quizlet
     final firestore = ref.watch(fireStoreProvider);
     final auth = ref.watch(authProvider);
     Stream<DocumentSnapshot<Map<String, dynamic>>> flashcardStream = firestore

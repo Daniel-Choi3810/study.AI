@@ -42,7 +42,8 @@ class SearchField extends StatelessWidget {
             ),
           ),
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(width: 2, color: Colors.grey),
+            // none
+            borderSide: BorderSide.none,
             borderRadius: BorderRadius.all(Radius.circular(12.0)),
           ),
           focusedBorder: OutlineInputBorder(

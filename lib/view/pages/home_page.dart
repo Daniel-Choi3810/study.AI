@@ -33,6 +33,8 @@ class _HomePageState extends ConsumerState<HomePage> {
         children: [
           SideMenu(
             style: SideMenuStyle(
+                itemOuterPadding:
+                    const EdgeInsets.only(bottom: 2, left: 5, right: 5),
                 // showTooltip: false,
                 displayMode: SideMenuDisplayMode.auto,
                 hoverColor: AppColors.complementaryLight,
@@ -40,6 +42,11 @@ class _HomePageState extends ConsumerState<HomePage> {
                 selectedTitleTextStyle: const TextStyle(color: Colors.white),
                 selectedIconColor: Colors.white,
                 decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0x6352d0e7), Color(0x3652e7b4)],
+                    // begin: Alignment.topLeft,
+                    // end: Alignment.bottomCenter,
+                  ),
                   // boxShadow: [
                   //   BoxShadow(
                   //     color: Colors.black12,
@@ -47,7 +54,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                   //     spreadRadius: 5,
                   //   ),
                   // ],
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
+                  // borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
                 backgroundColor: AppColors.dominant),
             // Page controller to manage a PageView
@@ -126,13 +133,16 @@ class _HomePageState extends ConsumerState<HomePage> {
                   auth.auth.currentUser?.email ?? "Guest Profile",
                   style: const TextStyle(color: Colors.black),
                 ),
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.0125,
+                ),
                 const Divider(
                   indent: 10.0,
                   endIndent: 10.0,
                   color: Colors.black,
                 ),
                 const Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: EdgeInsets.only(bottom: 20.0),
                   child: Text('Sabres Media LLC © 2023'),
                 ),
               ],

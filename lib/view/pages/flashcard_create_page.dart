@@ -145,6 +145,7 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                               height: height * 0.08,
                               child: const Text("Create Flashcard Set"),
                               onPressed: () async {
+                                // TODO: Refactor this using new DB architecture
                                 List<String> titles = [];
                                 final setsRef = firestore
                                     .collection('flashcardSets')

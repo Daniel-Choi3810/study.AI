@@ -87,7 +87,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
         width: widget.width * 0.9,
         padding: const EdgeInsets.all(20),
         decoration: const BoxDecoration(
-            color: Colors.black,
+            color: Colors.white,
             borderRadius: BorderRadius.all(Radius.circular(20))),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -107,7 +107,10 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                   alignment: Alignment(0, 0),
                   child: Text(
                     "Term:",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
                   ),
                 ),
                 SizedBox(

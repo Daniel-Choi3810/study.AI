@@ -37,7 +37,7 @@ class MyApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'StudyAI',
+      title: 'CramAI',
       theme: ThemeData(
           // scaffoldBackgroundColor: Colors.black,
           fontFamily: GoogleFonts.poppins().fontFamily),

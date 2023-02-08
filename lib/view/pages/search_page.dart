@@ -84,7 +84,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Color(0x241babc6), Color(0x2607cc96)],
+            colors: [Color(0x4352d0e7), Color(0x4652e7b4)],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -181,6 +181,10 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                               height: height * 0.15,
                               width: 300,
                               decoration: BoxDecoration(
+                                // border: Border.all(
+                                //   color: AppColors.complementary,
+                                //   width: 1,
+                                // ),
                                 color: AppColors.dominant,
                                 borderRadius: BorderRadius.circular(10),
                               ),
