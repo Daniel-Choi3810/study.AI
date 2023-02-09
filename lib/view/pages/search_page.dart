@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/providers/providers.dart';
@@ -82,30 +83,34 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       //   ],
       // ),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [Color(0x4352d0e7), Color(0x4652e7b4)],
-            begin: Alignment.topLeft,
-            end: Alignment.bottomRight,
-          ),
-        ),
+        decoration: const BoxDecoration(color: AppColors.dominant),
         child: Padding(
           padding: const EdgeInsets.only(left: 20.0),
           child: SafeArea(
             child: Column(
               children: [
-                SizedBox(
-                  height: height * 0.125,
-                  child: Padding(
-                    padding: const EdgeInsets.only(left: 10.0, top: 1.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 35.0,
+                    vertical: 20.0,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    height: height * 0.16,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         Expanded(
-                          child: SearchField(
-                            height: height,
-                            width: width,
-                            textFieldController: searchFieldTextController,
+                          child: Padding(
+                            padding: const EdgeInsets.only(left: 35.0),
+                            child: SearchField(
+                              height: height,
+                              width: width,
+                              textFieldController: searchFieldTextController,
+                            ),
                           ),
                         ),
                         SizedBox(
@@ -123,91 +128,101 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                     ),
                   ),
                 ),
-                SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: <Widget>[
-                      isValid
-                          ? SizedBox(
-                              height: height * 0.02,
-                            )
-                          : SizedBox(
-                              height: height * 0.05,
-                              child: const Text(
-                                'Please enter a valid prompt',
-                                style: TextStyle(
-                                  color: Colors.red,
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ),
-                      isLoading // TODO: Make loading indicator container match the size of the cards
-                          ? Padding(
-                              padding: const EdgeInsets.only(
-                                  bottom: 30.0, right: 34.0),
-                              child: Container(
-                                height: height * 0.08,
-                                width: width * 0.785,
-                                decoration: BoxDecoration(
-                                  color: AppColors.complementary,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: const SizedBox(
-                                  width: 5,
-                                  height: 5,
-                                  child: Center(
-                                    child: CircularProgressIndicator(
-                                      color: AppColors.accent,
-                                    ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        isValid
+                            ? SizedBox(
+                                height: height * 0.02,
+                              )
+                            : SizedBox(
+                                height: height * 0.05,
+                                child: const Text(
+                                  'Please enter a valid prompt',
+                                  style: TextStyle(
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14,
                                   ),
                                 ),
                               ),
-                            )
-                          : const SizedBox(), // If isLoading is true, show CircularProgressIndicator, else show SizedBox
-                      // Create a scrollable vertical list view
-                      ListView.builder(
-                        physics: const NeverScrollableScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: db
-                            .length, // Watch for changes in responsesProvider (list of responses)
-                        itemBuilder: ((_, index) {
-                          return Padding(
-                            // TODO: Refactor this response card to a custom widget
-                            padding: const EdgeInsets.only(
-                                left: 8.0, bottom: 16.0, right: 34.0),
-                            child: Container(
-                              height: height * 0.15,
-                              width: 300,
-                              decoration: BoxDecoration(
-                                // border: Border.all(
-                                //   color: AppColors.complementary,
-                                //   width: 1,
-                                // ),
-                                color: AppColors.dominant,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Text(db[index][0]),
-                                  Text(db[index][1]),
-                                  IconButton(
+                        isLoading // TODO: Make loading indicator container match the size of the cards
+                            ? Padding(
+                                padding: const EdgeInsets.only(
+                                    bottom: 30.0, right: 34.0),
+                                child: Container(
+                                  height: height * 0.08,
+                                  width: width * 0.785,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.complementary,
+                                    borderRadius: BorderRadius.circular(10),
+                                  ),
+                                  child: const SizedBox(
+                                    width: 5,
+                                    height: 5,
+                                    child: Center(
+                                      child: CircularProgressIndicator(
+                                        color: AppColors.accent,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : const SizedBox(), // If isLoading is true, show CircularProgressIndicator, else show SizedBox
+                        // Create a scrollable vertical list view
+                        ListView.builder(
+                          physics: const ScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: db
+                              .length, // Watch for changes in responsesProvider (list of responses)
+                          itemBuilder: ((_, index) {
+                            return Padding(
+                              // TODO: Refactor this response card to a custom widget
+                              padding: const EdgeInsets.only(
+                                  left: 35.0, bottom: 16.0, right: 35.0),
+                              child: Container(
+                                height: height * 0.15,
+                                decoration: BoxDecoration(
+                                  // border: Border.all(
+                                  //   color: AppColors.complementary,
+                                  //   width: 1,
+                                  // ),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    AutoSizeText(
+                                      db[index][0],
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                      ),
+                                    ),
+                                    AutoSizeText(db[index][1]),
+                                    IconButton(
                                       onPressed: () async {
                                         await ref
                                             .read(
                                                 localSearchDBProvider.notifier)
                                             .removeFromList(index: index);
                                       },
-                                      icon: const Icon(Icons.delete)),
-                                ],
+                                      icon: const Icon(
+                                        Icons.delete,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ],
+                            );
+                          }),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
