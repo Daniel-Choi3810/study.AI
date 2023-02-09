@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/providers/providers.dart';
@@ -28,20 +27,17 @@ class _FlashcardMasterViewPageState
         .collection('cards')
         .snapshots()
         .map((querySnap) => querySnap
-            .docs //Mapping Stream of CollectionReference to List<QueryDocumentSnapshot>
+            .docs // Mapping Stream of CollectionReference to List<QueryDocumentSnapshot>
             .map((doc) => {
                   'id': doc.id,
                   'data': doc.data()
-                }) //Getting each document ID from the data property of QueryDocumentSnapshot
+                }) // Getting each document ID from the data property of QueryDocumentSnapshot
             .toList());
-    //{uid}, {term, def, regen, isStarred}
-
     // flashcardStream.forEach((flashcardList) {
     //   for (var flashcard in flashcardList) {
     //     print(flashcard['term']);
     //   }
     // });
-
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Row(
@@ -51,21 +47,31 @@ class _FlashcardMasterViewPageState
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton.extended(
                 onPressed: () async {
-                  await firestore
+                  firestore
                       .collection('flashcardSets')
                       .doc(auth.auth.currentUser!.uid.toString())
                       .collection('sets')
                       .doc(widget.title)
-                      .update({
-                    'flashcards': FieldValue.arrayUnion([
-                      {
-                        'definition': 'test asdd def',
-                        'isStarred': false,
-                        'regenerations': 3,
-                        'term': 'test adsd term',
-                      }
-                    ])
-                  });
+                      .collection('cards')
+                      .doc()
+                      .set(
+                    {
+                      'definition': '',
+                      'isStarred': false,
+                      'regenerations': 3,
+                      'term': '',
+                    },
+                  );
+                  // .update({
+                  //   'flashcards': FieldValue.arrayUnion([
+                  //     {
+                  //       'definition': 'test asdd def',
+                  //       'isStarred': false,
+                  //       'regenerations': 3,
+                  //       'term': 'test adsd term',
+                  //     }
+                  //   ])
+                  // });
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('Add')),
@@ -94,29 +100,6 @@ class _FlashcardMasterViewPageState
                         id: snapshot.data![index]['id'],
                         index: index),
                   );
-                  // return Row(
-                  //   mainAxisAlignment: MainAxisAlignment.center,
-                  //   crossAxisAlignment: CrossAxisAlignment.center,
-                  //   children: [
-                  //     Text(snapshot.data![index]['id']),
-                  //     const SizedBox(
-                  //       width: 20,
-                  //     ),
-                  //     Text(snapshot.data![index]['data']['term']),
-                  //     const SizedBox(
-                  //       width: 20,
-                  //     ),
-                  //     Text(snapshot.data![index]['data']['definition']),
-                  //     const SizedBox(
-                  //       width: 20,
-                  //     ),
-                  //     Padding(
-                  //       padding: const EdgeInsets.all(8.0),
-                  //       child: Text(snapshot.data![index]['data']['isStarred']
-                  //           .toString()),
-                  //     ),
-                  //   ],
-                  // );
                 },
               );
             }

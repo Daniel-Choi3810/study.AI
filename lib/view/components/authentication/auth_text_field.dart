@@ -22,7 +22,7 @@ class AuthTextField extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
-          color: Colors.black, borderRadius: BorderRadius.circular(25)),
+          color: Colors.white, borderRadius: BorderRadius.circular(25)),
       child: TextFormField(
         controller: textController,
         autocorrect: true,
@@ -31,7 +31,7 @@ class AuthTextField extends StatelessWidget {
         onSaved: (value) {},
         decoration: InputDecoration(
           hintText: hintText,
-          hintStyle: const TextStyle(color: Colors.white),
+          hintStyle: const TextStyle(color: Colors.black),
           icon: Icon(icon, color: Colors.blue.shade700, size: 24),
           alignLabelWithHint: true,
           border: InputBorder.none,

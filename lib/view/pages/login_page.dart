@@ -74,7 +74,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                     children: [
                       const Center(child: FlutterLogo(size: 81)),
                       Text('Sign in to create flashcards!!',
-                          style: Theme.of(context).textTheme.headline5),
+                          style: Theme.of(context).textTheme.headlineSmall),
                       const Spacer(flex: 1),
                       AuthTextField(
                         textController: emailText,
@@ -149,7 +149,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                           text: authStatus == Status.login
                               ? 'Don\'t have an account? '
                               : 'Already have an account? ',
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(color: Colors.black),
                           children: [
                             TextSpan(
                               text: authStatus == Status.login

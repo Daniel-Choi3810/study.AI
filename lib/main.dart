@@ -42,6 +42,7 @@ class MyApp extends ConsumerWidget {
           // scaffoldBackgroundColor: Colors.black,
           fontFamily: GoogleFonts.poppins().fontFamily),
       home: const FlashcardMasterViewPage(title: 'test 1'),
+      // home: const HomePage(),
     );
   }
 }
