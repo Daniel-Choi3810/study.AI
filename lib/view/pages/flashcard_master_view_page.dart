@@ -19,12 +19,28 @@ class _FlashcardMasterViewPageState
     // TODO: Master view page of cards created, like quizlet
     final firestore = ref.watch(fireStoreProvider);
     final auth = ref.watch(authProvider);
-    Stream<DocumentSnapshot<Map<String, dynamic>>> flashcardStream = firestore
+    Stream<List<Map<String, dynamic>>> flashcardStream = firestore
         .collection('flashcardSets')
         .doc(auth.auth.currentUser!.uid.toString())
         .collection('sets')
         .doc(widget.title)
-        .snapshots();
+        .collection('cards')
+        .snapshots()
+        .map((querySnap) => querySnap
+            .docs //Mapping Stream of CollectionReference to List<QueryDocumentSnapshot>
+            .map((doc) => {
+                  'id': doc.id,
+                  'data': doc.data()
+                }) //Getting each document ID from the data property of QueryDocumentSnapshot
+            .toList());
+    //{uid}, {term, def, regen, isStarred}
+
+    // flashcardStream.forEach((flashcardList) {
+    //   for (var flashcard in flashcardList) {
+    //     print(flashcard['term']);
+    //   }
+    // });
+
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Row(
@@ -59,35 +75,53 @@ class _FlashcardMasterViewPageState
                 onPressed: () async {
                   Map<String, dynamic> deleteCard = {};
                   print('is error before?');
-                  // deleteCard["flashcards"][0] = FieldValue.arrayRemove([
-                  //   {
-                  //     'flashcards': [
-                  //       {
-                  //         'definition': 'test asdd def',
-                  //         'isStarred': false,
-                  //         'regenerations': 3,
-                  //         'term': 'test adsd term',
-                  //       }
-                  //     ],
-                  //   }
-                  // ]);
+
+                //Delete Card
+                //store doc id of card and replace
+                  // firestore
+                  //     .collection('flashcardSets')
+                  //     .doc(auth.auth.currentUser!.uid.toString())
+                  //     .collection('sets')
+                  //     .doc(widget.title)
+                  //     .collection('cards')
+                  //     .doc("DOCiDoFcard")
+                  //     .delete()
+                  //     .then(
+                  //       (doc) => print("Document deleted"),
+                  //       onError: (e) => print("Error updating document $e"),
+                  //     );
+
+                  //Update Card
+                  // final cardRef = firestore
+                  //     .collection('flashcardSets')
+                  //     .doc(auth.auth.currentUser!.uid.toString())
+                  //     .collection('sets')
+                  //     .doc(widget.title)
+                  //     .collection('cards')
+                  //     .doc("DOCiDoFcard");
+
+                  // cardRef.update({"term": 'balls', "definition": "stuff"}).then(
+                  //     (value) =>
+                  //         print("DocumentSnapshot successfully updated!"),
+                  //     onError: (e) => print("Error updating document $e"));
+
                   // todo: fix thisf
-                  print('is error after?');
-                  await firestore
-                      .collection('flashcardSets')
-                      .doc(auth.auth.currentUser!.uid.toString())
-                      .collection('sets')
-                      .doc(widget.title)
-                      .update({
-                    'flashcards': FieldValue.arrayRemove([
-                      {
-                        'definition': 'test asdd def',
-                        'isStarred': false,
-                        'regenerations': 3,
-                        'term': 'test adsd term',
-                      }
-                    ])
-                  });
+          
+                  // await firestore
+                  //     .collection('flashcardSets')
+                  //     .doc(auth.auth.currentUser!.uid.toString())
+                  //     .collection('sets')
+                  //     .doc(widget.title)
+                  //     .update({
+                  //   'flashcards': FieldValue.arrayRemove([
+                  //     {
+                  //       'definition': 'test asdd def',
+                  //       'isStarred': false,
+                  //       'regenerations': 3,
+                  //       'term': 'test adsd term',
+                  //     }
+                  //   ])
+                  // });
                 },
                 label: const Text('Delete')),
           ),
@@ -99,27 +133,33 @@ class _FlashcardMasterViewPageState
         ],
       ),
       body: Center(
-        child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+        child: StreamBuilder<List<Map<String, dynamic>>>(
           stream: flashcardStream,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
+              //print(flashcardStream);
               return ListView.builder(
-                itemCount: snapshot.data!.data()!['flashcards'].length,
+                itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
                   return Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Text(snapshot.data!.data()!['flashcards'][index]['term']),
+                      Text(snapshot.data![index]['id']),
                       const SizedBox(
                         width: 20,
                       ),
-                      Text(snapshot.data!.data()!['flashcards'][index]
-                          ['definition']),
+                      Text(snapshot.data![index]['data']['term']),
+                      const SizedBox(
+                        width: 20,
+                      ),
+                      Text(snapshot.data![index]['data']['definition']),
+                      const SizedBox(
+                        width: 20,
+                      ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(snapshot.data!
-                            .data()!['flashcards'][index]['isStarred']
+                        child: Text(snapshot.data![index]['data']['isStarred']
                             .toString()),
                       ),
                     ],
