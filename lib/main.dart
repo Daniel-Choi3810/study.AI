@@ -6,8 +6,8 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 //Firebase
 import 'package:firebase_core/firebase_core.dart';
-import 'package:intellistudy/view/pages/flashcard_master_view_page.dart';
 import 'firebase_options.dart';
+import 'view/pages/flashcard_master_view_page.dart';
 
 void main() async {
   //Initialize Firebase

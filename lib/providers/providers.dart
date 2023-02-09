@@ -127,3 +127,5 @@ final authStatusNotifierProvider =
 
 /// Navbar Providers
 ///
+
+/// Flashcard Master View Page Providers

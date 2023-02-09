@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/providers/providers.dart';
@@ -47,7 +48,7 @@ class _FlashcardMasterViewPageState
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton.extended(
                 onPressed: () async {
-                  firestore
+                  await firestore
                       .collection('flashcardSets')
                       .doc(auth.auth.currentUser!.uid.toString())
                       .collection('sets')
@@ -79,7 +80,21 @@ class _FlashcardMasterViewPageState
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton.extended(
-                onPressed: () {}, label: const Text('Clear All')),
+                onPressed: () async {
+                  await firestore
+                      .collection('flashcardSets')
+                      .doc(auth.auth.currentUser!.uid.toString())
+                      .collection('sets')
+                      .doc(widget.title)
+                      .collection('cards')
+                      .get()
+                      .then((snapshot) {
+                    for (DocumentSnapshot ds in snapshot.docs) {
+                      ds.reference.delete();
+                    }
+                  });
+                },
+                label: const Text('Clear All')),
           )
         ],
       ),
