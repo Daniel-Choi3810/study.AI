@@ -1,10 +1,8 @@
 import 'dart:ui';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
-import 'package:intellistudy/view/components/flash_card/flash_card.dart';
 import 'package:intellistudy/view/components/flashcard_create_page/clear_all_dialog/clear_all_alert_cards_dialog.dart';
 import 'package:intellistudy/view/pages/flashcard_master_view_page.dart';
 import '../../utils/utils.dart';
@@ -247,13 +245,15 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                       itemCount: db
                           .length, // Watch for changes in responsesProvider (list of responses)
                       itemBuilder: ((_, index) {
-                        return FormattedResponse(
-                            key:
-                                UniqueKey(), //TODO: Figure this out, why does valueKey Not work?
-                            height: height,
-                            width: width,
-                            searchList: db,
-                            id: index);
+                        return Expanded(
+                          child: FormattedResponse(
+                              key:
+                                  UniqueKey(), //TODO: Figure this out, why does valueKey Not work?
+                              height: height,
+                              width: width,
+                              searchList: db,
+                              id: index),
+                        );
                       }),
                     ),
                   ],

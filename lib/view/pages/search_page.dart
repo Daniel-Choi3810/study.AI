@@ -183,77 +183,74 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                               // TODO: Refactor this response card to a custom widget
                               padding: const EdgeInsets.only(
                                   left: 35.0, bottom: 16.0, right: 35.0),
-                              child: Flexible(
-                                child: Container(
-                                  height: height * 0.15,
-                                  decoration: BoxDecoration(
-                                    // border: Border.all(
-                                    //   color: AppColors.complementary,
-                                    //   width: 1,
-                                    // ),
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(10),
-                                  ),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.start,
-                                    children: [
-                                      Align(
-                                        alignment: Alignment.centerRight,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              top: 3, right: 10),
-                                          child: IconButton(
-                                            padding: EdgeInsets.zero,
-                                            constraints: const BoxConstraints(),
-                                            onPressed: () async {
-                                              await ref
-                                                  .read(localSearchDBProvider
-                                                      .notifier)
-                                                  .removeFromList(index: index);
-                                            },
-                                            icon: const Icon(
-                                              Icons.close,
-                                              color: Colors.red,
-                                            ),
+                              child: Container(
+                                height: height * 0.15,
+                                decoration: BoxDecoration(
+                                  // border: Border.all(
+                                  //   color: AppColors.complementary,
+                                  //   width: 1,
+                                  // ),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 3, right: 10),
+                                        child: IconButton(
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
+                                          onPressed: () async {
+                                            await ref
+                                                .read(localSearchDBProvider
+                                                    .notifier)
+                                                .removeFromList(index: index);
+                                          },
+                                          icon: const Icon(
+                                            Icons.close,
+                                            color: Colors.red,
                                           ),
                                         ),
                                       ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 50.0,
+                                          right: 50.0,
+                                        ),
+                                        child: AutoSizeText(
+                                          db[index][0],
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 2,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
                                             left: 50.0,
                                             right: 50.0,
-                                          ),
-                                          child: AutoSizeText(
-                                            db[index][0],
-                                            style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 20,
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 2,
-                                        child: Padding(
-                                          padding: const EdgeInsets.only(
-                                              left: 50.0,
-                                              right: 50.0,
-                                              bottom: 10.0),
-                                          child: AutoSizeText(
-                                            db[index][1],
-                                            style: TextStyle(
-                                              fontSize: 12,
-                                              color: Colors.grey[600],
-                                            ),
+                                            bottom: 10.0),
+                                        child: AutoSizeText(
+                                          db[index][1],
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey[600],
                                           ),
                                         ),
                                       ),
-                                    ],
-                                  ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             );

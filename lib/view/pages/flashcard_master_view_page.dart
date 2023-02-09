@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/providers/providers.dart';
+import 'package:intellistudy/view/components/flashcard_master_view_page/master_flashcard.dart';
 
 class FlashcardMasterViewPage extends ConsumerStatefulWidget {
   const FlashcardMasterViewPage({super.key, required this.title});
@@ -72,62 +73,6 @@ class _FlashcardMasterViewPageState
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton.extended(
-                onPressed: () async {
-                  Map<String, dynamic> deleteCard = {};
-                  print('is error before?');
-
-                //Delete Card
-                //store doc id of card and replace
-                  // firestore
-                  //     .collection('flashcardSets')
-                  //     .doc(auth.auth.currentUser!.uid.toString())
-                  //     .collection('sets')
-                  //     .doc(widget.title)
-                  //     .collection('cards')
-                  //     .doc("DOCiDoFcard")
-                  //     .delete()
-                  //     .then(
-                  //       (doc) => print("Document deleted"),
-                  //       onError: (e) => print("Error updating document $e"),
-                  //     );
-
-                  //Update Card
-                  // final cardRef = firestore
-                  //     .collection('flashcardSets')
-                  //     .doc(auth.auth.currentUser!.uid.toString())
-                  //     .collection('sets')
-                  //     .doc(widget.title)
-                  //     .collection('cards')
-                  //     .doc("DOCiDoFcard");
-
-                  // cardRef.update({"term": 'balls', "definition": "stuff"}).then(
-                  //     (value) =>
-                  //         print("DocumentSnapshot successfully updated!"),
-                  //     onError: (e) => print("Error updating document $e"));
-
-                  // todo: fix thisf
-          
-                  // await firestore
-                  //     .collection('flashcardSets')
-                  //     .doc(auth.auth.currentUser!.uid.toString())
-                  //     .collection('sets')
-                  //     .doc(widget.title)
-                  //     .update({
-                  //   'flashcards': FieldValue.arrayRemove([
-                  //     {
-                  //       'definition': 'test asdd def',
-                  //       'isStarred': false,
-                  //       'regenerations': 3,
-                  //       'term': 'test adsd term',
-                  //     }
-                  //   ])
-                  // });
-                },
-                label: const Text('Delete')),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FloatingActionButton.extended(
                 onPressed: () {}, label: const Text('Clear All')),
           )
         ],
@@ -141,29 +86,37 @@ class _FlashcardMasterViewPageState
               return ListView.builder(
                 itemCount: snapshot.data!.length,
                 itemBuilder: (context, index) {
-                  return Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(snapshot.data![index]['id']),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Text(snapshot.data![index]['data']['term']),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Text(snapshot.data![index]['data']['definition']),
-                      const SizedBox(
-                        width: 20,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(snapshot.data![index]['data']['isStarred']
-                            .toString()),
-                      ),
-                    ],
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: MasterFlashcard(
+                        snapshot: snapshot,
+                        title: widget.title,
+                        id: snapshot.data![index]['id'],
+                        index: index),
                   );
+                  // return Row(
+                  //   mainAxisAlignment: MainAxisAlignment.center,
+                  //   crossAxisAlignment: CrossAxisAlignment.center,
+                  //   children: [
+                  //     Text(snapshot.data![index]['id']),
+                  //     const SizedBox(
+                  //       width: 20,
+                  //     ),
+                  //     Text(snapshot.data![index]['data']['term']),
+                  //     const SizedBox(
+                  //       width: 20,
+                  //     ),
+                  //     Text(snapshot.data![index]['data']['definition']),
+                  //     const SizedBox(
+                  //       width: 20,
+                  //     ),
+                  //     Padding(
+                  //       padding: const EdgeInsets.all(8.0),
+                  //       child: Text(snapshot.data![index]['data']['isStarred']
+                  //           .toString()),
+                  //     ),
+                  //   ],
+                  // );
                 },
               );
             }

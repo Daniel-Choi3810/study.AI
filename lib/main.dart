@@ -6,7 +6,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 
 //Firebase
 import 'package:firebase_core/firebase_core.dart';
-import 'package:intellistudy/view/pages/home_page.dart';
+import 'package:intellistudy/view/pages/flashcard_master_view_page.dart';
 import 'firebase_options.dart';
 
 void main() async {
@@ -41,7 +41,7 @@ class MyApp extends ConsumerWidget {
       theme: ThemeData(
           // scaffoldBackgroundColor: Colors.black,
           fontFamily: GoogleFonts.poppins().fontFamily),
-      home: const HomePage(),
+      home: const FlashcardMasterViewPage(title: 'test 1'),
     );
   }
 }

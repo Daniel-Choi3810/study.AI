@@ -81,7 +81,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
     // final count = ref.watch(responsesCountProvider);
     final isStarred = ref.watch(localFlashcardDBProvider)[widget.id][3];
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 200.0, vertical: 20),
+      padding: const EdgeInsets.symmetric(horizontal: 50.0, vertical: 20),
       child: Container(
         height: widget.height * 0.25,
         width: widget.width * 0.9,
