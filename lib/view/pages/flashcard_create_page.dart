@@ -1,8 +1,10 @@
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
+import 'package:intellistudy/view/components/flash_card/flash_card.dart';
 import 'package:intellistudy/view/components/flashcard_create_page/clear_all_dialog/clear_all_alert_cards_dialog.dart';
 import 'package:intellistudy/view/pages/flashcard_master_view_page.dart';
 import '../../utils/utils.dart';
@@ -145,59 +147,47 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                               height: height * 0.08,
                               child: const Text("Create Flashcard Set"),
                               onPressed: () async {
-                                // TODO: Refactor this using new DB architecture
-                                List<String> titles = [];
-                                final setsRef = firestore
-                                    .collection('flashcardSets')
-                                    .doc(auth.auth.currentUser!.uid.toString())
-                                    .collection('sets');
-                                final setsSnapshot = await setsRef.get();
-                                for (var doc in setsSnapshot.docs) {
-                                  titles.add(doc['title']);
-                                }
-                                // print(titles);
-
                                 if (titleTextController.text.isNotEmpty &&
                                     titleTextController.text.trim() != ' ' &&
-                                    db.length >= 2 &&
-                                    !titles
-                                        .contains(titleTextController.text)) {
+                                    db.length >= 2) {
                                   // titleTextController.clear();
                                   // descriptionTextController.clear();
                                   print('title: ${titleTextController.text}');
                                   print(
                                       'description: ${descriptionTextController.text}');
-                                  List<Map> flashcardList = db
-                                      .map((flashcard) => {
-                                            'term': flashcard[0],
-                                            'definition': flashcard[1],
-                                            'regenerations': flashcard[2],
-                                            'isStarred': flashcard[3],
-                                          })
-                                      .toList();
 
-                                  print(
-                                      "The flashcard list is: $flashcardList");
-                                  await firestore
-                                      .collection('flashcardSets')
-                                      .doc(
-                                          auth.auth.currentUser!.uid.toString())
-                                      .set({});
-
-                                  await firestore
+                                  final setRef = firestore
                                       .collection('flashcardSets')
                                       .doc(
                                           auth.auth.currentUser!.uid.toString())
                                       .collection('sets')
-                                      .doc(titleTextController.text.trim())
-                                      .set({
-                                    'title': titleTextController.text.trim(),
-                                    'description': descriptionTextController
-                                            .text.isEmpty
-                                        ? ' '
-                                        : descriptionTextController.text.trim(),
-                                    'dateCreated': DateTime.now().toString(),
-                                    'flashcards': flashcardList,
+                                      .doc(titleTextController.text.trim());
+                                  final setData = {
+                                    "title": titleTextController.text.trim(),
+                                    "description":
+                                        descriptionTextController.text.trim(),
+                                    "dateCreated": DateTime.now(),
+                                  };
+                                  setRef.set(setData).then((documentSnapshot) {
+                                    final cardsRef = firestore
+                                        .collection('flashcardSets')
+                                        .doc(auth.auth.currentUser!.uid
+                                            .toString())
+                                        .collection('sets')
+                                        .doc(titleTextController.text.trim())
+                                        .collection('cards');
+                                    for (var flashcard in db) {
+                                      final data = {
+                                        "term": flashcard[0],
+                                        "definition": flashcard[1],
+                                        "regenerations": flashcard[2],
+                                        "isStarred": flashcard[3]
+                                      };
+
+                                      cardsRef.add(data).then(
+                                          (documentSnapshot) => print(
+                                              "Added Data with ID: ${documentSnapshot.id}"));
+                                    }
                                   });
                                   await ref
                                       .read(localFlashcardDBProvider.notifier)
