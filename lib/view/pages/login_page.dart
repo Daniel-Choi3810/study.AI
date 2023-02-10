@@ -40,7 +40,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ref.read(emailTextProvider).text.trim(),
             ref.read(passwordTextProvider).text.trim(),
             context);
-        ref.read(profileNotifierProvider.notifier).changeProfileStatus();
+        // ref.read(profileNotifierProvider.notifier).changeProfileStatus();
         // ref.read(authProvider);
         // if (ref.read(authProvider).auth.currentUser != null) {
         //   if (!mounted) return;
@@ -50,7 +50,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       } else {
         await auth.signUpWithEmailAndPassword(
             emailText.text.trim(), passwordText.text.trim(), context);
-        ref.read(profileNotifierProvider.notifier).changeProfileStatus();
+
+        // ref.read(profileNotifierProvider.notifier).changeProfileStatus();
         // ref.read(authProvider);
         // ref.read(firstIsLoadingStateProvider.notifier).state = false;
       }

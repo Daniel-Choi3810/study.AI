@@ -8,7 +8,7 @@ class ProfileStatusController extends StateNotifier<String> {
   ProfileStatusController(this.ref)
       : super(
           ref.read(authProvider).auth.currentUser != null
-              ? ref.read(authProvider).auth.currentUser!.email!
+              ? ref.read(authProvider).auth.currentUser!.displayName!
               : 'Guest',
         ); // : super('Guest');
 
@@ -18,7 +18,7 @@ class ProfileStatusController extends StateNotifier<String> {
     final auth = ref.read(authProvider);
 
     if (auth.auth.currentUser != null) {
-      _profile = auth.auth.currentUser!.email!;
+      _profile = auth.auth.currentUser!.displayName!;
     } else {
       _profile = 'Guest';
     }

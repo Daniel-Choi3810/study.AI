@@ -85,38 +85,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.0125,
                 ),
-                // Center(
-                //   child: Row(
-                //     children: [
-                //       const Padding(
-                //         padding: EdgeInsets.only(left: 10.0),
-                //         child: Icon(
-                //           Icons.book,
-                //           color: Colors.white,
-                //           size: 30,
-                //         ),
-                //       ),
-                //       Expanded(
-                //         child: Padding(
-                //           padding: const EdgeInsets.all(8.0),
-                //           child: AutoSizeText(
-                //             minFontSize: 10,
-                //             stepGranularity: 10,
-                //             maxLines: 1,
-                //             MediaQuery.of(context).size.width > 600
-                //                 ? 'Cram.AI'
-                //                 : '',
-                //             style: const TextStyle(
-                //               color: Colors.white,
-                //               fontSize: 30,
-                //               fontWeight: FontWeight.bold,
-                //             ),
-                //           ),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // ),
                 const Padding(
                   padding: EdgeInsets.all(2.0),
                   child: Divider(
@@ -151,9 +119,17 @@ class _HomePageState extends ConsumerState<HomePage> {
                           ],
                         ),
                 ),
-                Text(
-                  profileState,
-                  style: const TextStyle(color: Colors.black),
+                // Text(
+                //   profileState,
+                //   style: const TextStyle(color: Colors.black),
+                // ),
+                ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.blue,
+                    child: Text(profileState[0].toUpperCase(),
+                        style: const TextStyle(color: Colors.white)),
+                  ),
+                  title: Text(profileState),
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.0125,

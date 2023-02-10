@@ -31,6 +31,7 @@ class AuthenticationModel {
       String email, String password, BuildContext context) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
+      ref.read(profileNotifierProvider.notifier).changeProfileStatus();
       // isAuthenticatedBox.put('isAuthenticated', isSignedIn);
       ref.read(firstIsLoadingStateProvider.notifier).state = false;
       ref.read(emailTextProvider).clear();
@@ -69,10 +70,12 @@ class AuthenticationModel {
   Future<void> signUpWithEmailAndPassword(
       String email, String password, BuildContext context) async {
     try {
-      await _auth.createUserWithEmailAndPassword(
+      UserCredential result = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      User? user = result.user;
+      user!.updateDisplayName(email.substring(0, email.indexOf('@')));
       await _firestore
           .collection('users')
           .doc(_auth.currentUser!.uid.toString())
@@ -82,6 +85,7 @@ class AuthenticationModel {
         'image_url': '',
         'userId': _auth.currentUser!.uid.toString(),
       });
+      ref.read(profileNotifierProvider.notifier).changeProfileStatus();
       // isAuthenticatedBox.put('isAuthenticated', true);
       ref.read(firstIsLoadingStateProvider.notifier).state = false;
       ref.read(confirmPasswordTextProvider).clear();
