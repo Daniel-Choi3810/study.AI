@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/components/flashcard_master_view_page/master_flashcard.dart';
 import 'package:intellistudy/view/pages/flash_card_view_page.dart';
+import 'package:intellistudy/view/pages/home_page.dart';
 
 class FlashcardMasterViewPage extends ConsumerStatefulWidget {
   const FlashcardMasterViewPage({super.key, required this.title});
@@ -107,6 +108,15 @@ class _FlashcardMasterViewPageState
               }));
             },
             label: const Text('Study cards'),
+          ),
+          FloatingActionButton.extended(
+            heroTag: null,
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return const HomePage();
+              }));
+            },
+            label: const Text('Home'),
           ),
         ],
       ),

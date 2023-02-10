@@ -6,6 +6,7 @@ import 'package:intellistudy/utils/utils.dart';
 import 'package:intellistudy/view/pages/flashcard_create_page.dart';
 import 'package:intellistudy/view/pages/search_page.dart';
 import '../../providers/providers.dart';
+import 'my_sets_page.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -173,6 +174,14 @@ class _HomePageState extends ConsumerState<HomePage> {
               ),
               SideMenuItem(
                 priority: 2,
+                title: 'My Sets',
+                onTap: (page, _) {
+                  sideMenu.changePage(page);
+                },
+                icon: const Icon(Icons.home),
+              ),
+              SideMenuItem(
+                priority: 3,
                 title: 'Settings',
                 onTap: (page, _) {
                   sideMenu.changePage(page);
@@ -183,10 +192,13 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
           Expanded(
             child: PageView(
-              physics: const NeverScrollableScrollPhysics(),
-              controller: page,
-              children: const [SearchPage(), FlashCardCreatePage()],
-            ),
+                physics: const NeverScrollableScrollPhysics(),
+                controller: page,
+                children: const [
+                  SearchPage(),
+                  FlashCardCreatePage(),
+                  MySetsPage(),
+                ]),
           ),
         ],
       ),
