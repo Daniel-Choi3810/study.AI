@@ -124,6 +124,7 @@ final authStatusNotifierProvider =
 });
 
 /// FlashCard View Page Providers
+final docLengthStateProvider = StateProvider.autoDispose((ref) => 2);
 
 /// Navbar Providers
 ///

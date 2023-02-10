@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intellistudy/view/pages/home_page.dart';
 import '../../providers/providers.dart';
 import '../components/flash_card/flash_card.dart';
 
@@ -13,6 +14,7 @@ class FlashCardViewPage extends ConsumerStatefulWidget {
 }
 
 class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
+  // create function that gets doc length
   PageController flashCardController = PageController(initialPage: 0);
   @override
   Widget build(BuildContext context) {
@@ -20,17 +22,45 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
     double width = MediaQuery.of(context).size.width;
     final auth = ref.watch(authProvider);
     final firestore = ref.watch(fireStoreProvider);
-    final db = ref.watch(localFlashcardDBProvider);
+    final size = ref.watch(docLengthStateProvider);
+    // TODO: provider for the size, to rebuild widget index
+
+    Stream<Map<String, dynamic>> flashcardStream = firestore
+        .collection('flashcardSets')
+        .doc(auth.auth.currentUser!.uid.toString())
+        .collection('sets')
+        .doc(widget.title)
+        .collection('cards')
+        .snapshots()
+        .map((querySnap) => {
+              'list': querySnap.docs
+                  .map((doc) => {'id': doc.id, 'data': doc.data()})
+                  .toList(),
+              'count': querySnap.docs.length,
+            });
+
+    flashcardStream.listen((data) async {
+      ref.read(docLengthStateProvider.notifier).state = await data['count'];
+      // print('size: $size');
+      // Use the count value here.
+    });
+
+    // final db = ref.watch(localFlashcardDBProvider);
     final currentIndex = ref.watch(flashcardIndexStateProvider);
+    // print("size after listen: $size");
+
     return Scaffold(
       floatingActionButton: Padding(
         padding: const EdgeInsets.all(15.0),
         child: FloatingActionButton.extended(
+          heroTag: null,
           onPressed: () {
-            ref
-                .read(localFlashcardDBProvider.notifier)
-                .updateStarState(index: currentIndex);
-            Navigator.pop(context);
+            // ref
+            //     .read(localFlashcardDBProvider.notifier)
+            //     .updateStarState(index: currentIndex);
+            Navigator.push(context, MaterialPageRoute(builder: (context) {
+              return const HomePage();
+            }));
           },
           label: const Text('Back to Home page'),
         ),
@@ -41,13 +71,14 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
           children: [
             Padding(
               padding: const EdgeInsets.all(20.0),
-              child: currentIndex == db.length
-                  ? Text('$currentIndex / ${db.length}')
-                  : Text('${currentIndex + 1} / ${db.length}'),
+              child: currentIndex == size
+                  ? Text('$currentIndex / $size')
+                  : Text('${currentIndex + 1} / $size'),
+              // : const Text('yo mamas so fat, she needs two numbers'),
             ),
             LinearProgressIndicator(
               minHeight: 2,
-              value: (currentIndex) / db.length,
+              value: (currentIndex) / size,
               backgroundColor: Colors.grey,
             ),
             Column(
@@ -55,7 +86,7 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                 // SizedBox(
                 //   height: height * 0.1,
                 // ),
-                currentIndex == db.length
+                currentIndex == size
                     ? Column(
                         children: [
                           SizedBox(
@@ -97,8 +128,7 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                           color: Colors.greenAccent,
                                         ),
                                       ),
-                                      Text(
-                                          '$currentIndex / ${db.length} studied')
+                                      Text('$currentIndex / $size studied')
                                     ],
                                   )
                                 ],
@@ -112,17 +142,29 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                         color: Colors.grey.shade400),
                                   ),
                                   IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(
-                                        Icons.restart_alt_rounded,
-                                        size: 30,
-                                      )),
+                                    onPressed: () {
+                                      ref
+                                          .read(flashcardIndexStateProvider
+                                              .notifier)
+                                          .state = 0;
+                                    },
+                                    icon: const Icon(
+                                      Icons.restart_alt_rounded,
+                                      size: 30,
+                                    ),
+                                  ),
                                   IconButton(
-                                      onPressed: () {},
-                                      icon: const Icon(
-                                        Icons.home,
-                                        size: 30,
-                                      )),
+                                    onPressed: () {
+                                      Navigator.push(context,
+                                          MaterialPageRoute(builder: (context) {
+                                        return const HomePage();
+                                      }));
+                                    },
+                                    icon: const Icon(
+                                      Icons.home,
+                                      size: 30,
+                                    ),
+                                  ),
                                 ],
                               )
                             ],
@@ -136,25 +178,82 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                             child: ConstrainedBox(
                               constraints:
                                   BoxConstraints(maxWidth: width * 0.9),
-                              child: PageView.builder(
-                                  controller: flashCardController,
-                                  itemBuilder: (context, index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 150.0, vertical: 50.0),
-                                      child: FlashCard(
-                                          key: UniqueKey(),
-                                          id: index,
-                                          term: db[index][0],
-                                          definition: db[index][1]),
-                                    );
-                                  },
-                                  itemCount: db.length,
-                                  onPageChanged: (index) {
-                                    ref
-                                        .read(flashcardIndexStateProvider
-                                            .notifier)
-                                        .state = index;
+                              child: StreamBuilder(
+                                  stream: flashcardStream,
+                                  builder: (context, snapshot) {
+                                    if (snapshot.hasData) {
+                                      // final shuffleStateProvider =
+                                      //     StateProvider((ref) => snapshot
+                                      //         .data!['list'] as List<dynamic>);
+                                      // final shuffleState = ref
+                                      //     .watch(shuffleStateProvider)
+                                      //     .shuffle();
+                                      // print("snapshot data is: $shuffleState}");
+                                      return PageView.builder(
+                                          controller: flashCardController,
+                                          itemBuilder: (_, index) {
+                                            // print("Index: $index");
+                                            // print(
+                                            //     "Term is: ${snapshot.data!['list'][index]['data']['term']}");
+                                            // print(
+                                            //     "Definition is: ${snapshot.data!['list'][index]['data']['definition']}");
+                                            return Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 150.0,
+                                                      vertical: 50.0),
+                                              child: FlashCard(
+                                                  // key: UniqueKey(),
+                                                  title: widget.title,
+                                                  id: index,
+                                                  term: snapshot.data!['list']
+                                                      [index]['data']['term'],
+                                                  definition: snapshot
+                                                          .data!['list'][index]
+                                                      ['data']['definition']),
+                                              // child: Row(
+                                              //   children: [
+                                              //     Text(snapshot.data!['list']
+                                              //             [index]['data']
+                                              //             ['term']
+                                              //         .toString()),
+                                              //     Text(
+                                              //       snapshot.data!['list']
+                                              //               [index]['data']
+                                              //               ['definition']
+                                              //           .toString(),
+                                              //     ),
+                                              //     Text(
+                                              //       snapshot.data!['list']
+                                              //               [index]['data']
+                                              //               ['isStarred']
+                                              //           .toString(),
+                                              //     ),
+                                              //     Text(
+                                              //       snapshot.data!['list']
+                                              //               [index]['data']
+                                              //               ['regenerations']
+                                              //           .toString(),
+                                              //     ),
+                                              //   ],
+                                              // ),
+                                            );
+                                          },
+                                          itemCount: size,
+                                          onPageChanged: (index) {
+                                            ref
+                                                .read(
+                                                    flashcardIndexStateProvider
+                                                        .notifier)
+                                                .state = index;
+                                          });
+                                    }
+                                    if (snapshot.hasError) {
+                                      return const Text('Error');
+                                    } else {
+                                      return const Center(
+                                          child: CircularProgressIndicator());
+                                    }
                                   }),
                             ),
                           ),
@@ -162,7 +261,7 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                       ),
               ],
             ),
-            currentIndex == db.length
+            currentIndex == size
                 ? const SizedBox()
                 : Flexible(
                     flex: 1,
@@ -199,7 +298,7 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                               label: const Text('Shuffle')),
                           ElevatedButton.icon(
                             onPressed: () {
-                              if (currentIndex + 1 < db.length) {
+                              if (currentIndex + 1 < size) {
                                 ref
                                     .read(flashcardIndexStateProvider.notifier)
                                     .state++;
@@ -221,7 +320,7 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                         ],
                       ),
                     ),
-                  )
+                  ),
           ],
         ),
       ),

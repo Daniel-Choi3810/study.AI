@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/components/flashcard_master_view_page/master_flashcard.dart';
+import 'package:intellistudy/view/pages/flash_card_view_page.dart';
 
 class FlashcardMasterViewPage extends ConsumerStatefulWidget {
   const FlashcardMasterViewPage({super.key, required this.title});
@@ -47,6 +48,7 @@ class _FlashcardMasterViewPageState
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton.extended(
+                heroTag: null,
                 onPressed: () async {
                   await firestore
                       .collection('flashcardSets')
@@ -80,6 +82,7 @@ class _FlashcardMasterViewPageState
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: FloatingActionButton.extended(
+                heroTag: null,
                 onPressed: () async {
                   await firestore
                       .collection('flashcardSets')
@@ -95,7 +98,16 @@ class _FlashcardMasterViewPageState
                   });
                 },
                 label: const Text('Clear All')),
-          )
+          ),
+          FloatingActionButton.extended(
+            heroTag: null,
+            onPressed: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return FlashCardViewPage(title: widget.title);
+              }));
+            },
+            label: const Text('Study cards'),
+          ),
         ],
       ),
       body: Center(
