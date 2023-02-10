@@ -29,6 +29,7 @@ class _HomePageState extends ConsumerState<HomePage> {
   @override
   Widget build(BuildContext context) {
     final auth = ref.watch(authProvider); // Watch for changes in authProvider
+    final profileState = ref.watch(profileNotifierProvider);
     return Scaffold(
       body: Row(
         children: [
@@ -130,8 +131,22 @@ class _HomePageState extends ConsumerState<HomePage> {
             footer: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () async {
+                        await auth.signOut();
+                        ref
+                            .read(profileNotifierProvider.notifier)
+                            .changeProfileStatus();
+                      },
+                      icon: const Icon(Icons.logout),
+                    ),
+                    const Text("Log Out")
+                  ],
+                ),
                 Text(
-                  auth.auth.currentUser?.email ?? "Guest Profile",
+                  profileState,
                   style: const TextStyle(color: Colors.black),
                 ),
                 SizedBox(

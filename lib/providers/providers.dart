@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/controllers/flashcard_database_controller_notifier.dart';
+import 'package:intellistudy/controllers/profile_status_controller.dart';
 import 'package:intellistudy/controllers/search_database_controller_notifier.dart';
 import 'package:intellistudy/controllers/search_text_controller_notifier.dart';
 import 'package:intellistudy/controllers/text_controller_notifier.dart';
@@ -106,6 +107,11 @@ final authProvider = Provider<AuthenticationModel>((ref) => AuthenticationModel(
 
 final authStateProvider = StreamProvider<User?>((ref) {
   return ref.watch(authProvider).authStateChange;
+});
+
+final profileNotifierProvider =
+    StateNotifierProvider<ProfileStatusController, String>((ref) {
+  return ProfileStatusController(ref);
 });
 
 /// Authentication Providers
