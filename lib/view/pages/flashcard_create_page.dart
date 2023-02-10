@@ -189,17 +189,28 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                                         .collection('sets')
                                         .doc(titleTextController.text.trim())
                                         .collection('cards');
-                                    for (var flashcard in db) {
+                                    // for (var flashcard in db) {
+                                    //   final data = {
+                                    //     "term": flashcard[0],
+                                    //     "definition": flashcard[1],
+                                    //     "regenerations": flashcard[2],
+                                    //     "isStarred": flashcard[3]
+                                    //   };
+
+                                    //   cardsRef.add(data).then(
+                                    //       (documentSnapshot) => print(
+                                    //           "Added Data with ID: ${documentSnapshot.id}"));
+                                    // }
+
+                                    for (int i = 0; i < db.length; i++) {
                                       final data = {
-                                        "term": flashcard[0],
-                                        "definition": flashcard[1],
-                                        "regenerations": flashcard[2],
-                                        "isStarred": flashcard[3]
+                                        "term": db[i][0],
+                                        "definition": db[i][1],
+                                        "regenerations": db[i][2],
+                                        "isStarred": db[i][3]
                                       };
 
-                                      cardsRef.add(data).then(
-                                          (documentSnapshot) => print(
-                                              "Added Data with ID: ${documentSnapshot.id}"));
+                                      cardsRef.doc("card ${i + 1}").set(data);
                                     }
                                   });
                                   await ref

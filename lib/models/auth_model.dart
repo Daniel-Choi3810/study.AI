@@ -32,6 +32,7 @@ class AuthenticationModel {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       ref.read(profileNotifierProvider.notifier).changeProfileStatus();
+
       // isAuthenticatedBox.put('isAuthenticated', isSignedIn);
       ref.read(firstIsLoadingStateProvider.notifier).state = false;
       ref.read(emailTextProvider).clear();
@@ -75,7 +76,9 @@ class AuthenticationModel {
         password: password,
       );
       User? user = result.user;
-      user!.updateDisplayName(email.substring(0, email.indexOf('@')));
+      await user!.updateDisplayName(email.substring(0, email.indexOf('@')));
+      ref.read(profileNotifierProvider.notifier).changeProfileStatus();
+      print(ref.read(profileNotifierProvider.notifier).profile);
       await _firestore
           .collection('users')
           .doc(_auth.currentUser!.uid.toString())
@@ -85,7 +88,6 @@ class AuthenticationModel {
         'image_url': '',
         'userId': _auth.currentUser!.uid.toString(),
       });
-      ref.read(profileNotifierProvider.notifier).changeProfileStatus();
       // isAuthenticatedBox.put('isAuthenticated', true);
       ref.read(firstIsLoadingStateProvider.notifier).state = false;
       ref.read(confirmPasswordTextProvider).clear();

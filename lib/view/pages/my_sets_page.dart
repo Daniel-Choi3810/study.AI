@@ -22,25 +22,12 @@ class _MySetsPageState extends ConsumerState<MySetsPage> {
     final firestore = ref.watch(fireStoreProvider);
     final auth = ref.watch(authProvider);
     final authState = ref.watch(authStateProvider);
-    // Stream<List<Map<String, dynamic>>> myCardSetsStream = firestore
-    //     .collection('flashcardSets')
-    //     .doc(auth.auth.currentUser!.uid.toString())
-    //     .collection('sets')
-    //     .snapshots()
-    //     .map((querySnap) => querySnap
-    //         .docs // Mapping Stream of CollectionReference to List<QueryDocumentSnapshot>
-    //         .map((doc) => {
-    //               'id': doc.id,
-    //               'data': doc.data()
-    //             }) // Getting each document ID from the data property of QueryDocumentSnapshot
-    //         .toList());
     return Scaffold(
       appBar: AppBar(
         title: const Text('My Sets'),
       ),
       body: authState.when(
         data: (data) {
-          print("data before conditional: $data");
           if (data != null) {
             Stream<List<Map<String, dynamic>>> myCardSetsStream = firestore
                 .collection('flashcardSets')
@@ -54,7 +41,6 @@ class _MySetsPageState extends ConsumerState<MySetsPage> {
                           'data': doc.data()
                         }) // Getting each document ID from the data property of QueryDocumentSnapshot
                     .toList());
-            print("data: $data");
             return SafeArea(
               child: Center(
                 child: StreamBuilder<List<Map<String, dynamic>>>(
@@ -67,22 +53,47 @@ class _MySetsPageState extends ConsumerState<MySetsPage> {
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Card(
-                              child: ListTile(
-                                title: Text(
-                                    snapshot.data![index]['data']['title']),
-                                subtitle: Text(snapshot.data![index]['data']
-                                    ['description']),
-                                onTap: () {
-                                  Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return FlashcardMasterViewPage(
-                                        title: snapshot.data![index]['data']
-                                            ['title']);
-                                  }));
-                                },
+                            child: Stack(children: [
+                              Card(
+                                child: ListTile(
+                                  title: Text(
+                                      snapshot.data![index]['data']['title']),
+                                  subtitle: Text(snapshot.data![index]['data']
+                                      ['description']),
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return FlashcardMasterViewPage(
+                                              title: snapshot.data![index]
+                                                  ['data']['title']);
+                                        },
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
-                            ),
+                              Align(
+                                alignment: Alignment.topRight,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 8.0),
+                                  child: IconButton(
+                                      splashRadius: 2,
+                                      onPressed: () {
+                                        firestore
+                                            .collection('flashcardSets')
+                                            .doc(auth.auth.currentUser!.uid
+                                                .toString())
+                                            .collection('sets')
+                                            .doc(snapshot.data![index]['data']
+                                                ['title'])
+                                            .delete();
+                                      },
+                                      icon: const Icon(Icons.close)),
+                                ),
+                              ),
+                            ]),
                           );
                         },
                       );
@@ -122,43 +133,6 @@ class _MySetsPageState extends ConsumerState<MySetsPage> {
           ),
         ),
       ),
-      // body: Center(
-      //   child: StreamBuilder<List<Map<String, dynamic>>>(
-      //     stream: myCardSetsStream,
-      //     builder: (context, snapshot) {
-      //       if (snapshot.hasData) {
-      //         //print(flashcardStream);
-      //         return ListView.builder(
-      //           itemCount: snapshot.data!.length,
-      //           itemBuilder: (context, index) {
-      //             return Padding(
-      //               padding: const EdgeInsets.all(8.0),
-      //               child: Card(
-      //                 child: ListTile(
-      //                   title: Text(snapshot.data![index]['data']['title']),
-      //                   subtitle:
-      //                       Text(snapshot.data![index]['data']['description']),
-      //                   onTap: () {
-      //                     Navigator.push(context,
-      //                         MaterialPageRoute(builder: (context) {
-      //                       return FlashcardMasterViewPage(
-      //                           title: snapshot.data![index]['data']['title']);
-      //                     }));
-      //                   },
-      //                 ),
-      //               ),
-      //             );
-      //           },
-      //         );
-      //       }
-      //       if (snapshot.hasError) {
-      //         return const Text('Error');
-      //       } else {
-      //         return const Center(child: CircularProgressIndicator());
-      //       }
-      //     },
-      //   ),
-      // ),
     );
   }
 }
