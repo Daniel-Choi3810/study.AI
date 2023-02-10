@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intellistudy/view/pages/home_page.dart';
 import '../../providers/providers.dart';
 import '../components/flash_card/flash_card.dart';
 
@@ -58,9 +57,10 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
             // ref
             //     .read(localFlashcardDBProvider.notifier)
             //     .updateStarState(index: currentIndex);
-            Navigator.push(context, MaterialPageRoute(builder: (context) {
-              return const HomePage();
-            }));
+            // Navigator.push(context, MaterialPageRoute(builder: (context) {
+            //   return const HomePage();
+            // }));
+            Navigator.of(context).popUntil((route) => route.isFirst);
           },
           label: const Text('Back to Home page'),
         ),
@@ -155,10 +155,12 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                   ),
                                   IconButton(
                                     onPressed: () {
-                                      Navigator.push(context,
-                                          MaterialPageRoute(builder: (context) {
-                                        return const HomePage();
-                                      }));
+                                      // Navigator.push(context,
+                                      //     MaterialPageRoute(builder: (context) {
+                                      //   return const HomePage();
+                                      // }));
+                                      Navigator.of(context)
+                                          .popUntil((route) => route.isFirst);
                                     },
                                     icon: const Icon(
                                       Icons.home,
