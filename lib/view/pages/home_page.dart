@@ -131,19 +131,25 @@ class _HomePageState extends ConsumerState<HomePage> {
             footer: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                Row(
-                  children: [
-                    IconButton(
-                      onPressed: () async {
-                        await auth.signOut();
-                        ref
-                            .read(profileNotifierProvider.notifier)
-                            .changeProfileStatus();
-                      },
-                      icon: const Icon(Icons.logout),
-                    ),
-                    const Text("Log Out")
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 30.0),
+                  child: profileState == 'Guest'
+                      ? const SizedBox()
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              onPressed: () async {
+                                await auth.signOut();
+                                ref
+                                    .read(profileNotifierProvider.notifier)
+                                    .changeProfileStatus();
+                              },
+                              icon: const Icon(Icons.logout),
+                            ),
+                            const Text("Log Out")
+                          ],
+                        ),
                 ),
                 Text(
                   profileState,

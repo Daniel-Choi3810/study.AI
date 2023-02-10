@@ -116,7 +116,7 @@ class _FlashcardMasterViewPageState
               // }));
               Navigator.pop(context);
             },
-            label: const Text('Home'),
+            label: const Text('My Sets'),
           ),
         ],
       ),

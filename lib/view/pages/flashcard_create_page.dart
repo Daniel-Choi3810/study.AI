@@ -143,7 +143,10 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                               ),
                               minWidth: width * 0.01,
                               height: height * 0.08,
-                              child: const Text("Create Flashcard Set"),
+                              child: const Text(
+                                "Create Flashcard Set",
+                                style: TextStyle(color: Colors.white),
+                              ),
                               onPressed: () async {
                                 if (titleTextController.text.isNotEmpty &&
                                     titleTextController.text.trim() != ' ' &&
@@ -160,6 +163,18 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                                           auth.auth.currentUser!.uid.toString())
                                       .collection('sets')
                                       .doc(titleTextController.text.trim());
+
+                                  firestore
+                                      .collection('flashcardSets')
+                                      .doc(
+                                          auth.auth.currentUser!.uid.toString())
+                                      .set(
+                                    {
+                                      'id':
+                                          auth.auth.currentUser!.uid.toString(),
+                                    },
+                                  );
+
                                   final setData = {
                                     "title": titleTextController.text.trim(),
                                     "description":
@@ -245,15 +260,13 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                       itemCount: db
                           .length, // Watch for changes in responsesProvider (list of responses)
                       itemBuilder: ((_, index) {
-                        return Expanded(
-                          child: FormattedResponse(
-                              key:
-                                  UniqueKey(), //TODO: Figure this out, why does valueKey Not work?
-                              height: height,
-                              width: width,
-                              searchList: db,
-                              id: index),
-                        );
+                        return FormattedResponse(
+                            key:
+                                UniqueKey(), //TODO: Figure this out, why does valueKey Not work?
+                            height: height,
+                            width: width,
+                            searchList: db,
+                            id: index);
                       }),
                     ),
                   ],

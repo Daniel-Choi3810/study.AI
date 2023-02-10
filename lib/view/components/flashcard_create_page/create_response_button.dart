@@ -17,7 +17,7 @@ class _CreateResponseButtonState extends ConsumerState<CreateResponseButton> {
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
-      color: Colors.black,
+      color: Colors.white,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(30.0),
       ),
