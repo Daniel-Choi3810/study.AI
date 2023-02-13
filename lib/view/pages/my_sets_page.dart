@@ -58,8 +58,17 @@ class _MySetsPageState extends ConsumerState<MySetsPage> {
                                 child: ListTile(
                                   title: Text(
                                       snapshot.data![index]['data']['title']),
-                                  subtitle: Text(snapshot.data![index]['data']
-                                      ['description']),
+                                  subtitle: Row(
+                                    children: [
+                                      Text(snapshot.data![index]['data']
+                                          ['description']),
+                                      const Spacer(),
+                                      Text(snapshot.data![index]['data']
+                                              ['dateCreated']
+                                          .toDate()
+                                          .toString()), // TODO: Format date with intl package
+                                    ],
+                                  ),
                                   onTap: () {
                                     Navigator.push(
                                       context,

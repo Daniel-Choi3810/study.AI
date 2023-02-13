@@ -10,11 +10,13 @@ class MasterFlashcard extends ConsumerStatefulWidget {
       required this.snapshot,
       required this.id,
       required this.index,
-      required this.title});
+      required this.title,
+      required this.itemCount});
   final AsyncSnapshot snapshot;
   final String id;
   final int index;
   final String title;
+  final int itemCount;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -28,7 +30,6 @@ class _MasterFlashcardState extends ConsumerState<MasterFlashcard> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     termController.dispose();
     definitionController.dispose();
     super.dispose();
@@ -36,8 +37,6 @@ class _MasterFlashcardState extends ConsumerState<MasterFlashcard> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement an edit icon and function that uses text field to edit to db.  Use bool provider to determine if its in edit mode or not
-    // TODO: when the bool is false, it saves to firebase
     final auth = ref.watch(authProvider);
     final firestore = ref.watch(fireStoreProvider);
     final isEdit = ref.watch(isEditStateProvider);
@@ -79,27 +78,29 @@ class _MasterFlashcardState extends ConsumerState<MasterFlashcard> {
           const SizedBox(
             width: 20,
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Text(widget.snapshot.data![widget.index]['data']['isStarred']
-                .toString()),
-          ),
           IconButton(
             onPressed: () async {
-              await firestore
-                  .collection('flashcardSets')
-                  .doc(auth.auth.currentUser!.uid.toString())
-                  .collection('sets')
-                  .doc(widget.title)
-                  .collection('cards')
-                  .doc(widget.id)
-                  .delete()
-                  .then(
-                    (doc) => print("Document deleted"),
-                    onError: (e) => print("Error updating document $e"),
-                  );
+              if (widget.itemCount > 2) {
+                await firestore
+                    .collection('flashcardSets')
+                    .doc(auth.auth.currentUser!.uid.toString())
+                    .collection('sets')
+                    .doc(widget.title)
+                    .collection('cards')
+                    .doc(widget.id)
+                    .delete()
+                    .then(
+                      (doc) => print("Document deleted"),
+                      onError: (e) => print("Error updating document $e"),
+                    );
+              }
             },
-            icon: const Icon(Icons.delete),
+            icon: widget.itemCount > 2
+                ? const Icon(Icons.delete)
+                : const Icon(
+                    Icons.delete,
+                    color: Colors.black54,
+                  ),
           ),
           IconButton(
             onPressed: () async {

@@ -2,11 +2,14 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/utils/utils.dart';
 import 'package:intellistudy/view/pages/flashcard_create_page.dart';
 import 'package:intellistudy/view/pages/search_page.dart';
 import '../../providers/providers.dart';
 import 'my_sets_page.dart';
+
+final myBox = Hive.box('currentIndexDataBase');
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -22,10 +25,16 @@ class _HomePageState extends ConsumerState<HomePage> {
     sideMenu.addListener((p0) {
       page.jumpToPage(p0);
     });
+    myBox.put('currentIndex', 0);
+    // print(myBox.get('currentIndex'));
   }
 
-  final PageController page = PageController();
-  final SideMenuController sideMenu = SideMenuController();
+  final PageController page = PageController(
+    initialPage: myBox.get('currentIndex'),
+  );
+  final SideMenuController sideMenu = SideMenuController(
+    initialPage: myBox.get('currentIndex'),
+  );
   @override
   Widget build(BuildContext context) {
     final auth = ref.watch(authProvider); // Watch for changes in authProvider
@@ -124,11 +133,13 @@ class _HomePageState extends ConsumerState<HomePage> {
                 //   style: const TextStyle(color: Colors.black),
                 // ),
                 ListTile(
-                  leading: CircleAvatar(
-                    backgroundColor: Colors.blue,
-                    child: Text(profileState[0].toUpperCase(),
-                        style: const TextStyle(color: Colors.white)),
-                  ),
+                  leading: profileState == 'Guest'
+                      ? const Icon(Icons.person)
+                      : CircleAvatar(
+                          backgroundColor: Colors.blue,
+                          child: Text(profileState[0].toUpperCase(),
+                              style: const TextStyle(color: Colors.white)),
+                        ),
                   title: Text(profileState),
                 ),
                 SizedBox(
@@ -157,6 +168,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 title: 'Search Page',
                 onTap: (page, _) {
                   sideMenu.changePage(page);
+                  myBox.put('currentIndex', page);
                 },
                 icon: const Icon(Icons.search),
                 tooltipContent: "This is a tooltip for Dashboard item",
@@ -166,6 +178,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 title: 'Create Flashcards',
                 onTap: (page, _) {
                   sideMenu.changePage(page);
+                  myBox.put('currentIndex', page);
                 },
                 icon: const Icon(Icons.card_giftcard_outlined),
               ),
@@ -174,6 +187,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 title: 'My Sets',
                 onTap: (page, _) {
                   sideMenu.changePage(page);
+                  myBox.put('currentIndex', page);
                 },
                 icon: const Icon(Icons.home),
               ),
@@ -182,6 +196,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 title: 'Settings',
                 onTap: (page, _) {
                   sideMenu.changePage(page);
+                  myBox.put('currentIndex', page);
                 },
                 icon: const Icon(Icons.settings),
               ),

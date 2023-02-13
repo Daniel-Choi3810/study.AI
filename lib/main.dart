@@ -3,6 +3,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intellistudy/view/pages/flash_card_view_page.dart';
+import 'package:intellistudy/view/pages/flashcard_create_page.dart';
+import 'package:intellistudy/view/pages/my_sets_page.dart';
+import 'package:intellistudy/view/pages/search_page.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
 //Firebase
@@ -26,8 +30,10 @@ void main() async {
   await Hive.openBox('flashcardDataBase');
   await Hive.openBox('responsesDataBase');
   await Hive.openBox('masterViewDataBase');
+  await Hive.openBox('currentIndexDataBase');
   // await Hive.openBox('isAuthenticated');
   await dotenv.load(fileName: ".env");
+
   runApp(
     const ProviderScope(
       child: MyApp(),
@@ -49,6 +55,15 @@ class MyApp extends ConsumerWidget {
           fontFamily: GoogleFonts.poppins().fontFamily),
       // home: const FlashCardViewPage(title: 'test 1'),
       home: const HomePage(),
+      routes: {
+        '/home': (context) => const HomePage(),
+        '/flashcard': (context) => const FlashCardViewPage(
+              title: '',
+            ),
+        '/flashcardCreate': (context) => const FlashCardCreatePage(),
+        '/search': (context) => const SearchPage(),
+        '/mySets': (context) => const MySetsPage(),
+      },
     );
   }
 }

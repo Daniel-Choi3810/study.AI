@@ -148,6 +148,8 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                                 style: TextStyle(color: Colors.white),
                               ),
                               onPressed: () async {
+                                print(
+                                    "Current user is: ${auth.auth.currentUser!.uid}");
                                 if (titleTextController.text.isNotEmpty &&
                                     titleTextController.text.trim() != ' ' &&
                                     db.length >= 2) {
@@ -164,7 +166,7 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                                       .collection('sets')
                                       .doc(titleTextController.text.trim());
 
-                                  firestore
+                                  await firestore
                                       .collection('flashcardSets')
                                       .doc(
                                           auth.auth.currentUser!.uid.toString())
@@ -172,6 +174,9 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                                     {
                                       'id':
                                           auth.auth.currentUser!.uid.toString(),
+                                      'email': auth.auth.currentUser!.email,
+                                      'username':
+                                          auth.auth.currentUser!.displayName,
                                     },
                                   );
 
@@ -181,7 +186,9 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                                         descriptionTextController.text.trim(),
                                     "dateCreated": DateTime.now(),
                                   };
-                                  setRef.set(setData).then((documentSnapshot) {
+                                  await setRef
+                                      .set(setData)
+                                      .then((documentSnapshot) {
                                     final cardsRef = firestore
                                         .collection('flashcardSets')
                                         .doc(auth.auth.currentUser!.uid
@@ -217,11 +224,15 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                                       .read(localFlashcardDBProvider.notifier)
                                       .clearList();
                                   if (!mounted) return;
-                                  Navigator.push(context,
+                                  await Navigator.push(context,
                                       MaterialPageRoute(builder: (context) {
                                     return FlashcardMasterViewPage(
                                         title: titleTextController.text.trim());
                                   }));
+                                  ref.read(setTitleTextStateProvider).clear();
+                                  ref
+                                      .read(setDescriptionTextStateProvider)
+                                      .clear();
                                 }
                               }),
                         ),

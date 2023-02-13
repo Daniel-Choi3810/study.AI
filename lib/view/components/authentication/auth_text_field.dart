@@ -24,6 +24,7 @@ class AuthTextField extends StatelessWidget {
       decoration: BoxDecoration(
           color: Colors.white, borderRadius: BorderRadius.circular(25)),
       child: TextFormField(
+        // autovalidateMode: AutovalidateMode.onUserInteraction,
         controller: textController,
         autocorrect: true,
         enableSuggestions: true,

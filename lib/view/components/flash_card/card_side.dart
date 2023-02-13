@@ -4,18 +4,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../providers/providers.dart';
 
 class CardSide extends ConsumerStatefulWidget {
-  const CardSide(
-      {super.key,
-      required this.title,
-      required this.text,
-      required this.side,
-      required this.height,
-      required this.width,
-      required this.id,
-      required this.onPressed});
+  const CardSide({
+    super.key,
+    required this.title,
+    required this.text,
+    required this.side,
+    required this.height,
+    required this.width,
+    required this.id,
+  });
   final String text;
   final String side;
-  final void Function() onPressed;
   final double height;
   final double width;
   final String title;

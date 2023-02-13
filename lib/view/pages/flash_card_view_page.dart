@@ -54,12 +54,6 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
         child: FloatingActionButton.extended(
           heroTag: null,
           onPressed: () {
-            // ref
-            //     .read(localFlashcardDBProvider.notifier)
-            //     .updateStarState(index: currentIndex);
-            // Navigator.push(context, MaterialPageRoute(builder: (context) {
-            //   return const HomePage();
-            // }));
             Navigator.of(context).popUntil((route) => route.isFirst);
           },
           label: const Text('Back to Home page'),
@@ -88,6 +82,7 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                 // ),
                 currentIndex == size
                     ? Column(
+                        // TODO: Make this a seperate widget
                         children: [
                           SizedBox(
                             height: height * 0.1,
@@ -194,11 +189,6 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                       return PageView.builder(
                                           controller: flashCardController,
                                           itemBuilder: (_, index) {
-                                            // print("Index: $index");
-                                            // print(
-                                            //     "Term is: ${snapshot.data!['list'][index]['data']['term']}");
-                                            // print(
-                                            //     "Definition is: ${snapshot.data!['list'][index]['data']['definition']}");
                                             return Padding(
                                               padding:
                                                   const EdgeInsets.symmetric(
@@ -213,32 +203,6 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                                   definition: snapshot
                                                           .data!['list'][index]
                                                       ['data']['definition']),
-                                              // child: Row(
-                                              //   children: [
-                                              //     Text(snapshot.data!['list']
-                                              //             [index]['data']
-                                              //             ['term']
-                                              //         .toString()),
-                                              //     Text(
-                                              //       snapshot.data!['list']
-                                              //               [index]['data']
-                                              //               ['definition']
-                                              //           .toString(),
-                                              //     ),
-                                              //     Text(
-                                              //       snapshot.data!['list']
-                                              //               [index]['data']
-                                              //               ['isStarred']
-                                              //           .toString(),
-                                              //     ),
-                                              //     Text(
-                                              //       snapshot.data!['list']
-                                              //               [index]['data']
-                                              //               ['regenerations']
-                                              //           .toString(),
-                                              //     ),
-                                              //   ],
-                                              // ),
                                             );
                                           },
                                           itemCount: size,

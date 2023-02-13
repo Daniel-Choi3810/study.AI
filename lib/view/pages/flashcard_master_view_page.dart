@@ -132,6 +132,7 @@ class _FlashcardMasterViewPageState
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: MasterFlashcard(
+                        itemCount: snapshot.data!.length,
                         snapshot: snapshot,
                         title: widget.title,
                         id: snapshot.data![index]['id'],
