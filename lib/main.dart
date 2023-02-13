@@ -55,15 +55,15 @@ class MyApp extends ConsumerWidget {
           fontFamily: GoogleFonts.poppins().fontFamily),
       // home: const FlashCardViewPage(title: 'test 1'),
       home: const HomePage(),
-      routes: {
-        '/home': (context) => const HomePage(),
-        '/flashcard': (context) => const FlashCardViewPage(
-              title: '',
-            ),
-        '/flashcardCreate': (context) => const FlashCardCreatePage(),
-        '/search': (context) => const SearchPage(),
-        '/mySets': (context) => const MySetsPage(),
-      },
+      // routes: {
+      //   '/home': (context) => const HomePage(),
+      //   '/flashcard': (context) => const FlashCardViewPage(
+      //         title: '',
+      //       ),
+      //   '/flashcardCreate': (context) => const FlashCardCreatePage(),
+      //   '/search': (context) => const SearchPage(),
+      //   '/mySets': (context) => const MySetsPage(),
+      // },
     );
   }
 }

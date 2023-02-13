@@ -25,15 +25,15 @@ class _HomePageState extends ConsumerState<HomePage> {
     sideMenu.addListener((p0) {
       page.jumpToPage(p0);
     });
-    myBox.put('currentIndex', 0);
+    myBox.get('currendIndex') == 0 ? myBox.put('currentIndex', 0) : null;
     // print(myBox.get('currentIndex'));
   }
 
   final PageController page = PageController(
-    initialPage: myBox.get('currentIndex'),
+    initialPage: myBox.get('currentIndex') ?? 0,
   );
   final SideMenuController sideMenu = SideMenuController(
-    initialPage: myBox.get('currentIndex'),
+    initialPage: myBox.get('currentIndex') ?? 0,
   );
   @override
   Widget build(BuildContext context) {
