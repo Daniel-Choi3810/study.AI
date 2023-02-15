@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/providers/providers.dart';
@@ -79,26 +78,26 @@ class _FlashcardMasterViewPageState
                 icon: const Icon(Icons.add),
                 label: const Text('Add')),
           ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: FloatingActionButton.extended(
-                heroTag: null,
-                onPressed: () async {
-                  await firestore
-                      .collection('flashcardSets')
-                      .doc(auth.auth.currentUser!.uid.toString())
-                      .collection('sets')
-                      .doc(widget.title)
-                      .collection('cards')
-                      .get()
-                      .then((snapshot) {
-                    for (DocumentSnapshot ds in snapshot.docs) {
-                      ds.reference.delete();
-                    }
-                  });
-                },
-                label: const Text('Clear All')),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.all(8.0),
+          //   child: FloatingActionButton.extended(
+          //       heroTag: null,
+          //       onPressed: () async {
+          //         await firestore
+          //             .collection('flashcardSets')
+          //             .doc(auth.auth.currentUser!.uid.toString())
+          //             .collection('sets')
+          //             .doc(widget.title)
+          //             .collection('cards')
+          //             .get()
+          //             .then((snapshot) {
+          //           for (DocumentSnapshot ds in snapshot.docs) {
+          //             ds.reference.delete();
+          //           }
+          //         });
+          //       },
+          //       label: const Text('Clear All')),
+          // ),
           FloatingActionButton.extended(
             heroTag: null,
             onPressed: () {

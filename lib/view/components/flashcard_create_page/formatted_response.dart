@@ -202,6 +202,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                     style: TextStyle(
                         color: definitionSaved ? Colors.white : Colors.red),
                   ),
+                  Text('${widget.searchList[widget.id][2]} regenerations left'),
                   IconButton(
                       onPressed: () async {
                         await ref
@@ -213,6 +214,7 @@ class FormattedResponseState extends ConsumerState<FormattedResponse> {
                       },
                       icon: const Icon(Icons.restart_alt_rounded))
                   //  : const Text("No more responses left"),
+                  ,
                 ],
               ),
             ),

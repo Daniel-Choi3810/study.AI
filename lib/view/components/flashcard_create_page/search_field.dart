@@ -35,7 +35,7 @@ class _SearchFieldState extends ConsumerState<SearchField> {
           filled: true,
           fillColor: AppColors.dominant,
           isDense: true, // Added this
-          contentPadding: const EdgeInsets.all(25), // Added this
+          contentPadding: const EdgeInsets.all(25.0), // Added this
           prefixIcon: const Padding(
             padding: EdgeInsets.only(
               right: 10.0,
@@ -51,6 +51,7 @@ class _SearchFieldState extends ConsumerState<SearchField> {
             ),
           ),
           suffixIcon: IconButton(
+              splashRadius: 2,
               icon: const Icon(
                 Icons.clear,
               ),
