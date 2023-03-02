@@ -121,6 +121,8 @@ class _HomePageState extends ConsumerState<HomePage> {
                                 ref
                                     .read(profileNotifierProvider.notifier)
                                     .changeProfileStatus();
+                                myBox.put('currentIndex', 0);
+                                sideMenu.changePage(0);
                               },
                               icon: const Icon(Icons.logout),
                             ),

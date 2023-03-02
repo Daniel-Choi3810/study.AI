@@ -96,9 +96,6 @@ class FlashCardDataBaseControllerNotifier extends StateNotifier<List> {
   }
 
   //TODO: These functions are for the flash card view page.  They need to be moved to a different controller with a different hive database.
-  Future<void> shuffleList() async {
-    state = state.toList()..shuffle();
-  }
 
   Future<void> starCard({required int index}) async {
     state[index][3] = !state[index][3];

@@ -19,9 +19,11 @@ class FlashCard extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _FlashCardState();
 }
 
-class _FlashCardState extends ConsumerState<FlashCard> {
+class _FlashCardState extends ConsumerState<FlashCard>
+    with AutomaticKeepAliveClientMixin<FlashCard> {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final height = MediaQuery.of(context).size.height;
     final width = MediaQuery.of(context).size.width;
 
@@ -45,4 +47,7 @@ class _FlashCardState extends ConsumerState<FlashCard> {
           id: widget.id,
         ));
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

@@ -64,6 +64,7 @@ class _FlashcardMasterViewPageState
                       'term': '',
                     },
                   );
+                  // TODO: Why doesn't set add the data to the array in order??
                   // .update({
                   //   'flashcards': FieldValue.arrayUnion([
                   //     {
