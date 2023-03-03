@@ -1,11 +1,12 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intellistudy/view/pages/flashcard_master_view_page.dart';
-
+import 'package:hive_flutter/hive_flutter.dart';
 import '../../providers/providers.dart';
 import 'login_page.dart';
+
+final titleBox = Hive.box('pageArgumentsDataBase');
+final myBox = Hive.box('flashcardIndexDataBase');
 
 class MySetsPage extends ConsumerStatefulWidget {
   const MySetsPage({super.key});
@@ -70,16 +71,22 @@ class _MySetsPageState extends ConsumerState<MySetsPage> {
                                     ],
                                   ),
                                   onTap: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return FlashcardMasterViewPage(
-                                              title: snapshot.data![index]
-                                                  ['data']['title']);
-                                        },
-                                      ),
-                                    );
+                                    if (titleBox.get('prevFlashcardViewArgs') !=
+                                        snapshot.data![index]['data']
+                                            ['title']) {
+                                      titleBox.put(
+                                          'prevFlashcardViewArgs',
+                                          snapshot.data![index]['data']
+                                              ['title']);
+                                      ref
+                                          .read(flashcardIndexProvider.notifier)
+                                          .resetIndex();
+                                      print('reset provider index');
+                                    }
+                                    Navigator.pushNamed(
+                                        context, '/flashcardMasterView',
+                                        arguments: snapshot.data![index]['data']
+                                            ['title']);
                                   },
                                 ),
                               ),

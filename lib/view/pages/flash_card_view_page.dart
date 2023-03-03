@@ -5,7 +5,8 @@ import '../../controllers/shuffle_state_notifier.dart';
 import '../../providers/providers.dart';
 import '../components/flash_card/flash_card.dart';
 
-final myBox = Hive.box('shuffleStateDataBase');
+final myBox = Hive.box('flashcardIndexDataBase');
+// Check if title is the same, if it is, then use the same index, if not, reset index to 0
 
 class FlashCardViewPage extends ConsumerStatefulWidget {
   const FlashCardViewPage({required this.title, super.key});
@@ -18,7 +19,18 @@ class FlashCardViewPage extends ConsumerStatefulWidget {
 
 class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
   // create function that gets doc length
-  PageController flashCardController = PageController(initialPage: 0);
+  PageController flashCardController =
+      PageController(initialPage: myBox.get('index') ?? 0);
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   if (titleBox.get('prevFlashcardViewArgs') != widget.title) {
+  //     myBox.put('index', 0);
+  //     print('reset index');
+  //     // ref.read(flashcardIndexProvider.notifier).resetIndex();
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
     double height = MediaQuery.of(context).size.height;
@@ -26,7 +38,11 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
     final auth = ref.watch(authProvider);
     final firestore = ref.watch(fireStoreProvider);
     // TODO: provider for the size, to rebuild widget index
-
+    // if (titleBox.get('prevFlashcardViewArgs') != widget.title) {
+    //   titleBox.put('prevFlashcardViewArgs', widget.title);
+    //   ref.read(flashcardIndexProvider.notifier).resetIndex();
+    //   print('reset provider index');
+    // }
     Stream<Map<String, dynamic>> flashcardStream = firestore
         .collection('flashcardSets')
         .doc(auth.auth.currentUser!.uid.toString())
@@ -37,7 +53,7 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
         .map((querySnap) => {
               'list': querySnap.docs
                   .map((doc) => {'id': doc.id, 'data': doc.data()})
-                  .toList(), // TODO: Does this work?
+                  .toList(),
               'count': querySnap.docs.length,
             });
 
@@ -48,7 +64,9 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
     });
 
     // final db = ref.watch(localFlashcardDBProvider);
-    final currentIndex = ref.watch(flashcardIndexStateProvider);
+
+    final currentIndex = ref.watch(flashcardIndexProvider);
+    // final currentIndex = myBox.get('index');
     // print("size after listen: $size");
 
     return StreamBuilder(
@@ -85,12 +103,12 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                       padding: const EdgeInsets.all(20.0),
                       child: currentIndex == size
                           ? Text('$currentIndex / $size')
-                          : Text('${currentIndex + 1} / $size'),
+                          : Text('${(currentIndex as int) + 1} / $size'),
                       // : const Text('yo mamas so fat, she needs two numbers'),
                     ),
                     LinearProgressIndicator(
                       minHeight: 2,
-                      value: (currentIndex) / size,
+                      value: (currentIndex as int) / size,
                       backgroundColor: Colors.grey,
                     ),
                     Column(
@@ -159,10 +177,9 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                           IconButton(
                                             onPressed: () {
                                               ref
-                                                  .read(
-                                                      flashcardIndexStateProvider
-                                                          .notifier)
-                                                  .state = 0;
+                                                  .read(flashcardIndexProvider
+                                                      .notifier)
+                                                  .resetIndex();
                                             },
                                             icon: const Icon(
                                               Icons.restart_alt_rounded,
@@ -215,9 +232,9 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                           ref.read(
                                               shuffleStateNotifierProvider);
                                           ref
-                                              .read(flashcardIndexStateProvider
+                                              .read(flashcardIndexProvider
                                                   .notifier)
-                                              .state = index;
+                                              .setIndex(index: index);
                                         },
                                       ),
                                     ),
@@ -240,14 +257,17 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                     onPressed: () {
                                       if (currentIndex - 1 >= 0) {
                                         ref
-                                            .read(flashcardIndexStateProvider
-                                                .notifier)
-                                            .state--;
+                                            .read(
+                                                flashcardIndexProvider.notifier)
+                                            .decrementIndex();
                                       }
                                       print(
                                           "Current index after pressing prev: $currentIndex");
                                       flashCardController.animateToPage(
-                                          ref.read(flashcardIndexStateProvider),
+                                          ref
+                                              .read(flashcardIndexProvider
+                                                  .notifier)
+                                              .getIndex(),
                                           duration:
                                               const Duration(milliseconds: 250),
                                           curve: Curves.linear);
@@ -261,12 +281,14 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                       icon: const Icon(Icons.restart_alt),
                                       onPressed: () {
                                         ref
-                                            .read(flashcardIndexStateProvider
-                                                .notifier)
-                                            .state = 0;
+                                            .read(
+                                                flashcardIndexProvider.notifier)
+                                            .resetIndex();
                                         flashCardController.animateToPage(
-                                            ref.read(
-                                                flashcardIndexStateProvider),
+                                            ref
+                                                .read(flashcardIndexProvider
+                                                    .notifier)
+                                                .getIndex(),
                                             duration: const Duration(
                                                 milliseconds: 250),
                                             curve: Curves.linear);
@@ -320,22 +342,26 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                     onPressed: () {
                                       if (currentIndex + 1 < size) {
                                         ref
-                                            .read(flashcardIndexStateProvider
-                                                .notifier)
-                                            .state++;
-                                        print(
-                                            "Current index after pressing next: $currentIndex");
+                                            .read(
+                                                flashcardIndexProvider.notifier)
+                                            .incrementIndex();
                                         flashCardController.animateToPage(
-                                            ref.read(
-                                                flashcardIndexStateProvider),
+                                            ref
+                                                .read(flashcardIndexProvider
+                                                    .notifier)
+                                                .getIndex(),
                                             duration: const Duration(
                                                 milliseconds: 250),
                                             curve: Curves.linear);
                                       } else {
                                         ref
-                                            .read(flashcardIndexStateProvider
-                                                .notifier)
-                                            .state++;
+                                            .read(
+                                                flashcardIndexProvider.notifier)
+                                            .incrementIndex();
+                                        // ref
+                                        //     .read(
+                                        //         flashcardIndexProvider.notifier)
+                                        //     .resetIndex();
                                       }
                                     },
                                     icon: const Icon(Icons.chevron_right),

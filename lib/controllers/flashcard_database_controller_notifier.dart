@@ -65,16 +65,6 @@ class FlashCardDataBaseControllerNotifier extends StateNotifier<List> {
     required int index,
     required String term,
   }) async {
-    // if (state[index][2] > 0) {
-    //   await ref.read(answerTextProvider.notifier).getText(promptText: term);
-    //   state[index] = [
-    //     term,
-    //     ref.read(answerTextProvider).toString(),
-    //     state[index][2] - 1
-    //   ];
-    //   ref.read(responsesCountProvider.notifier).state = state[index][2];
-    //   myBox.put('flashcardDataBase', state);
-    // ref.read(responsesCountProvider.notifier).state--;
     if (term.isNotEmpty && state[index][2] > 0) {
       print('regenerating response... ${state[index][2]} left');
       await ref.read(answerTextProvider.notifier).getText(promptText: term);

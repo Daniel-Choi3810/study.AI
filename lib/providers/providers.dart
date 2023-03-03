@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/controllers/flashcard_database_controller_notifier.dart';
+import 'package:intellistudy/controllers/flashcard_index_controller_notifier.dart';
 import 'package:intellistudy/controllers/profile_status_controller.dart';
 import 'package:intellistudy/controllers/search_database_controller_notifier.dart';
 import 'package:intellistudy/controllers/search_text_controller_notifier.dart';
@@ -12,6 +13,8 @@ import '../controllers/master_view_database_controller_notifier.dart';
 import '../models/auth_model.dart';
 
 // Search Page Providers
+
+// final indexBox = Hive.box('flashcardIndexDataBase');
 
 final searchIsLoadingStateProvider = StateProvider.autoDispose((ref) => false);
 final searchIsValidStateProvider = StateProvider.autoDispose((ref) => true);
@@ -81,7 +84,8 @@ final localMasterViewDBProvider =
 /// This is the provider that is used to access
 /// the flashcard index to display the flashcards
 /// in the list view
-final flashcardIndexStateProvider = StateProvider.autoDispose((ref) => 0);
+final flashcardIndexProvider = StateNotifierProvider.autoDispose(
+    (ref) => FlashCardIndexControllerNotifier(ref));
 
 /// Firebase Providers
 
@@ -131,8 +135,3 @@ final authStatusNotifierProvider =
 
 /// FlashCard View Page Providers
 final docLengthStateProvider = StateProvider.autoDispose((ref) => 2);
-
-/// Navbar Providers
-///
-
-/// Flashcard Master View Page Providers

@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/components/flashcard_create_page/clear_all_dialog/clear_all_alert_cards_dialog.dart';
-import 'package:intellistudy/view/pages/flashcard_master_view_page.dart';
 import '../../utils/utils.dart';
 import '../components/flashcard_create_page/create_response_button.dart';
 import '../components/flashcard_create_page/formatted_response.dart';
@@ -224,11 +223,10 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                                       .read(localFlashcardDBProvider.notifier)
                                       .clearList();
                                   if (!mounted) return;
-                                  await Navigator.push(context,
-                                      MaterialPageRoute(builder: (context) {
-                                    return FlashcardMasterViewPage(
-                                        title: titleTextController.text.trim());
-                                  }));
+                                  await Navigator.pushNamed(
+                                      context, '/flashcardMasterView',
+                                      arguments:
+                                          titleTextController.text.trim());
                                   ref.read(setTitleTextStateProvider).clear();
                                   ref
                                       .read(setDescriptionTextStateProvider)

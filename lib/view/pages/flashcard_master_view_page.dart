@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/components/flashcard_master_view_page/master_flashcard.dart';
-import 'package:intellistudy/view/pages/flash_card_view_page.dart';
 
 class FlashcardMasterViewPage extends ConsumerStatefulWidget {
   const FlashcardMasterViewPage({super.key, required this.title});
@@ -15,6 +14,16 @@ class FlashcardMasterViewPage extends ConsumerStatefulWidget {
 
 class _FlashcardMasterViewPageState
     extends ConsumerState<FlashcardMasterViewPage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.title.isEmpty) {
+      throw Exception('Title is null');
+    }
+    print("This is the title: ${widget.title}");
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: Master view page of cards created, like quizlet
@@ -64,17 +73,6 @@ class _FlashcardMasterViewPageState
                       'term': '',
                     },
                   );
-                  // TODO: Why doesn't set add the data to the array in order??
-                  // .update({
-                  //   'flashcards': FieldValue.arrayUnion([
-                  //     {
-                  //       'definition': 'test asdd def',
-                  //       'isStarred': false,
-                  //       'regenerations': 3,
-                  //       'term': 'test adsd term',
-                  //     }
-                  //   ])
-                  // });
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('Add')),
@@ -102,9 +100,8 @@ class _FlashcardMasterViewPageState
           FloatingActionButton.extended(
             heroTag: null,
             onPressed: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return FlashCardViewPage(title: widget.title);
-              }));
+              Navigator.pushNamed(context, '/flashcardView',
+                  arguments: widget.title);
             },
             label: const Text('Study cards'),
           ),
