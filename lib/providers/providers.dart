@@ -135,3 +135,4 @@ final authStatusNotifierProvider =
 
 /// FlashCard View Page Providers
 final docLengthStateProvider = StateProvider.autoDispose((ref) => 2);
+final isShuffleStateProvider = StateProvider.autoDispose((ref) => false);

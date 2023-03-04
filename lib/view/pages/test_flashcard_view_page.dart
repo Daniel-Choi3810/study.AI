@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -9,50 +8,32 @@ import '../components/flash_card/flash_card.dart';
 final myBox = Hive.box('flashcardIndexDataBase');
 // Check if title is the same, if it is, then use the same index, if not, reset index to 0
 
-class FlashCardViewPage extends ConsumerStatefulWidget {
-  const FlashCardViewPage({required this.title, super.key});
+class TestFlashCardViewPage extends ConsumerStatefulWidget {
+  const TestFlashCardViewPage({required this.title, super.key});
   final String title;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
-      _FlashCardViewPageState();
+      _TestFlashCardViewPageState();
 }
 
-class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
-  List<Map<String, Object>> _documents = [];
-  List<Map<String, Object>> _shuffledDocuments = [];
+class _TestFlashCardViewPageState extends ConsumerState<TestFlashCardViewPage> {
   // create function that gets doc length
-  PageController flashCardController =
-      PageController(initialPage: myBox.get('index') ?? 0, keepPage: true);
+  //     // ref.read(flashcardIndexProvider.notifier).resetIndex();
+  //   }
+  // }
+  final List<DocumentSnapshot> _documents = [];
+  final List<DocumentSnapshot> _shuffledDocuments = [];
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    print('widget rebuild');
-    _subscribeToData();
-  }
-
-  void _subscribeToData() {
-    FirebaseFirestore.instance
-        .collection('flashcardSets')
-        .doc(FirebaseAuth.instance.currentUser!.uid.toString())
-        .collection('sets')
-        .doc(widget.title)
-        .collection('cards')
-        .snapshots()
-        .listen((querySnapshot) {
-      _documents = querySnapshot.docs
-          .map((doc) => {'id': doc.id, 'data': doc.data()})
-          .toList();
-      _shuffledDocuments = querySnapshot.docs
-          .map((doc) => {'id': doc.id, 'data': doc.data()})
-          .toList();
-    });
   }
 
   @override
   Widget build(BuildContext context) {
-    print('widget rebuild in the build context');
+    print('build flashcard view page');
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
     final auth = ref.watch(authProvider);
@@ -80,14 +61,24 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
 
     flashcardStream.listen((data) async {
       ref.read(docLengthStateProvider.notifier).state = await data['count'];
-      // await data['list'].forEach((element) {
-      //   _documents.add(element);
-      //   _shuffledDocuments.add(element);
-      // });
-      // _shuffledDocuments.shuffle();
       // print('size: $size');
       // Use the count value here.
     });
+
+    Stream<Map<String, dynamic>> shuffleStream = firestore
+        .collection('flashcardSets')
+        .doc(auth.auth.currentUser!.uid.toString())
+        .collection('sets')
+        .doc(widget.title)
+        .collection('cards')
+        .snapshots()
+        .map((querySnap) => {
+              'list': querySnap.docs
+                  .map((doc) => {'id': doc.id, 'data': doc.data()})
+                  .toList()
+                ..shuffle(),
+              'count': querySnap.docs.length,
+            });
 
     // final db = ref.watch(localFlashcardDBProvider);
 
@@ -99,14 +90,9 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
         stream: flashcardStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            print("Documents: $_documents");
-            print("Shuffled documents: $_shuffledDocuments");
-            // print(
-            //     'shuffledDoc: $_shuffledDocuments: type: ${_shuffledDocuments.runtimeType}');
             // var shuffledDoc = snapshot.data!['list']..shuffle();
             // List<dynamic> shuffledDoc = snapshot.data!['list'];
-            // final size = snapshot.data!['count'];
-            final size = _documents.length;
+            final size = snapshot.data!['count'];
             // final shuffleStateProvider =
             //     StateProvider((ref) => snapshot.data!['list'] as List<dynamic>);
             // final shuffleStateNotifierProvider =
@@ -149,7 +135,7 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                         // ),
                         currentIndex == size
                             ? Column(
-                                // TODO: Make this a seperate widget
+                                // TODO: Make this a separate widget
                                 children: [
                                   SizedBox(
                                     height: height * 0.1,
@@ -240,48 +226,23 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                     child: ConstrainedBox(
                                       constraints:
                                           BoxConstraints(maxWidth: width * 0.9),
-                                      child: PageView.builder(
-                                        controller: flashCardController,
-                                        itemBuilder: (_, index) {
-                                          return Padding(
-                                            padding: const EdgeInsets.symmetric(
-                                                horizontal: 150.0,
-                                                vertical: 50.0),
-                                            child: FlashCard(
-                                              // key: UniqueKey(),
-                                              title: widget.title,
-                                              id: index,
-                                              term: ref
-                                                      .read(
-                                                          isShuffleStateProvider
-                                                              .notifier)
-                                                      .state
-                                                  ? (_shuffledDocuments[index]
-                                                      ['data'] as Map)['term']
-                                                  : (_documents[index]['data']
-                                                      as Map)['term'],
-                                              definition: ref
-                                                      .read(
-                                                          isShuffleStateProvider
-                                                              .notifier)
-                                                      .state
-                                                  ? (_shuffledDocuments[index]
-                                                          ['data']
-                                                      as Map)['definition']
-                                                  : (_documents[index]['data']
-                                                      as Map)['definition'],
-                                            ),
-                                          );
-                                        },
-                                        itemCount: size,
-                                        onPageChanged: (index) {
-                                          // ref.read(
-                                          //     shuffleStateNotifierProvider);
-                                          ref
-                                              .read(flashcardIndexProvider
-                                                  .notifier)
-                                              .setIndex(index: index);
-                                        },
+                                      child: IndexedStack(
+                                        index: currentIndex,
+                                        children: snapshot.data!['list']
+                                            .map<Widget>(
+                                              (doc) => FlashCard(
+                                                title: widget.title,
+                                                id: currentIndex,
+                                                term: snapshot.data!['list']
+                                                        [currentIndex]['data']
+                                                    ['term'],
+                                                definition:
+                                                    snapshot.data!['list']
+                                                            [currentIndex]
+                                                        ['data']['definition'],
+                                              ),
+                                            )
+                                            .toList(),
                                       ),
                                     ),
                                   ),
@@ -307,16 +268,8 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                                 flashcardIndexProvider.notifier)
                                             .decrementIndex();
                                       }
-                                      print(
-                                          "Current index after pressing prev: $currentIndex");
-                                      flashCardController.animateToPage(
-                                          ref
-                                              .read(flashcardIndexProvider
-                                                  .notifier)
-                                              .getIndex(),
-                                          duration:
-                                              const Duration(milliseconds: 250),
-                                          curve: Curves.linear);
+                                      // print(
+                                      //     "Current index after pressing prev: $currentIndex");
                                     },
                                     icon: const Icon(Icons.chevron_left),
                                     label: const Text('Prev'),
@@ -330,27 +283,49 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                             .read(
                                                 flashcardIndexProvider.notifier)
                                             .resetIndex();
-                                        flashCardController.animateToPage(
-                                            ref
-                                                .read(flashcardIndexProvider
-                                                    .notifier)
-                                                .getIndex(),
-                                            duration: const Duration(
-                                                milliseconds: 250),
-                                            curve: Curves.linear);
+                                        ref
+                                            .read(
+                                                flashcardIndexProvider.notifier)
+                                            .resetIndex();
                                       },
                                       label: const Text('Restart cards'),
                                     ),
                                   ),
                                   ElevatedButton.icon(
                                       onPressed: () async {
-                                        _shuffledDocuments.shuffle();
-                                        print(_shuffledDocuments);
                                         ref
                                                 .read(isShuffleStateProvider
                                                     .notifier)
                                                 .state =
                                             !ref.read(isShuffleStateProvider);
+
+                                        // flashcardStream = flashcardStream
+                                        //     .map((flashcardData) {
+                                        //   List<Map<String, dynamic>>
+                                        //       shuffledList =
+                                        //       List<Map<String, dynamic>>.from(
+                                        //           flashcardData['list'])
+                                        //         ..shuffle();
+                                        //   print(shuffledList.toString());
+                                        //   print('hello world');
+                                        //   return {
+                                        //     'list': shuffledList,
+                                        //     'count': shuffledList.length,
+                                        //   };
+                                        // });
+                                        // flashcardStream.listen((flashcardData) {
+                                        //   print('Flashcard set:');
+                                        //   print(
+                                        //       '  Count: ${flashcardData['count']}');
+                                        //   print('  List:');
+                                        //   flashcardData['list']
+                                        //       .forEach((flashcardItem) {
+                                        //     print(
+                                        //         '    ID: ${flashcardItem['id']}');
+                                        //     print(
+                                        //         '    Data: ${flashcardItem['data']}');
+                                        //   });
+                                        // });
                                       },
                                       icon: const Icon(Icons.shuffle),
                                       label: const Text('Shuffle')),
@@ -361,23 +336,6 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                             .read(
                                                 flashcardIndexProvider.notifier)
                                             .incrementIndex();
-                                        flashCardController.animateToPage(
-                                            ref
-                                                .read(flashcardIndexProvider
-                                                    .notifier)
-                                                .getIndex(),
-                                            duration: const Duration(
-                                                milliseconds: 250),
-                                            curve: Curves.linear);
-                                      } else {
-                                        ref
-                                            .read(
-                                                flashcardIndexProvider.notifier)
-                                            .incrementIndex();
-                                        // ref
-                                        //     .read(
-                                        //         flashcardIndexProvider.notifier)
-                                        //     .resetIndex();
                                       }
                                     },
                                     icon: const Icon(Icons.chevron_right),

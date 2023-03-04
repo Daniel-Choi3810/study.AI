@@ -102,6 +102,11 @@ class _FlashcardMasterViewPageState
             onPressed: () {
               Navigator.pushNamed(context, '/flashcardView',
                   arguments: widget.title);
+              // Navigator.push(context, MaterialPageRoute(builder: (context) {
+              //   return TestFlashCardViewPage(
+              //     title: widget.title,
+              //   );
+              // }));
             },
             label: const Text('Study cards'),
           ),
