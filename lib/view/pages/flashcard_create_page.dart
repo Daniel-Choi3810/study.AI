@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -213,10 +214,11 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                                         "term": db[i][0],
                                         "definition": db[i][1],
                                         "regenerations": db[i][2],
-                                        "isStarred": db[i][3]
+                                        "isStarred": db[i][3],
+                                        "dateExample": Timestamp.now(),
                                       };
 
-                                      cardsRef.doc("card ${i + 1}").set(data);
+                                      cardsRef.doc().set(data);
                                     }
                                   });
                                   await ref

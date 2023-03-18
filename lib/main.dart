@@ -35,6 +35,7 @@ void main() async {
   await Hive.openBox('currentIndexDataBase');
   await Hive.openBox('pageArgumentsDataBase');
   await Hive.openBox('flashcardIndexDataBase');
+  await Hive.openBox('flashcardIsShuffledDataBase');
   // await Hive.openBox('isAuthenticated');
   await dotenv.load(fileName: ".env");
 

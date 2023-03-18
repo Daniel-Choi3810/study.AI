@@ -9,6 +9,7 @@ import 'package:intellistudy/controllers/search_database_controller_notifier.dar
 import 'package:intellistudy/controllers/search_text_controller_notifier.dart';
 import 'package:intellistudy/controllers/text_controller_notifier.dart';
 import '../controllers/auth_method_status_controller.dart';
+import '../controllers/is_shuffle_controller_notifier.dart';
 import '../controllers/master_view_database_controller_notifier.dart';
 import '../models/auth_model.dart';
 
@@ -135,4 +136,10 @@ final authStatusNotifierProvider =
 
 /// FlashCard View Page Providers
 final docLengthStateProvider = StateProvider.autoDispose((ref) => 2);
-final isShuffleStateProvider = StateProvider.autoDispose((ref) => false);
+final isShuffleStateNotifierProvider =
+    StateNotifierProvider<IsShuffleControllerNotifier, bool>((ref) {
+  return IsShuffleControllerNotifier(ref);
+});
+
+/// Flashcard Master View Page Providers
+final masterdocLengthStateProvider = StateProvider((ref) => 2);

@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/providers/providers.dart';
@@ -16,7 +17,6 @@ class _FlashcardMasterViewPageState
     extends ConsumerState<FlashcardMasterViewPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (widget.title.isEmpty) {
       throw Exception('Title is null');
@@ -26,21 +26,23 @@ class _FlashcardMasterViewPageState
 
   @override
   Widget build(BuildContext context) {
-    // TODO: Master view page of cards created, like quizlet
     final firestore = ref.watch(fireStoreProvider);
     final auth = ref.watch(authProvider);
+    final masterdocLength = ref.watch(masterdocLengthStateProvider);
     Stream<List<Map<String, dynamic>>> flashcardStream = firestore
         .collection('flashcardSets')
         .doc(auth.auth.currentUser!.uid.toString())
         .collection('sets')
         .doc(widget.title)
-        .collection('cards')
+        .collection("cards")
+        .orderBy("dateExample")
         .snapshots()
         .map((querySnap) => querySnap
             .docs // Mapping Stream of CollectionReference to List<QueryDocumentSnapshot>
             .map((doc) => {
                   'id': doc.id,
-                  'data': doc.data()
+                  'data': doc.data(),
+                  'count': querySnap.docs.length
                 }) // Getting each document ID from the data property of QueryDocumentSnapshot
             .toList());
     // flashcardStream.forEach((flashcardList) {
@@ -48,6 +50,13 @@ class _FlashcardMasterViewPageState
     //     print(flashcard['term']);
     //   }
     // });
+
+    flashcardStream.listen((data) async {
+      // access count
+      ref.read(masterdocLengthStateProvider.notifier).state = data[0]['count'];
+      print("This is the length: $masterdocLength");
+    });
+
     return Scaffold(
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       floatingActionButton: Row(
@@ -58,12 +67,21 @@ class _FlashcardMasterViewPageState
             child: FloatingActionButton.extended(
                 heroTag: null,
                 onPressed: () async {
+                  // iterate through stream and get lenght
+                  // await flashcardStream.forEach((flashcardList) {
+                  //   flashcardStreamLength++;
+                  // });
+                  // print(flashcardStreamLength);
+                  // delay this add operation by half a second
+                  // await Future.delayed(const Duration(milliseconds: 400));
+                  // print(masterdocLength);
+
                   await firestore
                       .collection('flashcardSets')
                       .doc(auth.auth.currentUser!.uid.toString())
                       .collection('sets')
                       .doc(widget.title)
-                      .collection('cards')
+                      .collection("cards")
                       .doc()
                       .set(
                     {
@@ -71,8 +89,15 @@ class _FlashcardMasterViewPageState
                       'isStarred': false,
                       'regenerations': 3,
                       'term': '',
+                      "dateExample": Timestamp.now(),
                     },
                   );
+                  // TODO: Set field for time created for each card to sort in order
+
+                  // flashcardStreamLength = 0;
+                  // convert int to alphabet
+                  // String alphabet = String.fromCharCode(65 + masterdocLength);
+                  // print(alphabet);
                 },
                 icon: const Icon(Icons.add),
                 label: const Text('Add')),

@@ -51,6 +51,8 @@ class _MasterFlashcardState extends ConsumerState<MasterFlashcard> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Text(widget.index.toString()),
+          Text(widget.id),
           const SizedBox(
             width: 20,
           ),

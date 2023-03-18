@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flip_card/flip_card.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../../providers/providers.dart';
-import '../components/flash_card/flash_card.dart';
 
 final myBox = Hive.box('flashcardIndexDataBase');
 // Check if title is the same, if it is, then use the same index, if not, reset index to 0
@@ -30,6 +30,8 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
     super.initState();
     print('widget rebuild');
     _subscribeToData();
+    ref.read(isShuffleStateNotifierProvider.notifier).loadData();
+    print(ref.read(isShuffleStateNotifierProvider));
   }
 
   void _subscribeToData() {
@@ -38,7 +40,8 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
         .doc(FirebaseAuth.instance.currentUser!.uid.toString())
         .collection('sets')
         .doc(widget.title)
-        .collection('cards')
+        .collection("cards")
+        .orderBy("dateExample")
         .snapshots()
         .listen((querySnapshot) {
       _documents = querySnapshot.docs
@@ -57,19 +60,24 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
     double width = MediaQuery.of(context).size.width;
     final auth = ref.watch(authProvider);
     final firestore = ref.watch(fireStoreProvider);
-    final isShuffle = ref.watch(isShuffleStateProvider);
+    final isShuffle = ref.watch(isShuffleStateNotifierProvider);
     // TODO: provider for the size, to rebuild widget index
     // if (titleBox.get('prevFlashcardViewArgs') != widget.title) {
     //   titleBox.put('prevFlashcardViewArgs', widget.title);
     //   ref.read(flashcardIndexProvider.notifier).resetIndex();
     //   print('reset provider index');
     // }
+    print(isShuffle);
+
     Stream<Map<String, dynamic>> flashcardStream = firestore
         .collection('flashcardSets')
         .doc(auth.auth.currentUser!.uid.toString())
         .collection('sets')
         .doc(widget.title)
-        .collection('cards')
+        .collection("cards")
+        // .orderBy(
+        //   'dateExample',
+        // )
         .snapshots()
         .map((querySnap) => {
               'list': querySnap.docs
@@ -80,13 +88,6 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
 
     flashcardStream.listen((data) async {
       ref.read(docLengthStateProvider.notifier).state = await data['count'];
-      // await data['list'].forEach((element) {
-      //   _documents.add(element);
-      //   _shuffledDocuments.add(element);
-      // });
-      // _shuffledDocuments.shuffle();
-      // print('size: $size');
-      // Use the count value here.
     });
 
     // final db = ref.watch(localFlashcardDBProvider);
@@ -99,8 +100,9 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
         stream: flashcardStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            print("Documents: $_documents");
-            print("Shuffled documents: $_shuffledDocuments");
+            // print("Documents: $_documents");
+            // print("Shuffled documents: $_shuffledDocuments");
+            // print("Document type: ${_documents.runtimeType}");
             // print(
             //     'shuffledDoc: $_shuffledDocuments: type: ${_shuffledDocuments.runtimeType}');
             // var shuffledDoc = snapshot.data!['list']..shuffle();
@@ -120,6 +122,9 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                 child: FloatingActionButton.extended(
                   heroTag: null,
                   onPressed: () {
+                    ref
+                        .read(isShuffleStateNotifierProvider.notifier)
+                        .clearData();
                     Navigator.of(context).popUntil((route) => route.isFirst);
                   },
                   label: const Text('Back to Home page'),
@@ -148,91 +153,11 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                         //   height: height * 0.1,
                         // ),
                         currentIndex == size
-                            ? Column(
-                                // TODO: Make this a seperate widget
-                                children: [
-                                  SizedBox(
-                                    height: height * 0.1,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: const [
-                                      Text(
-                                        'Congratulations, you have finished the deck!',
-                                        style: TextStyle(fontSize: 30),
-                                      ),
-                                      SizedBox(
-                                        width: 20,
-                                      ),
-                                      Icon(
-                                        Icons.celebration,
-                                        size: 100,
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Text(
-                                            'Results',
-                                            style: TextStyle(
-                                                fontSize: 24,
-                                                color: Colors.grey.shade400),
-                                          ),
-                                          Row(
-                                            children: [
-                                              const Padding(
-                                                padding: EdgeInsets.all(8.0),
-                                                child: Icon(
-                                                  Icons.thumb_up_alt_rounded,
-                                                  color: Colors.greenAccent,
-                                                ),
-                                              ),
-                                              Text(
-                                                  '$currentIndex / $size studied')
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(
-                                            'Next Steps',
-                                            style: TextStyle(
-                                                fontSize: 24,
-                                                color: Colors.grey.shade400),
-                                          ),
-                                          IconButton(
-                                            onPressed: () {
-                                              ref
-                                                  .read(flashcardIndexProvider
-                                                      .notifier)
-                                                  .resetIndex();
-                                            },
-                                            icon: const Icon(
-                                              Icons.restart_alt_rounded,
-                                              size: 30,
-                                            ),
-                                          ),
-                                          IconButton(
-                                            onPressed: () {
-                                              Navigator.of(context).popUntil(
-                                                  (route) => route.isFirst);
-                                            },
-                                            icon: const Icon(
-                                              Icons.home,
-                                              size: 30,
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  )
-                                ],
-                              )
+                            ? CompleteScreen(
+                                height: height,
+                                currentIndex: currentIndex,
+                                size: size,
+                                ref: ref)
                             : Column(
                                 children: [
                                   SizedBox(
@@ -247,36 +172,278 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                             padding: const EdgeInsets.symmetric(
                                                 horizontal: 150.0,
                                                 vertical: 50.0),
-                                            child: FlashCard(
-                                              // key: UniqueKey(),
-                                              title: widget.title,
-                                              id: index,
-                                              term: ref
-                                                      .read(
-                                                          isShuffleStateProvider
-                                                              .notifier)
-                                                      .state
-                                                  ? (_shuffledDocuments[index]
-                                                      ['data'] as Map)['term']
-                                                  : (_documents[index]['data']
-                                                      as Map)['term'],
-                                              definition: ref
-                                                      .read(
-                                                          isShuffleStateProvider
-                                                              .notifier)
-                                                      .state
-                                                  ? (_shuffledDocuments[index]
-                                                          ['data']
-                                                      as Map)['definition']
-                                                  : (_documents[index]['data']
-                                                      as Map)['definition'],
+                                            child: FlipCard(
+                                              speed: 300,
+                                              direction: FlipDirection.VERTICAL,
+                                              front: Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  border: Border.all(
+                                                    color: Colors.black,
+                                                    width: 2,
+                                                  ),
+                                                ),
+                                                child: Stack(
+                                                  children: [
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Text(
+                                                          isShuffle
+                                                              ? (_shuffledDocuments[
+                                                                              index]
+                                                                          [
+                                                                          'data']
+                                                                      as Map)[
+                                                                  'term']
+                                                              : (_documents[
+                                                                          index]
+                                                                      ['data']
+                                                                  as Map)['term'],
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 30),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.topRight,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(30.0),
+                                                        child: IconButton(
+                                                          onPressed: () async {
+                                                            await firestore
+                                                                .collection(
+                                                                    'flashcardSets')
+                                                                .doc(auth
+                                                                    .auth
+                                                                    .currentUser!
+                                                                    .uid
+                                                                    .toString())
+                                                                .collection(
+                                                                    'sets')
+                                                                .doc(widget
+                                                                    .title)
+                                                                .collection(
+                                                                    'cards')
+                                                                .doc(
+                                                                  isShuffle
+                                                                      ? (_shuffledDocuments[index])[
+                                                                              'id']
+                                                                          .toString()
+                                                                      : (_documents[index])[
+                                                                              'id']
+                                                                          .toString(),
+                                                                )
+                                                                .update({
+                                                              'isStarred': isShuffle
+                                                                  ? !(_shuffledDocuments[index]
+                                                                              [
+                                                                              'data']
+                                                                          as Map)[
+                                                                      'isStarred']
+                                                                  : !(_documents[index]
+                                                                              [
+                                                                              'data']
+                                                                          as Map)[
+                                                                      'isStarred']
+                                                            });
+                                                          },
+                                                          icon: isShuffle
+                                                              ? (_shuffledDocuments[index]
+                                                                              [
+                                                                              'data']
+                                                                          as Map)[
+                                                                      'isStarred']
+                                                                  ? const Icon(
+                                                                      Icons
+                                                                          .star,
+                                                                      color: Colors
+                                                                          .yellow,
+                                                                    )
+                                                                  : const Icon(
+                                                                      Icons
+                                                                          .star_border,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    )
+                                                              : (_documents[index]
+                                                                              [
+                                                                              'data']
+                                                                          as Map)[
+                                                                      'isStarred']
+                                                                  ? const Icon(
+                                                                      Icons
+                                                                          .star,
+                                                                      color: Colors
+                                                                          .yellow,
+                                                                    )
+                                                                  : const Icon(
+                                                                      Icons
+                                                                          .star_border,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const Align(
+                                                      alignment:
+                                                          Alignment.topLeft,
+                                                      child: Padding(
+                                                        padding: EdgeInsets.all(
+                                                            45.0),
+                                                        child: Text("Term"),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                              back: Container(
+                                                decoration: BoxDecoration(
+                                                  borderRadius:
+                                                      BorderRadius.circular(20),
+                                                  border: Border.all(
+                                                    color: Colors.black,
+                                                    width: 2,
+                                                  ),
+                                                ),
+                                                child: Stack(
+                                                  children: [
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: Text(
+                                                          isShuffle
+                                                              ? (_shuffledDocuments[index]
+                                                                          [
+                                                                          'data']
+                                                                      as Map)[
+                                                                  'definition']
+                                                              : (_documents[index]
+                                                                          [
+                                                                          'data']
+                                                                      as Map)[
+                                                                  'definition'],
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 30),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.topRight,
+                                                      child: Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(30.0),
+                                                        child: IconButton(
+                                                          onPressed: () async {
+                                                            await firestore
+                                                                .collection(
+                                                                    'flashcardSets')
+                                                                .doc(auth
+                                                                    .auth
+                                                                    .currentUser!
+                                                                    .uid
+                                                                    .toString())
+                                                                .collection(
+                                                                    'sets')
+                                                                .doc(widget
+                                                                    .title)
+                                                                .collection(
+                                                                    'cards')
+                                                                .doc(
+                                                                  isShuffle
+                                                                      ? (_shuffledDocuments[index])[
+                                                                              'id']
+                                                                          .toString()
+                                                                      : (_documents[index])[
+                                                                              'id']
+                                                                          .toString(),
+                                                                )
+                                                                .update({
+                                                              'isStarred': isShuffle
+                                                                  ? !(_shuffledDocuments[index]
+                                                                              [
+                                                                              'data']
+                                                                          as Map)[
+                                                                      'isStarred']
+                                                                  : !(_documents[index]
+                                                                              [
+                                                                              'data']
+                                                                          as Map)[
+                                                                      'isStarred']
+                                                            });
+                                                          },
+                                                          icon: isShuffle
+                                                              ? (_shuffledDocuments[index]
+                                                                              [
+                                                                              'data']
+                                                                          as Map)[
+                                                                      'isStarred']
+                                                                  ? const Icon(
+                                                                      Icons
+                                                                          .star,
+                                                                      color: Colors
+                                                                          .yellow,
+                                                                    )
+                                                                  : const Icon(
+                                                                      Icons
+                                                                          .star_border,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    )
+                                                              : (_documents[index]
+                                                                              [
+                                                                              'data']
+                                                                          as Map)[
+                                                                      'isStarred']
+                                                                  ? const Icon(
+                                                                      Icons
+                                                                          .star,
+                                                                      color: Colors
+                                                                          .yellow,
+                                                                    )
+                                                                  : const Icon(
+                                                                      Icons
+                                                                          .star_border,
+                                                                      color: Colors
+                                                                          .black,
+                                                                    ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                    const Align(
+                                                      alignment:
+                                                          Alignment.topLeft,
+                                                      child: Padding(
+                                                        padding: EdgeInsets.all(
+                                                            45.0),
+                                                        child: Text("Term"),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
                                             ),
                                           );
                                         },
                                         itemCount: size,
                                         onPageChanged: (index) {
-                                          // ref.read(
-                                          //     shuffleStateNotifierProvider);
                                           ref
                                               .read(flashcardIndexProvider
                                                   .notifier)
@@ -344,15 +511,21 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                   ),
                                   ElevatedButton.icon(
                                       onPressed: () async {
-                                        _shuffledDocuments.shuffle();
+                                        _shuffledDocuments = _shuffledDocuments
+                                          ..shuffle();
                                         print(_shuffledDocuments);
                                         ref
-                                                .read(isShuffleStateProvider
-                                                    .notifier)
-                                                .state =
-                                            !ref.read(isShuffleStateProvider);
+                                            .read(isShuffleStateNotifierProvider
+                                                .notifier)
+                                            .toggleIsShuffled();
+                                        print(isShuffle);
                                       },
-                                      icon: const Icon(Icons.shuffle),
+                                      icon: Icon(
+                                        Icons.shuffle,
+                                        color: isShuffle
+                                            ? Colors.black
+                                            : Colors.white,
+                                      ),
                                       label: const Text('Shuffle')),
                                   ElevatedButton.icon(
                                     onPressed: () {
@@ -374,10 +547,6 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                             .read(
                                                 flashcardIndexProvider.notifier)
                                             .incrementIndex();
-                                        // ref
-                                        //     .read(
-                                        //         flashcardIndexProvider.notifier)
-                                        //     .resetIndex();
                                       }
                                     },
                                     icon: const Icon(Icons.chevron_right),
@@ -398,5 +567,98 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
             return const Center(child: CircularProgressIndicator());
           }
         });
+  }
+}
+
+class CompleteScreen extends StatelessWidget {
+  const CompleteScreen({
+    super.key,
+    required this.height,
+    required this.currentIndex,
+    required this.size,
+    required this.ref,
+  });
+
+  final double height;
+  final Object? currentIndex;
+  final int size;
+  final WidgetRef ref;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+          height: height * 0.1,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: const [
+            Text(
+              'Congratulations, you have finished the deck!',
+              style: TextStyle(fontSize: 30),
+            ),
+            SizedBox(
+              width: 20,
+            ),
+            Icon(
+              Icons.celebration,
+              size: 100,
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              children: [
+                Text(
+                  'Results',
+                  style: TextStyle(fontSize: 24, color: Colors.grey.shade400),
+                ),
+                Row(
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(8.0),
+                      child: Icon(
+                        Icons.thumb_up_alt_rounded,
+                        color: Colors.greenAccent,
+                      ),
+                    ),
+                    Text('$currentIndex / $size studied')
+                  ],
+                )
+              ],
+            ),
+            Column(
+              children: [
+                Text(
+                  'Next Steps',
+                  style: TextStyle(fontSize: 24, color: Colors.grey.shade400),
+                ),
+                IconButton(
+                  onPressed: () {
+                    ref.read(flashcardIndexProvider.notifier).resetIndex();
+                  },
+                  icon: const Icon(
+                    Icons.restart_alt_rounded,
+                    size: 30,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    Navigator.of(context).popUntil((route) => route.isFirst);
+                  },
+                  icon: const Icon(
+                    Icons.home,
+                    size: 30,
+                  ),
+                ),
+              ],
+            )
+          ],
+        )
+      ],
+    );
   }
 }

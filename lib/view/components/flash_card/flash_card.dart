@@ -9,11 +9,17 @@ class FlashCard extends ConsumerStatefulWidget {
       required this.definition,
       required this.id,
       required this.title,
+      required this.isStarred,
+      required this.snapshot,
+      required this.docId,
       super.key});
   final String term;
   final String definition;
   final int id;
   final String title;
+  final bool isStarred;
+  final AsyncSnapshot snapshot;
+  final String docId;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _FlashCardState();
@@ -31,7 +37,10 @@ class _FlashCardState extends ConsumerState<FlashCard>
         speed: 300,
         direction: FlipDirection.VERTICAL,
         front: CardSide(
+          docId: widget.docId,
+          snapshot: widget.snapshot,
           title: widget.title,
+          isStarred: widget.isStarred,
           text: widget.term,
           side: "Term",
           height: height * 0.8,
@@ -39,7 +48,10 @@ class _FlashCardState extends ConsumerState<FlashCard>
           id: widget.id,
         ),
         back: CardSide(
+          docId: widget.docId,
+          snapshot: widget.snapshot,
           title: widget.title,
+          isStarred: widget.isStarred,
           text: widget.definition,
           side: "Definition",
           height: height * 0.8,

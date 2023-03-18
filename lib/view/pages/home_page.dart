@@ -25,7 +25,7 @@ class _HomePageState extends ConsumerState<HomePage> {
     sideMenu.addListener((p0) {
       page.jumpToPage(p0);
     });
-    myBox.get('currendIndex') == 0 ? myBox.put('currentIndex', 0) : null;
+    myBox.get('currentIndex') == 0 ? myBox.put('currentIndex', 0) : null;
     // print(myBox.get('currentIndex'));
   }
 
