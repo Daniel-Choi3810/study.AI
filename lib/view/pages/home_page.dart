@@ -52,21 +52,7 @@ class _HomePageState extends ConsumerState<HomePage> {
                 selectedColor: AppColors.complementary,
                 selectedTitleTextStyle: const TextStyle(color: Colors.white),
                 selectedIconColor: Colors.white,
-                decoration: const BoxDecoration(
-                    // gradient: LinearGradient(
-                    //   colors: [Color(0x6352d0e7), Color(0x3652e7b4)],
-                    //   // begin: Alignment.topLeft,
-                    //   // end: Alignment.bottomCenter,
-                    // ),
-                    // boxShadow: [
-                    //   BoxShadow(
-                    //     color: Colors.black12,
-                    //     blurRadius: 10,
-                    //     spreadRadius: 5,
-                    //   ),
-                    // ],
-                    // borderRadius: BorderRadius.all(Radius.circular(10)),
-                    ),
+                decoration: const BoxDecoration(),
                 backgroundColor: Colors.white),
             // Page controller to manage a PageView
             controller:
@@ -130,10 +116,6 @@ class _HomePageState extends ConsumerState<HomePage> {
                           ],
                         ),
                 ),
-                // Text(
-                //   profileState,
-                //   style: const TextStyle(color: Colors.black),
-                // ),
                 ListTile(
                   leading: profileState == 'Guest'
                       ? const Icon(Icons.person)

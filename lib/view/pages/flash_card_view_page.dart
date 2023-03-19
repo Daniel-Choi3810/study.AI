@@ -20,7 +20,7 @@ class FlashCardViewPage extends ConsumerStatefulWidget {
 
 class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
   List<Map<String, Object>> _documents = [];
-  List<Map<String, Object>> _shuffledDocuments = [];
+  // List<Map<String, Object>> _shuffledDocuments = [];
   // create function that gets doc length
   PageController flashCardController =
       PageController(initialPage: myBox.get('index') ?? 0, keepPage: true);
@@ -47,9 +47,9 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
       _documents = querySnapshot.docs
           .map((doc) => {'id': doc.id, 'data': doc.data()})
           .toList();
-      _shuffledDocuments = querySnapshot.docs
-          .map((doc) => {'id': doc.id, 'data': doc.data()})
-          .toList();
+      // _shuffledDocuments = querySnapshot.docs
+      //     .map((doc) => {'id': doc.id, 'data': doc.data()})
+      //     .toList();
     });
   }
 
@@ -61,13 +61,6 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
     final auth = ref.watch(authProvider);
     final firestore = ref.watch(fireStoreProvider);
     final isShuffle = ref.watch(isShuffleStateNotifierProvider);
-    // TODO: provider for the size, to rebuild widget index
-    // if (titleBox.get('prevFlashcardViewArgs') != widget.title) {
-    //   titleBox.put('prevFlashcardViewArgs', widget.title);
-    //   ref.read(flashcardIndexProvider.notifier).resetIndex();
-    //   print('reset provider index');
-    // }
-    print(isShuffle);
 
     Stream<Map<String, dynamic>> flashcardStream = firestore
         .collection('flashcardSets')
@@ -90,41 +83,21 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
       ref.read(docLengthStateProvider.notifier).state = await data['count'];
     });
 
-    // final db = ref.watch(localFlashcardDBProvider);
-
     final currentIndex = ref.watch(flashcardIndexProvider);
-    // final currentIndex = myBox.get('index');
-    // print("size after listen: $size");
-
     return StreamBuilder(
         stream: flashcardStream,
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            // print("Documents: $_documents");
-            // print("Shuffled documents: $_shuffledDocuments");
-            // print("Document type: ${_documents.runtimeType}");
-            // print(
-            //     'shuffledDoc: $_shuffledDocuments: type: ${_shuffledDocuments.runtimeType}');
-            // var shuffledDoc = snapshot.data!['list']..shuffle();
-            // List<dynamic> shuffledDoc = snapshot.data!['list'];
-            // final size = snapshot.data!['count'];
             final size = _documents.length;
-            // final shuffleStateProvider =
-            //     StateProvider((ref) => snapshot.data!['list'] as List<dynamic>);
-            // final shuffleStateNotifierProvider =
-            //     StateNotifierProvider<ShuffleStateNotifier, List<dynamic>>(
-            //         (ref) => ShuffleStateNotifier(
-            //             ref, ref.watch(shuffleStateProvider)));
-            // final shuffleState = ref.watch(shuffleStateNotifierProvider);
             return Scaffold(
               floatingActionButton: Padding(
                 padding: const EdgeInsets.all(15.0),
                 child: FloatingActionButton.extended(
                   heroTag: null,
                   onPressed: () {
-                    ref
-                        .read(isShuffleStateNotifierProvider.notifier)
-                        .clearData();
+                    // ref
+                    //     .read(isShuffleStateNotifierProvider.notifier)
+                    //     .clearData();
                     Navigator.of(context).popUntil((route) => route.isFirst);
                   },
                   label: const Text('Back to Home page'),
@@ -194,21 +167,29 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                                             const EdgeInsets
                                                                 .all(8.0),
                                                         child: Text(
-                                                          isShuffle
-                                                              ? (_shuffledDocuments[
-                                                                              index]
-                                                                          [
-                                                                          'data']
-                                                                      as Map)[
-                                                                  'term']
-                                                              : (_documents[
-                                                                          index]
-                                                                      ['data']
-                                                                  as Map)['term'],
+                                                          (_documents[index]
+                                                                  ['data']
+                                                              as Map)['term'],
                                                           style:
                                                               const TextStyle(
                                                                   fontSize: 30),
                                                         ),
+                                                        // child: Text(
+                                                        //   isShuffle
+                                                        //       ? (_shuffledDocuments[
+                                                        //                       index]
+                                                        //                   [
+                                                        //                   'data']
+                                                        //               as Map)[
+                                                        //           'term']
+                                                        //       : (_documents[
+                                                        //                   index]
+                                                        //               ['data']
+                                                        //           as Map)['term'],
+                                                        //   style:
+                                                        //       const TextStyle(
+                                                        //           fontSize: 30),
+                                                        // ),
                                                       ),
                                                     ),
                                                     Align(
@@ -235,47 +216,51 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                                                 .collection(
                                                                     'cards')
                                                                 .doc(
-                                                                  isShuffle
-                                                                      ? (_shuffledDocuments[index])[
-                                                                              'id']
-                                                                          .toString()
-                                                                      : (_documents[index])[
-                                                                              'id']
-                                                                          .toString(),
+                                                                  // isShuffle
+                                                                  //     ? (_shuffledDocuments[index])[
+                                                                  //             'id']
+                                                                  //         .toString() :
+                                                                  (_documents[index])[
+                                                                          'id']
+                                                                      .toString(),
                                                                 )
                                                                 .update({
-                                                              'isStarred': isShuffle
-                                                                  ? !(_shuffledDocuments[index]
-                                                                              [
-                                                                              'data']
-                                                                          as Map)[
-                                                                      'isStarred']
-                                                                  : !(_documents[index]
+                                                              'isStarred':
+                                                                  // isShuffle
+                                                                  //     ? !(_shuffledDocuments[index]
+                                                                  //                 [
+                                                                  //                 'data']
+                                                                  //             as Map)[
+                                                                  //         'isStarred']
+                                                                  //     :
+                                                                  !(_documents[index]
                                                                               [
                                                                               'data']
                                                                           as Map)[
                                                                       'isStarred']
                                                             });
                                                           },
-                                                          icon: isShuffle
-                                                              ? (_shuffledDocuments[index]
-                                                                              [
-                                                                              'data']
-                                                                          as Map)[
-                                                                      'isStarred']
-                                                                  ? const Icon(
-                                                                      Icons
-                                                                          .star,
-                                                                      color: Colors
-                                                                          .yellow,
-                                                                    )
-                                                                  : const Icon(
-                                                                      Icons
-                                                                          .star_border,
-                                                                      color: Colors
-                                                                          .black,
-                                                                    )
-                                                              : (_documents[index]
+                                                          icon:
+                                                              // isShuffle
+                                                              //     ? (_shuffledDocuments[index]
+                                                              //                     [
+                                                              //                     'data']
+                                                              //                 as Map)[
+                                                              //             'isStarred']
+                                                              //         ? const Icon(
+                                                              //             Icons
+                                                              //                 .star,
+                                                              //             color: Colors
+                                                              //                 .yellow,
+                                                              //           )
+                                                              //         : const Icon(
+                                                              //             Icons
+                                                              //                 .star_border,
+                                                              //             color: Colors
+                                                              //                 .black,
+                                                              //           )
+                                                              //     :
+                                                              (_documents[index]
                                                                               [
                                                                               'data']
                                                                           as Map)[
@@ -326,17 +311,17 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                                             const EdgeInsets
                                                                 .all(8.0),
                                                         child: Text(
-                                                          isShuffle
-                                                              ? (_shuffledDocuments[index]
-                                                                          [
-                                                                          'data']
-                                                                      as Map)[
-                                                                  'definition']
-                                                              : (_documents[index]
-                                                                          [
-                                                                          'data']
-                                                                      as Map)[
-                                                                  'definition'],
+                                                          // isShuffle
+                                                          //     ? (_shuffledDocuments[index]
+                                                          //                 [
+                                                          //                 'data']
+                                                          //             as Map)[
+                                                          //         'definition']
+                                                          //     :
+                                                          (_documents[index]
+                                                                      ['data']
+                                                                  as Map)[
+                                                              'definition'],
                                                           style:
                                                               const TextStyle(
                                                                   fontSize: 30),
@@ -367,47 +352,52 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                                                 .collection(
                                                                     'cards')
                                                                 .doc(
-                                                                  isShuffle
-                                                                      ? (_shuffledDocuments[index])[
-                                                                              'id']
-                                                                          .toString()
-                                                                      : (_documents[index])[
-                                                                              'id']
-                                                                          .toString(),
+                                                                  // isShuffle
+                                                                  //     ? (_shuffledDocuments[index])[
+                                                                  //             'id']
+                                                                  //         .toString()
+                                                                  //     :
+                                                                  (_documents[index])[
+                                                                          'id']
+                                                                      .toString(),
                                                                 )
                                                                 .update({
-                                                              'isStarred': isShuffle
-                                                                  ? !(_shuffledDocuments[index]
-                                                                              [
-                                                                              'data']
-                                                                          as Map)[
-                                                                      'isStarred']
-                                                                  : !(_documents[index]
+                                                              'isStarred':
+                                                                  //  isShuffle
+                                                                  //     ? !(_shuffledDocuments[index]
+                                                                  //                 [
+                                                                  //                 'data']
+                                                                  //             as Map)[
+                                                                  //         'isStarred']
+                                                                  //     :
+                                                                  !(_documents[index]
                                                                               [
                                                                               'data']
                                                                           as Map)[
                                                                       'isStarred']
                                                             });
                                                           },
-                                                          icon: isShuffle
-                                                              ? (_shuffledDocuments[index]
-                                                                              [
-                                                                              'data']
-                                                                          as Map)[
-                                                                      'isStarred']
-                                                                  ? const Icon(
-                                                                      Icons
-                                                                          .star,
-                                                                      color: Colors
-                                                                          .yellow,
-                                                                    )
-                                                                  : const Icon(
-                                                                      Icons
-                                                                          .star_border,
-                                                                      color: Colors
-                                                                          .black,
-                                                                    )
-                                                              : (_documents[index]
+                                                          icon:
+                                                              //  isShuffle
+                                                              //     ? (_shuffledDocuments[index]
+                                                              //                     [
+                                                              //                     'data']
+                                                              //                 as Map)[
+                                                              //             'isStarred']
+                                                              //         ? const Icon(
+                                                              //             Icons
+                                                              //                 .star,
+                                                              //             color: Colors
+                                                              //                 .yellow,
+                                                              //           )
+                                                              //         : const Icon(
+                                                              //             Icons
+                                                              //                 .star_border,
+                                                              //             color: Colors
+                                                              //                 .black,
+                                                              //           )
+                                                              //     :
+                                                              (_documents[index]
                                                                               [
                                                                               'data']
                                                                           as Map)[
@@ -509,24 +499,24 @@ class _FlashCardViewPageState extends ConsumerState<FlashCardViewPage> {
                                       label: const Text('Restart cards'),
                                     ),
                                   ),
-                                  ElevatedButton.icon(
-                                      onPressed: () async {
-                                        _shuffledDocuments = _shuffledDocuments
-                                          ..shuffle();
-                                        print(_shuffledDocuments);
-                                        ref
-                                            .read(isShuffleStateNotifierProvider
-                                                .notifier)
-                                            .toggleIsShuffled();
-                                        print(isShuffle);
-                                      },
-                                      icon: Icon(
-                                        Icons.shuffle,
-                                        color: isShuffle
-                                            ? Colors.black
-                                            : Colors.white,
-                                      ),
-                                      label: const Text('Shuffle')),
+                                  // ElevatedButton.icon(
+                                  //     onPressed: () async {
+                                  //       _shuffledDocuments = _shuffledDocuments
+                                  //         ..shuffle();
+                                  //       print(_shuffledDocuments);
+                                  //       ref
+                                  //           .read(isShuffleStateNotifierProvider
+                                  //               .notifier)
+                                  //           .toggleIsShuffled();
+                                  //       print(isShuffle);
+                                  //     },
+                                  //     icon: Icon(
+                                  //       Icons.shuffle,
+                                  //       color: isShuffle
+                                  //           ? Colors.black
+                                  //           : Colors.white,
+                                  //     ),
+                                  //     label: const Text('Shuffle')),
                                   ElevatedButton.icon(
                                     onPressed: () {
                                       if (currentIndex + 1 < size) {

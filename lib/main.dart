@@ -55,10 +55,7 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'CramAI',
-      theme: ThemeData(
-          // scaffoldBackgroundColor: Colors.black,
-          fontFamily: GoogleFonts.poppins().fontFamily),
-      // home: const FlashCardViewPage(title: 'test 1'),
+      theme: ThemeData(fontFamily: GoogleFonts.poppins().fontFamily),
       home: const HomePage(),
       onGenerateRoute: (settings) {
         final myBox = Hive.box('pageArgumentsDataBase');
