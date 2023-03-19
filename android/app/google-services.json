@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "3207424943",
+    "project_id": "study-ai-app",
+    "storage_bucket": "study-ai-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:3207424943:android:4a60f0b773b5b5de90dd5a",
+        "android_client_info": {
+          "package_name": "com.example.intellistudy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "3207424943-4ho962khd3ak2hiqb3k5cbcstubq75h9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.intellistudy",
+            "certificate_hash": "a2e389242146c27e43a4ad80052d8d9b0f024997"
+          }
+        },
+        {
+          "client_id": "3207424943-tcidmffiua295egl32jbkcf0tl15gbdn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyACWsfS1_vGVtMTxuSG1gnAyjOifQYtPY8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "3207424943-i6seg33cns8cd9muv4akbt06i72fj0p8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "3207424943-ji9lg2ld95nbac5uim67hm8cujrvga9p.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.intellistudy"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
