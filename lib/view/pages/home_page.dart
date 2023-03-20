@@ -1,4 +1,3 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:easy_sidemenu/easy_sidemenu.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -77,27 +76,25 @@ class _HomePageState extends ConsumerState<HomePage> {
             controller:
                 sideMenu, // Will shows on top of all items, it can be a logo or a Title text
             title: Padding(
-              padding: EdgeInsets.only(bottom: height * 0.125),
+              padding: EdgeInsets.only(bottom: height * 0.075),
               child: Column(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.only(top: 40.0),
-                    child: Icon(
-                      Icons.book,
-                      size: 40,
-                    ),
+                  Image.asset(
+                    'assets/AI.png',
+                    height: 175,
+                    width: 175,
                   ),
-                  AutoSizeText(
-                    MediaQuery.of(context).size.width > 600 ? 'Cram.AI' : '',
-                    minFontSize: 10,
-                    stepGranularity: 10,
-                    maxLines: 1,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
+                  // AutoSizeText(
+                  //   MediaQuery.of(context).size.width > 600 ? 'Cram.AI' : '',
+                  //   minFontSize: 10,
+                  //   stepGranularity: 10,
+                  //   maxLines: 1,
+                  //   style: const TextStyle(
+                  //     color: Colors.black,
+                  //     fontSize: 30,
+                  //     fontWeight: FontWeight.bold,
+                  //   ),
+                  // ),
                   SizedBox(
                     height: MediaQuery.of(context).size.height * 0.0125,
                   ),

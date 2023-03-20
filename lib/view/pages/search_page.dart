@@ -103,7 +103,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                     const SizedBox(
                       width: 50,
                     ),
-                    Expanded(
+                    Flexible(
                       child: Row(
                         children: [
                           profileState == 'Guest'
@@ -121,32 +121,31 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                         ],
                       ),
                     ),
-                    Expanded(
-                      child: PopupMenuButton(
-                          itemBuilder: (context) => [
-                                const PopupMenuItem(child: Text('Profile')),
-                                profileState == 'Guest'
-                                    ? PopupMenuItem(
-                                        child: TextButton(
-                                          child: const Text('Log In'),
-                                          onPressed: () {
-                                            Navigator.pushNamed(
-                                                context, '/login');
-                                          },
-                                        ),
-                                      )
-                                    : PopupMenuItem(
-                                        onTap: () async {
-                                          await auth.signOut();
-                                          ref
-                                              .read(profileNotifierProvider
-                                                  .notifier)
-                                              .changeProfileStatus();
+                    PopupMenuButton(
+                        splashRadius: 2,
+                        itemBuilder: (context) => [
+                              const PopupMenuItem(child: Text('Profile')),
+                              profileState == 'Guest'
+                                  ? PopupMenuItem(
+                                      child: TextButton(
+                                        child: const Text('Log In'),
+                                        onPressed: () {
+                                          Navigator.pushNamed(
+                                              context, '/login');
                                         },
-                                        child: const Text('Sign Out'),
                                       ),
-                              ]),
-                    ),
+                                    )
+                                  : PopupMenuItem(
+                                      onTap: () async {
+                                        await auth.signOut();
+                                        ref
+                                            .read(profileNotifierProvider
+                                                .notifier)
+                                            .changeProfileStatus();
+                                      },
+                                      child: const Text('Sign Out'),
+                                    ),
+                            ]),
                   ],
                 ),
               ),
@@ -180,22 +179,22 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                         AutoSizeText(
                           "Welcome to Cram.AI!",
                           style: TextStyle(
-                            fontSize: 18.0,
+                            fontSize: 32.0,
                             fontWeight: FontWeight.bold,
                           ),
                         ),
                         SizedBox(
                           height: 10.0,
                         ),
-                        SizedBox(
-                          width: 150,
-                          child: AutoSizeText(
-                            textAlign: TextAlign.left,
-                            "Sign up for a free account to create your own flashcards and study sets.",
-                            style: TextStyle(
-                                fontSize: 12.0, color: Colors.black54),
-                          ),
-                        ),
+                        // SizedBox(
+                        //   width: 200,
+                        //   child: AutoSizeText(
+                        //     textAlign: TextAlign.left,
+                        //     "Sign up for a free account to create your own flashcards and study sets.",
+                        //     style: TextStyle(
+                        //         fontSize: 12.0, color: Colors.black54),
+                        //   ),
+                        // ),
                       ],
                     ),
                     // const SizedBox(width: 50),
@@ -270,7 +269,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                               ),
                             ),
                           ),
-                    isLoading // TODO: Make loading indicator container match the size of the cards
+                    isLoading
                         ? const Padding(
                             padding: EdgeInsets.only(bottom: 30.0, right: 34.0),
                             child: CircularProgressIndicator(
@@ -279,90 +278,89 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                           )
                         : const SizedBox(), // If isLoading is true, show CircularProgressIndicator, else show SizedBox
                     // Create a scrollable vertical list view
-                    Column(
-                      children: [
-                        ListView.builder(
-                          physics: const ScrollPhysics(),
-                          shrinkWrap: true,
-                          itemCount: db
-                              .length, // Watch for changes in responsesProvider (list of responses)
-                          itemBuilder: ((_, index) {
-                            return Padding(
-                              // TODO: Refactor this response card to a custom widget
-                              padding: const EdgeInsets.only(
-                                  left: 35.0, bottom: 16.0, right: 35.0),
-                              child: Container(
-                                height: height * 0.15,
-                                decoration: BoxDecoration(
-                                  // border: Border.all(
-                                  //   color: AppColors.complementary,
-                                  //   width: 1,
-                                  // ),
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.centerRight,
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            top: 3, right: 10),
-                                        child: IconButton(
-                                          padding: EdgeInsets.zero,
-                                          constraints: const BoxConstraints(),
-                                          onPressed: () async {
-                                            await ref
-                                                .read(localSearchDBProvider
-                                                    .notifier)
-                                                .removeFromList(index: index);
-                                          },
-                                          icon: const Icon(
-                                            Icons.close,
-                                            color: AppColors.red,
-                                          ),
+                    SizedBox(
+                      height: height * .6,
+                      child: ListView.builder(
+                        physics: const ScrollPhysics(),
+                        shrinkWrap: true,
+                        itemCount: db
+                            .length, // Watch for changes in responsesProvider (list of responses)
+                        itemBuilder: ((_, index) {
+                          return Padding(
+                            // TODO: Refactor this response card to a custom widget
+                            padding: const EdgeInsets.only(
+                                left: 35.0, bottom: 16.0, right: 35.0),
+                            child: Container(
+                              height: height * 0.15,
+                              decoration: BoxDecoration(
+                                // border: Border.all(
+                                //   color: AppColors.complementary,
+                                //   width: 1,
+                                // ),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Align(
+                                    alignment: Alignment.centerRight,
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                          top: 3, right: 10),
+                                      child: IconButton(
+                                        padding: EdgeInsets.zero,
+                                        constraints: const BoxConstraints(),
+                                        onPressed: () async {
+                                          await ref
+                                              .read(localSearchDBProvider
+                                                  .notifier)
+                                              .removeFromList(index: index);
+                                        },
+                                        icon: const Icon(
+                                          Icons.close,
+                                          color: AppColors.red,
                                         ),
                                       ),
                                     ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
+                                        left: 50.0,
+                                        right: 50.0,
+                                      ),
+                                      child: AutoSizeText(
+                                        db[index][0],
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(
                                           left: 50.0,
                                           right: 50.0,
-                                        ),
-                                        child: AutoSizeText(
-                                          db[index][0],
-                                          style: const TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 20,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Padding(
-                                        padding: const EdgeInsets.only(
-                                            left: 50.0,
-                                            right: 50.0,
-                                            bottom: 10.0),
-                                        child: AutoSizeText(
-                                          db[index][1],
-                                          style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.grey[600],
-                                          ),
+                                          bottom: 10.0),
+                                      child: AutoSizeText(
+                                        db[index][1],
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Colors.grey[600],
                                         ),
                                       ),
                                     ),
-                                  ],
-                                ),
+                                  ),
+                                ],
                               ),
-                            );
-                          }),
-                        ),
-                      ],
+                            ),
+                          );
+                        }),
+                      ),
                     ),
                   ],
                 ),
