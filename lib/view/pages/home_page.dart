@@ -43,10 +43,11 @@ class _HomePageState extends ConsumerState<HomePage> {
       body: Row(
         children: [
           SideMenu(
+            key: const Key('SideMenu'),
             style: SideMenuStyle(
                 itemOuterPadding:
                     const EdgeInsets.only(bottom: 2, left: 5, right: 5),
-                // showTooltip: false,
+                showTooltip: true,
                 displayMode: SideMenuDisplayMode.auto,
                 hoverColor: AppColors.complementaryLight,
                 selectedColor: AppColors.complementary,
