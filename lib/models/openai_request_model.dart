@@ -7,8 +7,8 @@ class OpenAIRequestModel {
   int maxTokens; // This is the max number of tokens that the model can use
   double temperature; // This determines the randomness of the model response
   double topP;
-  bool stream;
-  dynamic logprobs;
+  // bool stream;
+  // dynamic logprobs;
   // String frequencyPenalty;
   // String presencePenalty;
   // String stop;
@@ -35,8 +35,8 @@ class OpenAIRequestModel {
     required this.authorization,
     required this.model,
     required this.messages,
-    required this.stream,
-    required this.logprobs,
+    // required this.stream,
+    // required this.logprobs,
     required this.url,
     required this.apiToken,
     // required this.stop,
@@ -54,8 +54,8 @@ class OpenAIRequestModel {
     data['model'] = model;
     data['url'] = url;
     data['messages'] = messages;
-    data['stream'] = stream;
-    data['logprobs'] = logprobs;
+    // data['stream'] = stream;
+    // data['logprobs'] = logprobs;
     // data['frequency_penalty'] = frequencyPenalty;
     // data['presence_penalty'] = presencePenalty;
     // data['stop'] = stop;
@@ -64,26 +64,24 @@ class OpenAIRequestModel {
 
   // This function is used to make and return the post request
   Future<Response> postRequest() async {
-    var request = await http.post(
-      url,
-      headers: {
-        'Content-Type': contentType,
-        'Authorization': authorization,
-      },
-      body: jsonEncode(
-        {
-          "model": model,
-          "messages": messages,
-          // "prompt": "$prompt. \n \n",
-          "max_tokens": maxTokens,
-          "temperature": temperature,
-          "top_p": topP,
-          "n": n,
-        },
-      ),
-    );
+    var headers = {
+      'Content-Type': contentType,
+      'Authorization': 'Bearer $apiToken'
+    };
+    var request = http.Request('POST', url);
 
-    // http.StreamedResponse response = await request.send();
-    return request;
+    request.body = json.encode({
+      "model": model,
+      "messages": messages,
+      "max_tokens": maxTokens,
+      "temperature": temperature,
+      "top_p": topP,
+      "n": n
+    });
+    request.headers.addAll(headers);
+    var streamedResponse = await request.send();
+    var response = await http.Response.fromStream(streamedResponse);
+
+    return response;
   }
 }

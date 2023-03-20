@@ -47,6 +47,13 @@ class _SearchPageState extends ConsumerState<SearchPage> {
       body: SafeArea(
         child: Column(
           children: [
+            // MaterialBanner(
+            //   content: const Text(
+            //       'This is a beta version of the app. Please report any bugs to the developers. Thank you!'),
+            //   actions: [
+            //     TextButton(onPressed: () {}, child: const Text('Report Bug'))
+            //   ],
+            // ),
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 35.0,
@@ -114,6 +121,39 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                         ],
                       ),
                     ),
+                  ],
+                ),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 35.0,
+                vertical: 20.0,
+              ),
+              child: Container(
+                height: height * 0.2,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20.0),
+                ),
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: const [
+                    Text(
+                      "Left side text",
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    SizedBox(width: 20.0),
+                    // Image.asset(
+                    //   "assets/images/image.png",
+                    //   width: 100.0,
+                    //   height: 100.0,
+                    //   fit: BoxFit.cover,
+                    // ),
                   ],
                 ),
               ),
@@ -201,86 +241,90 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                           )
                         : const SizedBox(), // If isLoading is true, show CircularProgressIndicator, else show SizedBox
                     // Create a scrollable vertical list view
-                    ListView.builder(
-                      physics: const ScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: db
-                          .length, // Watch for changes in responsesProvider (list of responses)
-                      itemBuilder: ((_, index) {
-                        return Padding(
-                          // TODO: Refactor this response card to a custom widget
-                          padding: const EdgeInsets.only(
-                              left: 35.0, bottom: 16.0, right: 35.0),
-                          child: Container(
-                            height: height * 0.15,
-                            decoration: BoxDecoration(
-                              // border: Border.all(
-                              //   color: AppColors.complementary,
-                              //   width: 1,
-                              // ),
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                Align(
-                                  alignment: Alignment.centerRight,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        top: 3, right: 10),
-                                    child: IconButton(
-                                      padding: EdgeInsets.zero,
-                                      constraints: const BoxConstraints(),
-                                      onPressed: () async {
-                                        await ref
-                                            .read(
-                                                localSearchDBProvider.notifier)
-                                            .removeFromList(index: index);
-                                      },
-                                      icon: const Icon(
-                                        Icons.close,
-                                        color: AppColors.red,
+                    Column(
+                      children: [
+                        ListView.builder(
+                          physics: const ScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: db
+                              .length, // Watch for changes in responsesProvider (list of responses)
+                          itemBuilder: ((_, index) {
+                            return Padding(
+                              // TODO: Refactor this response card to a custom widget
+                              padding: const EdgeInsets.only(
+                                  left: 35.0, bottom: 16.0, right: 35.0),
+                              child: Container(
+                                height: height * 0.15,
+                                decoration: BoxDecoration(
+                                  // border: Border.all(
+                                  //   color: AppColors.complementary,
+                                  //   width: 1,
+                                  // ),
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  children: [
+                                    Align(
+                                      alignment: Alignment.centerRight,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            top: 3, right: 10),
+                                        child: IconButton(
+                                          padding: EdgeInsets.zero,
+                                          constraints: const BoxConstraints(),
+                                          onPressed: () async {
+                                            await ref
+                                                .read(localSearchDBProvider
+                                                    .notifier)
+                                                .removeFromList(index: index);
+                                          },
+                                          icon: const Icon(
+                                            Icons.close,
+                                            color: AppColors.red,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                      left: 50.0,
-                                      right: 50.0,
-                                    ),
-                                    child: AutoSizeText(
-                                      db[index][0],
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                          left: 50.0,
+                                          right: 50.0,
+                                        ),
+                                        child: AutoSizeText(
+                                          db[index][0],
+                                          style: const TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 20,
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(
-                                        left: 50.0, right: 50.0, bottom: 10.0),
-                                    child: AutoSizeText(
-                                      db[index][1],
-                                      style: TextStyle(
-                                        fontSize: 12,
-                                        color: Colors.grey[600],
+                                    Expanded(
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            left: 50.0,
+                                            right: 50.0,
+                                            bottom: 10.0),
+                                        child: AutoSizeText(
+                                          db[index][1],
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.grey[600],
+                                          ),
+                                        ),
                                       ),
                                     ),
-                                  ),
+                                  ],
                                 ),
-                              ],
-                            ),
-                          ),
-                        );
-                      }),
+                              ),
+                            );
+                          }),
+                        ),
+                      ],
                     ),
                   ],
                 ),

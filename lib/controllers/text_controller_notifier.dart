@@ -33,8 +33,6 @@ class TextControllerNotifier extends StateNotifier<String?> {
       temperature: 1,
       topP: 0.5,
       n: 1,
-      stream: false,
-      logprobs: null,
       contentType: 'application/json',
       authorization: 'Bearer $_apiToken',
       model: 'gpt-3.5-turbo',
