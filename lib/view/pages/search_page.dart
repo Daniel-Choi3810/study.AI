@@ -83,7 +83,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                     ),
                     MaterialButton(
                       hoverElevation: 10,
-                      hoverColor: AppColors.accentDark,
+                      hoverColor: AppColors.complementaryDark,
                       color: AppColors.complementary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12.0),
@@ -117,9 +117,35 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                           const SizedBox(
                             width: 10,
                           ),
-                          Text(profileState),
+                          Expanded(child: Text(profileState)),
                         ],
                       ),
+                    ),
+                    Expanded(
+                      child: PopupMenuButton(
+                          itemBuilder: (context) => [
+                                const PopupMenuItem(child: Text('Profile')),
+                                profileState == 'Guest'
+                                    ? PopupMenuItem(
+                                        child: TextButton(
+                                          child: const Text('Log In'),
+                                          onPressed: () {
+                                            Navigator.pushNamed(
+                                                context, '/login');
+                                          },
+                                        ),
+                                      )
+                                    : PopupMenuItem(
+                                        onTap: () async {
+                                          await auth.signOut();
+                                          ref
+                                              .read(profileNotifierProvider
+                                                  .notifier)
+                                              .changeProfileStatus();
+                                        },
+                                        child: const Text('Sign Out'),
+                                      ),
+                              ]),
                     ),
                   ],
                 ),
@@ -128,32 +154,59 @@ class _SearchPageState extends ConsumerState<SearchPage> {
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 35.0,
-                vertical: 20.0,
+                vertical: 8.0,
               ),
               child: Container(
                 height: height * 0.2,
                 decoration: BoxDecoration(
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color.fromARGB(80, 148, 160, 255),
+                      Color.fromARGB(69, 223, 159, 234)
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20.0),
                 ),
                 padding: const EdgeInsets.all(20.0),
                 child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
-                    Text(
-                      "Left side text",
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                      ),
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        AutoSizeText(
+                          "Welcome to Cram.AI!",
+                          style: TextStyle(
+                            fontSize: 18.0,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 10.0,
+                        ),
+                        SizedBox(
+                          width: 150,
+                          child: AutoSizeText(
+                            textAlign: TextAlign.left,
+                            "Sign up for a free account to create your own flashcards and study sets.",
+                            style: TextStyle(
+                                fontSize: 12.0, color: Colors.black54),
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 20.0),
-                    // Image.asset(
-                    //   "assets/images/image.png",
-                    //   width: 100.0,
-                    //   height: 100.0,
-                    //   fit: BoxFit.cover,
-                    // ),
+                    // const SizedBox(width: 50),
+                    Image.asset(
+                      "assets/Banner-Image.png",
+                      width: 175.0,
+                      height: 175.0,
+                      fit: BoxFit.cover,
+                    ),
+                    // Image.asset("assets/Ground-Vector.png",
+                    //     width: 200.0, height: 200.0),
                   ],
                 ),
               ),
@@ -218,25 +271,10 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                             ),
                           ),
                     isLoading // TODO: Make loading indicator container match the size of the cards
-                        ? Padding(
-                            padding: const EdgeInsets.only(
-                                bottom: 30.0, right: 34.0),
-                            child: Container(
-                              height: height * 0.08,
-                              width: width * 0.785,
-                              decoration: BoxDecoration(
-                                color: AppColors.complementary,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: const SizedBox(
-                                width: 5,
-                                height: 5,
-                                child: Center(
-                                  child: CircularProgressIndicator(
-                                    color: AppColors.accent,
-                                  ),
-                                ),
-                              ),
+                        ? const Padding(
+                            padding: EdgeInsets.only(bottom: 30.0, right: 34.0),
+                            child: CircularProgressIndicator(
+                              color: AppColors.accentLight,
                             ),
                           )
                         : const SizedBox(), // If isLoading is true, show CircularProgressIndicator, else show SizedBox

@@ -22,7 +22,7 @@ class _ClearAllButtonState extends State<ClearAllButton> {
           color: Colors.grey.shade100,
         ),
         backgroundColor: AppColors.red,
-        hoverColor: AppColors.accentDark,
+        hoverColor: AppColors.darkRed,
         heroTag: null,
         label: Text(
           "Clear All",

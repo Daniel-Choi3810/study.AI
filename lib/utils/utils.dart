@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static const dominant = Color(0xffF2F4FA);
-  static const complementary = Color(0xff0E185F);
-  static const complementaryLight = Color(0xff6abde0);
-  static const complementaryDark = Color(0xff13485e);
-  static const accent = Color(0xff48E7CF);
-  static const accentLight = Color(0xff009b8d);
-  static const accentDark = Color(0xff00665e);
+  static const complementary = Color(0xFF0E185F);
+  static const complementaryLight = Color(0xffa8b1f2);
+  static const complementaryDark = Color(0xff0a1142);
+  static const accent = Color(0xff15a18c);
+  static const accentLight = Color(0xff34e5ca);
+  static const accentDark = Color(0xff0d6154);
   static const red = Color(0xffFF6974);
+  static const darkRed = Color(0xffff4553);
 }

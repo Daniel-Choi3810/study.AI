@@ -40,6 +40,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ref.read(emailTextProvider).text.trim(),
             ref.read(passwordTextProvider).text.trim(),
             context);
+
         // ref.read(profileNotifierProvider.notifier).changeProfileStatus();
         // ref.read(authProvider);
         // if (ref.read(authProvider).auth.currentUser != null) {
