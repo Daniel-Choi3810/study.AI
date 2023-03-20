@@ -14,12 +14,14 @@ class _ClearAllButtonState extends State<ClearAllButton> {
   @override
   Widget build(BuildContext context) {
     return FloatingActionButton.extended(
-        // TODO: Refactor this button to a custom widget
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(15.0),
+        ),
         icon: Icon(
           Icons.delete,
           color: Colors.grey.shade100,
         ),
-        backgroundColor: AppColors.accent,
+        backgroundColor: AppColors.red,
         hoverColor: AppColors.accentDark,
         heroTag: null,
         label: Text(

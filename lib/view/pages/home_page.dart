@@ -37,6 +37,8 @@ class _HomePageState extends ConsumerState<HomePage> {
   );
   @override
   Widget build(BuildContext context) {
+    double height = MediaQuery.of(context).size.height;
+    double width = MediaQuery.of(context).size.width;
     final auth = ref.watch(authProvider); // Watch for changes in authProvider
     final profileState = ref.watch(profileNotifierProvider);
     return Scaffold(
@@ -44,51 +46,71 @@ class _HomePageState extends ConsumerState<HomePage> {
         children: [
           SideMenu(
             style: SideMenuStyle(
-                itemOuterPadding:
-                    const EdgeInsets.only(bottom: 2, left: 5, right: 5),
-                // showTooltip: false,
-                displayMode: SideMenuDisplayMode.auto,
-                hoverColor: AppColors.complementaryLight,
-                selectedColor: AppColors.complementary,
-                selectedTitleTextStyle: const TextStyle(color: Colors.white),
-                selectedIconColor: Colors.white,
-                decoration: const BoxDecoration(),
-                backgroundColor: Colors.white),
+              openSideMenuWidth: 275,
+              itemOuterPadding: const EdgeInsets.only(bottom: 2, right: 10),
+              // showTooltip: false,
+              displayMode: SideMenuDisplayMode.auto,
+              hoverColor: AppColors.complementaryLight,
+              selectedColor: AppColors.complementary,
+              selectedTitleTextStyle: const TextStyle(color: Colors.white),
+              selectedIconColor: Colors.white,
+              decoration: const BoxDecoration(
+                // boxShadow: [
+                //   BoxShadow(
+                //     color: Colors.black12,
+                //     blurRadius: 5,
+                //     spreadRadius: 10,
+                //   ),
+                // ],
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(20),
+                    bottomRight: Radius.circular(20)),
+              ),
+              backgroundColor: Colors.white,
+              itemBorderRadius: const BorderRadius.only(
+                topRight: Radius.circular(10),
+                bottomRight: Radius.circular(10),
+              ),
+              // itemInnerSpacing: 40,
+            ),
             // Page controller to manage a PageView
             controller:
                 sideMenu, // Will shows on top of all items, it can be a logo or a Title text
-            title: Column(
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 40.0),
-                  child: Icon(
-                    Icons.book,
-                    size: 40,
+            title: Padding(
+              padding: EdgeInsets.only(bottom: height * 0.125),
+              child: Column(
+                children: [
+                  const Padding(
+                    padding: EdgeInsets.only(top: 40.0),
+                    child: Icon(
+                      Icons.book,
+                      size: 40,
+                    ),
                   ),
-                ),
-                AutoSizeText(
-                  MediaQuery.of(context).size.width > 600 ? 'Cram.AI' : '',
-                  minFontSize: 10,
-                  stepGranularity: 10,
-                  maxLines: 1,
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
+                  AutoSizeText(
+                    MediaQuery.of(context).size.width > 600 ? 'Cram.AI' : '',
+                    minFontSize: 10,
+                    stepGranularity: 10,
+                    maxLines: 1,
+                    style: const TextStyle(
+                      color: Colors.black,
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.0125,
-                ),
-                const Padding(
-                  padding: EdgeInsets.all(2.0),
-                  child: Divider(
-                    color: Colors.black,
-                    indent: 10.0,
-                    endIndent: 10.0,
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.0125,
                   ),
-                ),
-              ],
+                  // const Padding(
+                  //   padding: EdgeInsets.all(2.0),
+                  //   child: Divider(
+                  //     color: Colors.black,
+                  //     indent: 10.0,
+                  //     endIndent: 10.0,
+                  //   ),
+                  // ),
+                ],
+              ),
             ),
             // Will show on bottom of SideMenu when displayMode was SideMenuDisplayMode.open
             footer: Column(
@@ -116,27 +138,30 @@ class _HomePageState extends ConsumerState<HomePage> {
                           ],
                         ),
                 ),
-                ListTile(
-                  leading: profileState == 'Guest'
-                      ? const Icon(Icons.person)
-                      : CircleAvatar(
-                          backgroundColor: Colors.blue,
-                          child: Text(profileState[0].toUpperCase(),
-                              style: const TextStyle(color: Colors.white)),
-                        ),
-                  title: Text(profileState),
-                ),
+                // ListTile(
+                //   leading: profileState == 'Guest'
+                //       ? const Icon(Icons.person)
+                //       : CircleAvatar(
+                //           backgroundColor: Colors.blue,
+                //           child: Text(profileState[0].toUpperCase(),
+                //               style: const TextStyle(color: Colors.white)),
+                //         ),
+                //   title: Text(profileState),
+                // ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.0125,
                 ),
-                const Divider(
-                  indent: 10.0,
-                  endIndent: 10.0,
-                  color: Colors.black,
-                ),
+                // const Divider(
+                //   indent: 10.0,
+                //   endIndent: 10.0,
+                //   color: Colors.black,
+                // ),
                 const Padding(
                   padding: EdgeInsets.only(bottom: 20.0),
-                  child: Text('Sabres Media LLC © 2023'),
+                  child: Text(
+                    'Sabres Media LLC © 2023',
+                    style: TextStyle(color: Colors.black54),
+                  ),
                 ),
               ],
             ),
@@ -155,7 +180,19 @@ class _HomePageState extends ConsumerState<HomePage> {
                   myBox.put('currentIndex', page);
                 },
                 icon: const Icon(Icons.search),
-                tooltipContent: "This is a tooltip for Dashboard item",
+                tooltipContent: "Search",
+                trailing: Container(
+                    decoration: const BoxDecoration(
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.all(Radius.circular(6))),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6.0, vertical: 3),
+                      child: Text(
+                        'New',
+                        style: TextStyle(fontSize: 11, color: Colors.grey[800]),
+                      ),
+                    )),
               ),
               SideMenuItem(
                 priority: 1,
@@ -175,15 +212,15 @@ class _HomePageState extends ConsumerState<HomePage> {
                 },
                 icon: const Icon(Icons.home),
               ),
-              SideMenuItem(
-                priority: 3,
-                title: 'Settings',
-                onTap: (page, _) {
-                  sideMenu.changePage(page);
-                  myBox.put('currentIndex', page);
-                },
-                icon: const Icon(Icons.settings),
-              ),
+              // SideMenuItem(
+              //   priority: 3,
+              //   title: 'Settings',
+              //   onTap: (page, _) {
+              //     sideMenu.changePage(page);
+              //     myBox.put('currentIndex', page);
+              //   },
+              //   icon: const Icon(Icons.settings),
+              // ),
             ],
           ),
           Expanded(

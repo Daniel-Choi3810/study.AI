@@ -23,7 +23,7 @@ class _SearchButtonState extends ConsumerState<SearchButton> {
     return MaterialButton(
       hoverElevation: 10,
       hoverColor: AppColors.accentDark,
-      color: AppColors.accent,
+      color: AppColors.complementary,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),
