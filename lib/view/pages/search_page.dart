@@ -1,10 +1,12 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/utils/utils.dart';
+import 'package:intellistudy/view/components/header_banner.dart';
+import 'package:intellistudy/view/components/page_menu_bar.dart';
 import 'package:intellistudy/view/components/search_page/clear_all_dialog/clear_all_button.dart';
 import 'package:intellistudy/view/components/search_page/clear_all_dialog/search_clear_all_dialog/search_clear_all_alert_dialog.dart';
+import 'package:intellistudy/view/components/search_page/search_card.dart';
 import '../components/flashcard_create_page/search_field.dart';
 import '../components/search_page/create_search_response_button.dart';
 
@@ -54,6 +56,10 @@ class _SearchPageState extends ConsumerState<SearchPage> {
             //     TextButton(onPressed: () {}, child: const Text('Report Bug'))
             //   ],
             // ),
+            const PageMenuBar(
+              title: "Search Page",
+            ),
+            const HeaderBanner(),
             Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 35.0,
@@ -64,163 +70,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(10),
                 ),
-                height: height * 0.08,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      width: 20,
-                    ),
-                    const Expanded(
-                      flex: 4,
-                      child: AutoSizeText(
-                        'Search Page',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                        ),
-                      ),
-                    ),
-                    MaterialButton(
-                      hoverElevation: 10,
-                      hoverColor: AppColors.complementaryDark,
-                      color: AppColors.complementary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12.0),
-                      ),
-                      minWidth: width * 0.1,
-                      height: height * 0.065,
-                      onPressed: () {},
-                      child: const Text(
-                        'Subscription Plans',
-                        style: TextStyle(
-                          fontSize: 16,
-                          //fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 50,
-                    ),
-                    Flexible(
-                      child: Row(
-                        children: [
-                          profileState == 'Guest'
-                              ? const Icon(Icons.person)
-                              : CircleAvatar(
-                                  backgroundColor: Colors.blue,
-                                  child: Text(profileState[0].toUpperCase(),
-                                      style:
-                                          const TextStyle(color: Colors.white)),
-                                ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Expanded(child: Text(profileState)),
-                        ],
-                      ),
-                    ),
-                    PopupMenuButton(
-                        splashRadius: 2,
-                        itemBuilder: (context) => [
-                              const PopupMenuItem(child: Text('Profile')),
-                              profileState == 'Guest'
-                                  ? PopupMenuItem(
-                                      child: TextButton(
-                                        child: const Text('Log In'),
-                                        onPressed: () {
-                                          Navigator.pushNamed(
-                                              context, '/login');
-                                        },
-                                      ),
-                                    )
-                                  : PopupMenuItem(
-                                      onTap: () async {
-                                        await auth.signOut();
-                                        ref
-                                            .read(profileNotifierProvider
-                                                .notifier)
-                                            .changeProfileStatus();
-                                      },
-                                      child: const Text('Sign Out'),
-                                    ),
-                            ]),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 35.0,
-                vertical: 8.0,
-              ),
-              child: Container(
-                height: height * 0.2,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color.fromARGB(80, 148, 160, 255),
-                      Color.fromARGB(69, 223, 159, 234)
-                    ],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                  ),
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                padding: const EdgeInsets.all(20.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: const [
-                        AutoSizeText(
-                          "Welcome to Cram.AI!",
-                          style: TextStyle(
-                            fontSize: 32.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 10.0,
-                        ),
-                        // SizedBox(
-                        //   width: 200,
-                        //   child: AutoSizeText(
-                        //     textAlign: TextAlign.left,
-                        //     "Sign up for a free account to create your own flashcards and study sets.",
-                        //     style: TextStyle(
-                        //         fontSize: 12.0, color: Colors.black54),
-                        //   ),
-                        // ),
-                      ],
-                    ),
-                    // const SizedBox(width: 50),
-                    Image.asset(
-                      "assets/Banner-Image.png",
-                      width: 175.0,
-                      height: 175.0,
-                      fit: BoxFit.cover,
-                    ),
-                    // Image.asset("assets/Ground-Vector.png",
-                    //     width: 200.0, height: 200.0),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 35.0,
-                vertical: 20.0,
-              ),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                height: height * 0.16,
+                height: height * 0.12,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -278,89 +128,17 @@ class _SearchPageState extends ConsumerState<SearchPage> {
                           )
                         : const SizedBox(), // If isLoading is true, show CircularProgressIndicator, else show SizedBox
                     // Create a scrollable vertical list view
-                    SizedBox(
-                      height: height * .6,
-                      child: ListView.builder(
-                        physics: const ScrollPhysics(),
-                        shrinkWrap: true,
-                        itemCount: db
-                            .length, // Watch for changes in responsesProvider (list of responses)
-                        itemBuilder: ((_, index) {
-                          return Padding(
-                            // TODO: Refactor this response card to a custom widget
-                            padding: const EdgeInsets.only(
-                                left: 35.0, bottom: 16.0, right: 35.0),
-                            child: Container(
-                              height: height * 0.15,
-                              decoration: BoxDecoration(
-                                // border: Border.all(
-                                //   color: AppColors.complementary,
-                                //   width: 1,
-                                // ),
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Align(
-                                    alignment: Alignment.centerRight,
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          top: 3, right: 10),
-                                      child: IconButton(
-                                        padding: EdgeInsets.zero,
-                                        constraints: const BoxConstraints(),
-                                        onPressed: () async {
-                                          await ref
-                                              .read(localSearchDBProvider
-                                                  .notifier)
-                                              .removeFromList(index: index);
-                                        },
-                                        icon: const Icon(
-                                          Icons.close,
-                                          color: AppColors.red,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                        left: 50.0,
-                                        right: 50.0,
-                                      ),
-                                      child: AutoSizeText(
-                                        db[index][0],
-                                        style: const TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 20,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: Padding(
-                                      padding: const EdgeInsets.only(
-                                          left: 50.0,
-                                          right: 50.0,
-                                          bottom: 10.0),
-                                      child: AutoSizeText(
-                                        db[index][1],
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          color: Colors.grey[600],
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
+                    ListView.builder(
+                      physics: const ScrollPhysics(),
+                      shrinkWrap: true,
+                      itemCount: db
+                          .length, // Watch for changes in responsesProvider (list of responses)
+                      itemBuilder: ((_, index) {
+                        return SearchCard(
+                            question: db[index][0],
+                            answer: db[index][1],
+                            index: index);
+                      }),
                     ),
                   ],
                 ),

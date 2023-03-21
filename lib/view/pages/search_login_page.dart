@@ -7,14 +7,16 @@ import 'package:intellistudy/view/components/authentication/auth_confirm_passwor
 import 'package:intellistudy/view/components/authentication/auth_text_field.dart';
 import '../../controllers/auth_method_status_controller.dart';
 
-class LoginPage extends ConsumerStatefulWidget {
-  const LoginPage({super.key});
+// EVERYTHING IS THE SAME, THIS PAGE JUST POPS CONTEXT AFTER SIGNING IN / UP
+class SearchLoginPage extends ConsumerStatefulWidget {
+  const SearchLoginPage({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _LoginPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _SearchLoginPageState();
 }
 
-class _LoginPageState extends ConsumerState<LoginPage> {
+class _SearchLoginPageState extends ConsumerState<SearchLoginPage> {
   //  GlobalKey is used to validate the Form
   final GlobalKey<FormState> formKey = GlobalKey();
 
@@ -40,6 +42,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             ref.read(emailTextProvider).text.trim(),
             ref.read(passwordTextProvider).text.trim(),
             context);
+        if (!mounted) return;
+        Navigator.pop(context);
 
         // ref.read(profileNotifierProvider.notifier).changeProfileStatus();
         // ref.read(authProvider);
@@ -51,6 +55,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       } else {
         await auth.signUpWithEmailAndPassword(
             emailText.text.trim(), passwordText.text.trim(), context);
+        if (!mounted) return;
+        Navigator.pop(context);
 
         // ref.read(profileNotifierProvider.notifier).changeProfileStatus();
         // ref.read(authProvider);
@@ -71,6 +77,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               Expanded(
                 flex: 3,
                 child: Container(
+                  margin: const EdgeInsets.only(top: 48),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,

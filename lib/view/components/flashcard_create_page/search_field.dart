@@ -26,7 +26,7 @@ class _SearchFieldState extends ConsumerState<SearchField> {
         ._textFieldController); // TODO: Implement clear button when textfield is not empty
     final textEditingController = ref.watch(textEditingProvider);
     return SizedBox(
-      height: widget.height * 0.07,
+      height: widget.height * 0.08,
       width: widget.width * 0.5,
       child: TextField(
         cursorColor: Colors.grey,

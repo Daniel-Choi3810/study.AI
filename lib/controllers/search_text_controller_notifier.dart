@@ -48,7 +48,8 @@ class SearchTextControllerNotifier extends StateNotifier<String?> {
       var response = await openAIRequestModel.postRequest();
       print("Response is: $response");
       if (response.statusCode == 200) {
-        final result = jsonDecode(response.body) as Map<String, dynamic>;
+        final result =
+            jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
         print(result['choices'][0]['message']['content'].trim());
         ref
             .read(searchIsLoadingStateProvider.notifier)
