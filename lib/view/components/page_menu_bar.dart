@@ -1,4 +1,3 @@
-
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,7 +25,7 @@ class _PageMenuBarState extends ConsumerState<PageMenuBar> {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 35.0,
-        vertical: 20.0,
+        vertical: 10.0,
       ),
       child: Container(
         decoration: BoxDecoration(
