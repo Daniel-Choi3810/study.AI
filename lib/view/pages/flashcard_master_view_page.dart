@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/components/flashcard_master_view_page/master_flashcard.dart';
+import 'package:intellistudy/view/components/header_banner.dart';
 
 import '../components/page_menu_bar.dart';
 
@@ -152,8 +153,9 @@ class _FlashcardMasterViewPageState
       body: Column(
         children: [
           const PageMenuBar(
-            title: "Search Page",
+            title: "My Sets",
           ),
+          const HeaderBanner(),
           Center(
             child: StreamBuilder<List<Map<String, dynamic>>>(
               stream: flashcardStream,
@@ -165,7 +167,8 @@ class _FlashcardMasterViewPageState
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: const EdgeInsets.all(8.0),
+                        padding: const EdgeInsets.only(
+                            top: 8.0, bottom: 8.0, left: 90.0, right: 90.0),
                         child: MasterFlashcard(
                             itemCount: snapshot.data!.length,
                             snapshot: snapshot,
