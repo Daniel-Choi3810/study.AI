@@ -151,16 +151,23 @@ class _MySetsPageState extends ConsumerState<MySetsPage> {
               sigmaX: 2,
               sigmaY: 2,
             ),
-            child: AlertDialog(
-              contentPadding: EdgeInsets.zero,
-              content: Container(
-                height: height * 0.75,
-                width: width * 0.75,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            child: Column(
+              children: [
+                const PageMenuBar(
+                  title: "My Sets Page",
                 ),
-                child: const LoginPage(),
-              ),
+                AlertDialog(
+                  contentPadding: EdgeInsets.zero,
+                  content: Container(
+                    height: height * 0.75,
+                    width: width * 0.75,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    ),
+                    child: const LoginPage(),
+                  ),
+                ),
+              ],
             ),
           );
         },

@@ -9,6 +9,7 @@ import '../../utils/utils.dart';
 import '../components/flashcard_create_page/create_response_button.dart';
 import '../components/flashcard_create_page/formatted_response.dart';
 import '../components/flashcard_create_page/search_field.dart';
+import '../components/page_menu_bar.dart';
 import 'login_page.dart';
 
 class FlashCardCreatePage extends ConsumerStatefulWidget {
@@ -84,6 +85,9 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
+                    const PageMenuBar(
+                      title: "Flashcard Create Page",
+                    ),
                     SizedBox(
                       height: height * 0.05,
                     ),
@@ -102,9 +106,8 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 15.0, left: 35.0),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 15.0, left: 35.0),
                               child: Text(
                                 'Title',
                               ),
@@ -128,9 +131,8 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                             SizedBox(
                               height: height * 0.01,
                             ),
-                            Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 10.0, left: 35.0),
+                            const Padding(
+                              padding: EdgeInsets.only(top: 10.0, left: 35.0),
                               child: Text(
                                 'Description',
                               ),
@@ -320,10 +322,10 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                       child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Expanded(
+                            const Expanded(
                                 flex: 5,
                                 child: Padding(
-                                  padding: const EdgeInsets.only(left: 15.0),
+                                  padding: EdgeInsets.only(left: 15.0),
                                   child: Text('My Flashcards'),
                                 )),
                             Expanded(
@@ -398,16 +400,23 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
               sigmaX: 2,
               sigmaY: 2,
             ),
-            child: AlertDialog(
-              contentPadding: EdgeInsets.zero,
-              content: Container(
-                height: height * 0.75,
-                width: width * 0.75,
-                decoration: const BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            child: Column(
+              children: [
+                const PageMenuBar(
+                  title: "Flashcard Create Page",
                 ),
-                child: const LoginPage(),
-              ),
+                AlertDialog(
+                  contentPadding: EdgeInsets.zero,
+                  content: Container(
+                    height: height * 0.75,
+                    width: width * 0.75,
+                    decoration: const BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(20.0)),
+                    ),
+                    child: const LoginPage(),
+                  ),
+                ),
+              ],
             ),
           );
         },
