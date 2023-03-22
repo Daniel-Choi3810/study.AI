@@ -22,8 +22,8 @@ class _SearchButtonState extends ConsumerState<SearchButton> {
   Widget build(BuildContext context) {
     return MaterialButton(
       hoverElevation: 10,
-      hoverColor: AppColors.accentDark,
-      color: AppColors.accent,
+      hoverColor: AppColors.complementaryDark,
+      color: AppColors.complementary,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),

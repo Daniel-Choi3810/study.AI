@@ -26,7 +26,7 @@ class _SearchFieldState extends ConsumerState<SearchField> {
         ._textFieldController); // TODO: Implement clear button when textfield is not empty
     final textEditingController = ref.watch(textEditingProvider);
     return SizedBox(
-      height: widget.height * 0.07,
+      height: widget.height * 0.08,
       width: widget.width * 0.5,
       child: TextField(
         cursorColor: Colors.grey,
@@ -54,6 +54,7 @@ class _SearchFieldState extends ConsumerState<SearchField> {
               splashRadius: 2,
               icon: const Icon(
                 Icons.clear,
+                color: AppColors.complementaryLight,
               ),
               onPressed: () {
                 print(textEditingController.text.isEmpty);
@@ -65,7 +66,8 @@ class _SearchFieldState extends ConsumerState<SearchField> {
             borderRadius: BorderRadius.all(Radius.circular(12.0)),
           ),
           focusedBorder: const OutlineInputBorder(
-            borderSide: BorderSide(width: 2, color: AppColors.accentLight),
+            borderSide:
+                BorderSide(width: 2, color: AppColors.complementaryLight),
             borderRadius: BorderRadius.all(Radius.circular(12.0)),
           ),
           hintText: 'Enter your question...',

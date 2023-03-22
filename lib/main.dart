@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intellistudy/utils/utils.dart';
 import 'package:intellistudy/view/pages/flashcard_master_view_page.dart';
 import 'package:stack_trace/stack_trace.dart' as stack_trace;
 
@@ -55,7 +56,9 @@ class MyApp extends ConsumerWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'CramAI',
-      theme: ThemeData(fontFamily: GoogleFonts.poppins().fontFamily),
+      theme: ThemeData(
+          scaffoldBackgroundColor: AppColors.dominant,
+          fontFamily: GoogleFonts.poppins().fontFamily),
       home: const HomePage(),
       onGenerateRoute: (settings) {
         final myBox = Hive.box('pageArgumentsDataBase');
