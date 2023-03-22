@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart';
 import '../models/openai_request_model.dart';
 import '../providers/providers.dart';
 
@@ -30,8 +29,8 @@ class TextControllerNotifier extends StateNotifier<String?> {
         {"role": "user", "content": promptText}
       ],
       maxTokens: 2000,
-      temperature: 1,
-      topP: 0.5,
+      temperature: 0.5,
+      topP: 1,
       n: 1,
       contentType: 'application/json',
       authorization: 'Bearer $_apiToken',
@@ -45,26 +44,21 @@ class TextControllerNotifier extends StateNotifier<String?> {
       // This try catch block is used to make the post request and update the state of the app
       ref.read(isLoadingStateProvider.notifier).update((state) =>
           true); // This is used to update the loading progress of the app to true
-      Response request = await openAIRequestModel
-          .postRequest()
-          .timeout(const Duration(seconds: 10), onTimeout: () {
-        ref.read(isLoadingStateProvider.notifier).update((state) => false);
-        return Response('error', 404);
-      }); // This is the post request
 
-      if (request.statusCode == 200) {
+      var response = await openAIRequestModel.postRequest();
+      print("Response is: $response");
+      if (response.statusCode == 200) {
+        final result =
+            jsonDecode(utf8.decode(response.bodyBytes)) as Map<String, dynamic>;
+        print(result['choices'][0]['message']['content'].trim());
         ref.read(isLoadingStateProvider.notifier).update((state) => false);
-        // if the request is successful, then the state is updated to the response
-        state = await jsonDecode(utf8.decode(request.bodyBytes))['choices'][0]
-                ['message']['content']
-            .trim();
-        print(state);
+        state = result['choices'][0]['message']['content'].trim();
+        print("State is: $state");
       } else {
         ref.read(isLoadingStateProvider.notifier).update((state) => false);
-        // if the request is not successful, then the state is updated to the error
-        state = "${request.statusCode} error, please try again";
+        print(response.reasonPhrase);
+        state = "${response.statusCode} error, please try again";
       }
-      ref.read(isLoadingStateProvider.notifier).update((state) => false);
     } catch (e) {
       ref.read(isLoadingStateProvider.notifier).update((state) => false);
       state = "$e, please reload and try again";
