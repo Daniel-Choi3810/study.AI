@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intellistudy/providers/providers.dart';
 import 'package:intellistudy/view/components/flashcard_master_view_page/master_flashcard.dart';
 
+import '../components/page_menu_bar.dart';
+
 class FlashcardMasterViewPage extends ConsumerStatefulWidget {
   const FlashcardMasterViewPage({super.key, required this.title});
   final String title;
@@ -147,34 +149,42 @@ class _FlashcardMasterViewPageState
           ),
         ],
       ),
-      body: Center(
-        child: StreamBuilder<List<Map<String, dynamic>>>(
-          stream: flashcardStream,
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              //print(flashcardStream);
-              return ListView.builder(
-                itemCount: snapshot.data!.length,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: MasterFlashcard(
-                        itemCount: snapshot.data!.length,
-                        snapshot: snapshot,
-                        title: widget.title,
-                        id: snapshot.data![index]['id'],
-                        index: index),
+      body: Column(
+        children: [
+          const PageMenuBar(
+            title: "Search Page",
+          ),
+          Center(
+            child: StreamBuilder<List<Map<String, dynamic>>>(
+              stream: flashcardStream,
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  //print(flashcardStream);
+                  return ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: MasterFlashcard(
+                            itemCount: snapshot.data!.length,
+                            snapshot: snapshot,
+                            title: widget.title,
+                            id: snapshot.data![index]['id'],
+                            index: index),
+                      );
+                    },
                   );
-                },
-              );
-            }
-            if (snapshot.hasError) {
-              return const Text('Error');
-            } else {
-              return const Center(child: CircularProgressIndicator());
-            }
-          },
-        ),
+                }
+                if (snapshot.hasError) {
+                  return const Text('Error');
+                } else {
+                  return const Center(child: CircularProgressIndicator());
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

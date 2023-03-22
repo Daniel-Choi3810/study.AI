@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:intellistudy/view/components/page_menu_bar.dart';
 import '../../providers/providers.dart';
 import 'login_page.dart';
 
@@ -24,9 +25,6 @@ class _MySetsPageState extends ConsumerState<MySetsPage> {
     final auth = ref.watch(authProvider);
     final authState = ref.watch(authStateProvider);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Sets'),
-      ),
       body: authState.when(
         data: (data) {
           if (data != null) {
@@ -43,84 +41,108 @@ class _MySetsPageState extends ConsumerState<MySetsPage> {
                         }) // Getting each document ID from the data property of QueryDocumentSnapshot
                     .toList());
             return SafeArea(
-              child: Center(
-                child: StreamBuilder<List<Map<String, dynamic>>>(
-                  stream: myCardSetsStream,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasData) {
-                      //print(flashcardStream);
-                      return ListView.builder(
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          return Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Stack(children: [
-                              Card(
-                                child: ListTile(
-                                  title: Text(
-                                      snapshot.data![index]['data']['title']),
-                                  subtitle: Row(
-                                    children: [
-                                      Text(snapshot.data![index]['data']
-                                          ['description']),
-                                      const Spacer(),
-                                      Text(snapshot.data![index]['data']
-                                              ['dateCreated']
-                                          .toDate()
-                                          .toString()), // TODO: Format date with intl package
-                                    ],
-                                  ),
-                                  onTap: () {
-                                    if (titleBox.get('prevFlashcardViewArgs') !=
-                                        snapshot.data![index]['data']
-                                            ['title']) {
-                                      titleBox.put(
-                                          'prevFlashcardViewArgs',
-                                          snapshot.data![index]['data']
-                                              ['title']);
-                                      ref
-                                          .read(flashcardIndexProvider.notifier)
-                                          .resetIndex();
-                                      print('reset provider index');
-                                    }
-                                    Navigator.pushNamed(
-                                        context, '/flashcardMasterView',
-                                        arguments: snapshot.data![index]['data']
-                                            ['title']);
-                                  },
+              child: Column(
+                children: [
+                  const PageMenuBar(
+                    title: "My Sets Page",
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 25.0,
+                      vertical: 8.0,
+                    ),
+                    child: StreamBuilder<List<Map<String, dynamic>>>(
+                      stream: myCardSetsStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.hasData) {
+                          //print(flashcardStream);
+                          return GridView.count(
+                            shrinkWrap: true,
+                            crossAxisCount: 3,
+                            children:
+                                List.generate(snapshot.data!.length, (index) {
+                              return Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Stack(
+                                  children: [
+                                    Card(
+                                      child: ListTile(
+                                        title: Text(snapshot.data![index]
+                                            ['data']['title']),
+                                        subtitle: Row(
+                                          children: [
+                                            Text(snapshot.data![index]['data']
+                                                ['description']),
+                                            const Spacer(),
+                                            Text(
+                                              snapshot.data![index]['data']
+                                                      ['dateCreated']
+                                                  .toDate()
+                                                  .toString(),
+                                            ),
+                                          ],
+                                        ),
+                                        onTap: () {
+                                          if (titleBox.get(
+                                                  'prevFlashcardViewArgs') !=
+                                              snapshot.data![index]['data']
+                                                  ['title']) {
+                                            titleBox.put(
+                                                'prevFlashcardViewArgs',
+                                                snapshot.data![index]['data']
+                                                    ['title']);
+                                            ref
+                                                .read(flashcardIndexProvider
+                                                    .notifier)
+                                                .resetIndex();
+                                            print('reset provider index');
+                                          }
+                                          Navigator.pushNamed(
+                                            context,
+                                            '/flashcardMasterView',
+                                            arguments: snapshot.data![index]
+                                                ['data']['title'],
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                    Align(
+                                      alignment: Alignment.topRight,
+                                      child: Padding(
+                                        padding:
+                                            const EdgeInsets.only(right: 8.0),
+                                        child: IconButton(
+                                          splashRadius: 2,
+                                          onPressed: () {
+                                            firestore
+                                                .collection('flashcardSets')
+                                                .doc(auth.auth.currentUser!.uid
+                                                    .toString())
+                                                .collection('sets')
+                                                .doc(snapshot.data![index]
+                                                    ['data']['title'])
+                                                .delete();
+                                          },
+                                          icon: const Icon(Icons.delete),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              ),
-                              Align(
-                                alignment: Alignment.topRight,
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 8.0),
-                                  child: IconButton(
-                                      splashRadius: 2,
-                                      onPressed: () {
-                                        firestore
-                                            .collection('flashcardSets')
-                                            .doc(auth.auth.currentUser!.uid
-                                                .toString())
-                                            .collection('sets')
-                                            .doc(snapshot.data![index]['data']
-                                                ['title'])
-                                            .delete();
-                                      },
-                                      icon: const Icon(Icons.close)),
-                                ),
-                              ),
-                            ]),
+                              );
+                            }),
                           );
-                        },
-                      );
-                    }
-                    if (snapshot.hasError) {
-                      return const Text('Error');
-                    } else {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-                  },
-                ),
+                        }
+                        if (snapshot.hasError) {
+                          return const Text('Error');
+                        } else {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        }
+                      },
+                    ),
+                  ),
+                ],
               ),
             );
           }
