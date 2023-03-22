@@ -87,156 +87,193 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                     SizedBox(
                       height: height * 0.05,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        SizedBox(
-                          width: width * 0.05,
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 35.0,
+                        vertical: 20.0,
+                      ),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
                         ),
-                        Column(
+                        height: height * .3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.end,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
-                              children: [
-                                const Text('              Title: '),
-                                SizedBox(
-                                  width: width * 0.25,
-                                  height: height * 0.05,
-                                  child: TextField(
-                                    controller: titleTextController,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Please enter a title',
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 15.0, left: 35.0),
+                              child: Text(
+                                'Title',
+                              ),
                             ),
-                            SizedBox(height: height * 0.01),
-                            Row(
-                              children: [
-                                const Text('Description: '),
-                                SizedBox(
-                                  width: width * 0.25,
-                                  height: height * 0.05,
-                                  child: TextField(
-                                    controller: descriptionTextController,
-                                    decoration: const InputDecoration(
-                                      hintText: 'Enter a description',
-                                      border: OutlineInputBorder(),
-                                    ),
+                            SizedBox(
+                              height: height * 0.01,
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 35.0, right: 35.0),
+                                child: TextField(
+                                  controller: titleTextController,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Please enter a title',
+                                    border: OutlineInputBorder(),
                                   ),
                                 ),
-                              ],
+                              ),
+                            ),
+                            SizedBox(
+                              height: height * 0.01,
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 10.0, left: 35.0),
+                              child: Text(
+                                'Description',
+                              ),
+                            ),
+                            SizedBox(
+                              height: height * 0.01,
+                            ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    left: 35.0, right: 35.0),
+                                child: TextField(
+                                  controller: descriptionTextController,
+                                  decoration: const InputDecoration(
+                                    hintText: 'Enter a description',
+                                    border: OutlineInputBorder(),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    right: 35.0, top: 20.0, bottom: 15.0),
+                                child: MaterialButton(
+                                    hoverElevation: 10,
+                                    hoverColor:
+                                        const Color.fromARGB(255, 63, 50, 179),
+                                    color: AppColors.complementary,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    minWidth: width * 0.03,
+                                    height: height * 0.08,
+                                    child: const Text(
+                                      "Create Flashcard Set",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () async {
+                                      print(
+                                          "Current user is: ${auth.auth.currentUser!.uid}");
+                                      if (titleTextController.text.isNotEmpty &&
+                                          titleTextController.text.trim() !=
+                                              ' ' &&
+                                          db.length >= 2) {
+                                        // titleTextController.clear();
+                                        // descriptionTextController.clear();
+                                        print(
+                                            'title: ${titleTextController.text}');
+                                        print(
+                                            'description: ${descriptionTextController.text}');
+
+                                        final setRef = firestore
+                                            .collection('flashcardSets')
+                                            .doc(auth.auth.currentUser!.uid
+                                                .toString())
+                                            .collection('sets')
+                                            .doc(titleTextController.text
+                                                .trim());
+
+                                        await firestore
+                                            .collection('flashcardSets')
+                                            .doc(auth.auth.currentUser!.uid
+                                                .toString())
+                                            .set(
+                                          {
+                                            'id': auth.auth.currentUser!.uid
+                                                .toString(),
+                                            'email':
+                                                auth.auth.currentUser!.email,
+                                            'username': auth
+                                                .auth.currentUser!.displayName,
+                                          },
+                                        );
+
+                                        final setData = {
+                                          "title":
+                                              titleTextController.text.trim(),
+                                          "description":
+                                              descriptionTextController.text
+                                                  .trim(),
+                                          "dateCreated": DateTime.now(),
+                                        };
+                                        await setRef
+                                            .set(setData)
+                                            .then((documentSnapshot) {
+                                          final cardsRef = firestore
+                                              .collection('flashcardSets')
+                                              .doc(auth.auth.currentUser!.uid
+                                                  .toString())
+                                              .collection('sets')
+                                              .doc(titleTextController.text
+                                                  .trim())
+                                              .collection('cards');
+                                          // for (var flashcard in db) {
+                                          //   final data = {
+                                          //     "term": flashcard[0],
+                                          //     "definition": flashcard[1],
+                                          //     "regenerations": flashcard[2],
+                                          //     "isStarred": flashcard[3]
+                                          //   };
+
+                                          //   cardsRef.add(data).then(
+                                          //       (documentSnapshot) => print(
+                                          //           "Added Data with ID: ${documentSnapshot.id}"));
+                                          // }
+
+                                          for (int i = 0; i < db.length; i++) {
+                                            final data = {
+                                              "term": db[i][0],
+                                              "definition": db[i][1],
+                                              "regenerations": db[i][2],
+                                              "isStarred": db[i][3],
+                                              "dateExample": Timestamp.now(),
+                                            };
+
+                                            cardsRef.doc().set(data);
+                                          }
+                                        });
+                                        await ref
+                                            .read(localFlashcardDBProvider
+                                                .notifier)
+                                            .clearList();
+                                        if (!mounted) return;
+                                        await Navigator.pushNamed(
+                                            context, '/flashcardMasterView',
+                                            arguments: titleTextController.text
+                                                .trim());
+                                        ref
+                                            .read(setTitleTextStateProvider)
+                                            .clear();
+                                        ref
+                                            .read(
+                                                setDescriptionTextStateProvider)
+                                            .clear();
+                                      }
+                                    }),
+                              ),
                             ),
                           ],
                         ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: MaterialButton(
-                              hoverElevation: 10,
-                              hoverColor:
-                                  const Color.fromARGB(255, 63, 50, 179),
-                              color: AppColors.accent,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              minWidth: width * 0.01,
-                              height: height * 0.08,
-                              child: const Text(
-                                "Create Flashcard Set",
-                                style: TextStyle(color: Colors.white),
-                              ),
-                              onPressed: () async {
-                                print(
-                                    "Current user is: ${auth.auth.currentUser!.uid}");
-                                if (titleTextController.text.isNotEmpty &&
-                                    titleTextController.text.trim() != ' ' &&
-                                    db.length >= 2) {
-                                  // titleTextController.clear();
-                                  // descriptionTextController.clear();
-                                  print('title: ${titleTextController.text}');
-                                  print(
-                                      'description: ${descriptionTextController.text}');
-
-                                  final setRef = firestore
-                                      .collection('flashcardSets')
-                                      .doc(
-                                          auth.auth.currentUser!.uid.toString())
-                                      .collection('sets')
-                                      .doc(titleTextController.text.trim());
-
-                                  await firestore
-                                      .collection('flashcardSets')
-                                      .doc(
-                                          auth.auth.currentUser!.uid.toString())
-                                      .set(
-                                    {
-                                      'id':
-                                          auth.auth.currentUser!.uid.toString(),
-                                      'email': auth.auth.currentUser!.email,
-                                      'username':
-                                          auth.auth.currentUser!.displayName,
-                                    },
-                                  );
-
-                                  final setData = {
-                                    "title": titleTextController.text.trim(),
-                                    "description":
-                                        descriptionTextController.text.trim(),
-                                    "dateCreated": DateTime.now(),
-                                  };
-                                  await setRef
-                                      .set(setData)
-                                      .then((documentSnapshot) {
-                                    final cardsRef = firestore
-                                        .collection('flashcardSets')
-                                        .doc(auth.auth.currentUser!.uid
-                                            .toString())
-                                        .collection('sets')
-                                        .doc(titleTextController.text.trim())
-                                        .collection('cards');
-                                    // for (var flashcard in db) {
-                                    //   final data = {
-                                    //     "term": flashcard[0],
-                                    //     "definition": flashcard[1],
-                                    //     "regenerations": flashcard[2],
-                                    //     "isStarred": flashcard[3]
-                                    //   };
-
-                                    //   cardsRef.add(data).then(
-                                    //       (documentSnapshot) => print(
-                                    //           "Added Data with ID: ${documentSnapshot.id}"));
-                                    // }
-
-                                    for (int i = 0; i < db.length; i++) {
-                                      final data = {
-                                        "term": db[i][0],
-                                        "definition": db[i][1],
-                                        "regenerations": db[i][2],
-                                        "isStarred": db[i][3],
-                                        "dateExample": Timestamp.now(),
-                                      };
-
-                                      cardsRef.doc().set(data);
-                                    }
-                                  });
-                                  await ref
-                                      .read(localFlashcardDBProvider.notifier)
-                                      .clearList();
-                                  if (!mounted) return;
-                                  await Navigator.pushNamed(
-                                      context, '/flashcardMasterView',
-                                      arguments:
-                                          titleTextController.text.trim());
-                                  ref.read(setTitleTextStateProvider).clear();
-                                  ref
-                                      .read(setDescriptionTextStateProvider)
-                                      .clear();
-                                }
-                              }),
-                        ),
-                      ],
+                      ),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(18.0),
@@ -274,6 +311,66 @@ class _FlashCardCreatePageState extends ConsumerState<FlashCardCreatePage> {
                         : const SizedBox(), // If isLoading is true, show CircularProgressIndicator, else show SizedBox
                     SizedBox(
                       height: height * 0.06,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 35.0,
+                        vertical: 20.0,
+                      ),
+                      child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                                flex: 5,
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 15.0),
+                                  child: Text('My Flashcards'),
+                                )),
+                            Expanded(
+                              flex: 1,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    right: 35.0, top: 20.0, bottom: 15.0),
+                                child: MaterialButton(
+                                    hoverElevation: 10,
+                                    hoverColor:
+                                        const Color.fromARGB(255, 63, 50, 179),
+                                    color: AppColors.accentLight,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    minWidth: width * 0.09,
+                                    height: height * 0.07,
+                                    child: const Text(
+                                      "Add",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () async {}),
+                              ),
+                            ),
+                            Expanded(
+                              flex: 1,
+                              child: Padding(
+                                padding: const EdgeInsets.only(
+                                    right: 35.0, top: 20.0, bottom: 15.0),
+                                child: MaterialButton(
+                                    hoverElevation: 10,
+                                    hoverColor:
+                                        const Color.fromARGB(255, 63, 50, 179),
+                                    color: AppColors.red,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    ),
+                                    minWidth: width * 0.09,
+                                    height: height * 0.07,
+                                    child: const Text(
+                                      "Add",
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    onPressed: () async {}),
+                              ),
+                            ),
+                          ]),
                     ),
                     // Create a scrollable vertical list view
                     ListView.builder(
